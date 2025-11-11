@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sintassi e Concetti Fondamentali | Corso Rust Linux Desktop</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+header {
+    background: #2a2a2a;
+    padding: 1rem 2rem;
+    border-bottom: 3px solid #DE8E43;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rust-logo {
+    font-size: 2rem;
+    color: #DE8E43;
+}
+
+h1 {
+    font-size: 1.5rem;
+    color: #DE8E43;
+}
+
+.container {
+    display: flex;
+    margin-top: 70px;
+    min-height: calc(100vh - 70px);
+}
+
+.sidebar {
+    width: 280px;
+    background: #252525;
+    padding: 2rem 0;
+    position: fixed;
+    left: 0;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    border-right: 1px solid #3a3a3a;
+}
+
+.sidebar h3 {
+    color: #DE8E43;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li a {
+    display: block;
+    padding: 0.7rem 1.5rem 0.7rem 2.5rem;
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+}
+
+.sidebar li a:hover {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+}
+
+.sidebar li a.active {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+    font-weight: 600;
+}
+
+.content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem 3rem;
+    max-width: 1200px;
+}
+
+.breadcrumb {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.breadcrumb a {
+    color: #4A90E2;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.lesson-title {
+    font-size: 2.5rem;
+    color: #DE8E43;
+    margin-bottom: 1rem;
+}
+
+.box {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.box-theory {
+    background: #2a2a3e;
+    border-left-color: #4A90E2;
+}
+
+.box-steps {
+    background: #2a2a2a;
+    border-left-color: #DE8E43;
+}
+
+.box-code {
+    background: #1e1e1e;
+    border-left-color: #DE8E43;
+    position: relative;
+}
+
+.box-exercises {
+    background: #2d4a2e;
+    border-left-color: #5cb85c;
+}
+
+.box-troubleshooting {
+    background: #4a2d2e;
+    border-left-color: #d9534f;
+}
+
+.box h3 {
+    color: #DE8E43;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.box-theory h3 { color: #4A90E2; }
+.box-exercises h3 { color: #5cb85c; }
+.box-troubleshooting h3 { color: #d9534f; }
+
+code {
+    font-family: 'Fira Code', 'Courier New', monospace;
+    background: #2a2a2a;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: #DE8E43;
+}
+
+pre {
+    background: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: #e0e0e0;
+    display: block;
+}
+
+.copy-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #DE8E43;
+    color: #1a1a1a;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.copy-button:hover {
+    background: #f09d5a;
+}
+
+ol, ul {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+li {
+    margin: 0.5rem 0;
+}
+
+.lesson-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #3a3a3a;
+}
+
+.lesson-nav a {
+    background: #DE8E43;
+    color: #1a1a1a;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.lesson-nav a:hover {
+    background: #f09d5a;
+    transform: translateY(-2px);
+}
+
+.lesson-nav a.disabled {
+    background: #3a3a3a;
+    color: #666;
+    cursor: not-allowed;
+}
+
+footer {
+    background: #252525;
+    padding: 2rem;
+    text-align: center;
+    color: #888;
+    border-top: 1px solid #3a3a3a;
+    margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+}
+</style>
+</head>
+<body>
+    
+    <header>
+        <div class="header-content">
+            <div class="rust-logo">🦀</div>
+            <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
+        </div>
+    </header>
+    
+
+    <div class="container">
+        
+    <aside class="sidebar">
+        <h3>📚 Corso Rust Linux</h3>
+        <ul>
+            <li><a href="index.html">🏠 Home</a></li>
+        </ul>
+
+        <h3>1. Ambiente di Sviluppo</h3>
+        <ul>
+            <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
+            <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
+            <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
+        </ul>
+
+        <h3>2. Rust Base</h3>
+        <ul>
+            <li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li>
+            <li><a href="lesson-2-2.html">2.2 Strutture Controllo</a></li>
+            <li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li>
+            <li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li>
+        </ul>
+
+        <h3>3. Sviluppo GUI</h3>
+        <ul>
+            <li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li>
+            <li><a href="lesson-3-2.html">3.2 Glade Designer</a></li>
+            <li><a href="lesson-3-3.html">3.3 Sviluppo Manuale</a></li>
+            <li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li>
+            <li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li>
+        </ul>
+
+        <h3>4. Progetti Pratici</h3>
+        <ul>
+            <li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li>
+            <li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li>
+            <li><a href="lesson-4-3.html">4.3 Client HTTP</a></li>
+        </ul>
+
+        <h3>5. GitHub & Best Practices</h3>
+        <ul>
+            <li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li>
+            <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
+            <li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li>
+        </ul>
+
+        <h3>📖 Altro</h3>
+        <ul>
+            <li><a href="about.html">ℹ️ Info Corso</a></li>
+            <li><a href="projects.html">🎯 Progetti</a></li>
+            <li><a href="resources.html">🔗 Risorse</a></li>
+            <li><a href="faq.html">❓ FAQ</a></li>
+        </ul>
+    </aside>
+    
+
+        <main class="content">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> > Sezione 2: Rust Base > Sintassi e Concetti Fondamentali
+            </nav>
+
+            <h2 class="lesson-title">Sintassi e Concetti Fondamentali</h2>
+
+            <div class="box box-theory">
+                <h3>📘 Introduzione Teorica</h3>
+                
+<p><strong>Rust</strong> è un linguaggio che enfatizza sicurezza, concorrenza e performance. I concetti fondamentali che lo distinguono includono:</p>
+<ul>
+    <li><strong>Ownership (Proprietà)</strong>: Ogni valore in Rust ha un unico proprietario. Quando il proprietario esce dallo scope, il valore viene automaticamente deallocato. Questo elimina memory leaks e use-after-free.</li>
+    <li><strong>Borrowing (Prestito)</strong>: Puoi "prestare" un valore senza trasferirne l'ownership usando riferimenti (<code>&amp;</code>). I riferimenti permettono l'accesso ai dati senza prenderne possesso.</li>
+    <li><strong>Lifetimes (Durata)</strong>: Garantiscono che i riferimenti siano sempre validi e non puntino mai a memoria deallocata.</li>
+    <li><strong>Mutabilità esplicita</strong>: Le variabili sono immutabili di default. Devi usare <code>mut</code> per renderle mutabili, rendendo espliciti i punti dove i dati possono cambiare.</li>
+</ul>
+<p>Questi concetti prevengono bug comuni come null pointer dereference, data races e use-after-free <strong>a tempo di compilazione</strong>, senza bisogno di un garbage collector.</p>
+
+            </div>
+
+            <div class="box box-steps">
+                <h3>🔧 Procedura Passo-Passo</h3>
+                
+<ol>
+    <li><strong>Variabili immutabili e mutabili</strong>
+        <pre><code>// Immutabile di default
+let x = 5;
+// x = 6;  // ❌ ERRORE: cannot assign twice to immutable variable
+
+// Mutabile con 'mut'
+let mut y = 10;
+y = 15;  // ✅ OK
+println!("y = {}", y);</code></pre>
+    </li>
+
+    <li><strong>Ownership: trasferimento di proprietà</strong>
+        <pre><code>let s1 = String::from("hello");
+let s2 = s1;  // s1 viene "spostato" (moved) in s2
+
+// println!("{}", s1);  // ❌ ERRORE: value borrowed after move
+println!("{}", s2);  // ✅ OK: s2 è il nuovo proprietario</code></pre>
+        <p>Quando assegni <code>s1</code> a <code>s2</code>, l'ownership viene trasferita. <code>s1</code> non è più valido.</p>
+    </li>
+
+    <li><strong>Borrowing: riferimenti immutabili</strong>
+        <pre><code>let s1 = String::from("hello");
+let len = calcola_lunghezza(&amp;s1);  // Presta s1 con un riferimento
+println!("La lunghezza di '{}' è {}", s1, len);  // ✅ s1 ancora valido
+
+fn calcola_lunghezza(s: &amp;String) -> usize {
+    s.len()  // Legge ma non possiede il dato
+}  // s esce dallo scope ma non dealloca (è solo un riferimento)</code></pre>
+    </li>
+
+    <li><strong>Borrowing: riferimenti mutabili</strong>
+        <pre><code>let mut s = String::from("hello");
+modifica_stringa(&amp;mut s);
+println!("{}", s);  // Stampa "hello, world"
+
+fn modifica_stringa(s: &amp;mut String) {
+    s.push_str(", world");
+}</code></pre>
+        <p><strong>Regola importante</strong>: Puoi avere SOLO UN riferimento mutabile O più riferimenti immutabili, ma non entrambi contemporaneamente.</p>
+    </li>
+
+    <li><strong>Slice: riferimenti a porzioni di dati</strong>
+        <pre><code>let s = String::from("hello world");
+let hello = &amp;s[0..5];    // Slice della prima parola
+let world = &amp;s[6..11];   // Slice della seconda parola
+println!("{} {}", hello, world);</code></pre>
+    </li>
+</ol>
+
+            </div>
+
+            <div class="box box-code">
+                <h3>💻 Codice Sorgente Commentato</h3>
+                <button class="copy-button">Copia</button>
+                
+<pre><code>// Esempi completi di Ownership, Borrowing e Lifetimes
+
+fn main() {
+    // ========================================
+    // ESEMPIO 1: Ownership Transfer
+    // ========================================
+    let s = String::from("hello");
+    prendi_ownership(s);
+    // println!("{}", s);  // ❌ ERRORE: s è stato spostato
+
+    // ========================================
+    // ESEMPIO 2: Borrowing Immutabile
+    // ========================================
+    let s = String::from("world");
+    let len = calcola_len(&s);
+    println!("'{}' ha lunghezza {}", s, len);  // ✅ OK: s è ancora valido
+
+    // ========================================
+    // ESEMPIO 3: Borrowing Mutabile
+    // ========================================
+    let mut s = String::from("hello");
+    modifica_string(&mut s);
+    println!("{}", s);  // Stampa "hello, world"
+
+    // ========================================
+    // ESEMPIO 4: Regola del Borrowing
+    // ========================================
+    let mut s = String::from("test");
+
+    // Multipli riferimenti immutabili OK
+    let r1 = &s;
+    let r2 = &s;
+    println!("{} e {}", r1, r2);
+    // r1 e r2 non sono più usati dopo questo punto
+
+    // Ora possiamo creare un riferimento mutabile
+    let r3 = &mut s;
+    r3.push_str("!");
+    println!("{}", r3);
+
+    // ========================================
+    // ESEMPIO 5: Slice
+    // ========================================
+    let s = String::from("hello world");
+    let parola = prima_parola(&s);
+    println!("Prima parola: {}", parola);
+
+    // ========================================
+    // ESEMPIO 6: Vector e Ownership
+    // ========================================
+    let v = vec![1, 2, 3, 4, 5];
+    let somma = somma_vettore(&v);
+    println!("Somma: {}, vettore ancora valido: {:?}", somma, v);
+
+    // ========================================
+    // ESEMPIO 7: Clone per duplicare
+    // ========================================
+    let s1 = String::from("hello");
+    let s2 = s1.clone();  // Copia esplicita
+    println!("s1 = {}, s2 = {}", s1, s2);  // ✅ Entrambi validi
+}
+
+// Prende ownership e dealloca quando esce dallo scope
+fn prendi_ownership(s: String) {
+    println!("Ho ricevuto: {}", s);
+}  // s viene deallocato qui
+
+// Prende solo un riferimento immutabile
+fn calcola_len(s: &String) -> usize {
+    s.len()
+}  // s non viene deallocato (è solo un riferimento)
+
+// Prende un riferimento mutabile
+fn modifica_string(s: &mut String) {
+    s.push_str(", world");
+}
+
+// Ritorna una slice (riferimento a parte di String)
+fn prima_parola(s: &String) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+
+// Calcola somma senza prendere ownership del vettore
+fn somma_vettore(v: &Vec<i32>) -> i32 {
+    let mut somma = 0;
+    for &num in v {
+        somma += num;
+    }
+    somma
+}
+
+// ========================================
+// ESEMPIO AVANZATO: Lifetimes
+// ========================================
+// La funzione ritorna un riferimento, quindi dobbiamo specificare i lifetimes
+fn piu_lunga<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+// Uso:
+// let stringa1 = String::from("lungo");
+// let stringa2 = String::from("corto");
+// let risultato = piu_lunga(&stringa1, &stringa2);
+// println!("La stringa più lunga è: {}", risultato);
+</code></pre>
+
+            </div>
+
+            <div class="box box-exercises">
+                <h3>✏️ Esercizi Pratici</h3>
+                
+<ol>
+    <li><strong>Ownership Transfer</strong>
+        <p>Crea una funzione <code>fn somma_vec(v: Vec&lt;i32&gt;) -> i32</code> che prende ownership di un vettore e ritorna la somma dei suoi elementi. Testa la funzione e verifica che il vettore non sia più accessibile dopo la chiamata.</p>
+    </li>
+
+    <li><strong>Borrowing Immutabile</strong>
+        <p>Scrivi una funzione <code>fn conta_vocali(s: &String) -> usize</code> che conta quante vocali (a, e, i, o, u) ci sono in una stringa, senza prenderne ownership.</p>
+    </li>
+
+    <li><strong>Borrowing Mutabile</strong>
+        <p>Crea una funzione <code>fn raddoppia_valori(v: &mut Vec&lt;i32&gt;)</code> che raddoppia tutti i valori di un vettore. Testa che il vettore originale venga modificato.</p>
+    </li>
+
+    <li><strong>Slice</strong>
+        <p>Implementa una funzione <code>fn prima_parola(s: &str) -> &str</code> che ritorna la prima parola di una stringa (tutto prima del primo spazio). Se non ci sono spazi, ritorna l'intera stringa.</p>
+    </li>
+
+    <li><strong>Debug Ownership</strong>
+        <p>Correggi questo codice che ha errori di ownership:</p>
+        <pre><code>fn main() {
+    let s1 = String::from("hello");
+    let s2 = s1;
+    println!("{}", s1);  // ERRORE!
+
+    let v = vec![1, 2, 3];
+    let sum = somma(v);
+    println!("{:?}", v);  // ERRORE!
+}
+
+fn somma(v: Vec&lt;i32&gt;) -> i32 {
+    v.iter().sum()
+}</code></pre>
+    </li>
+
+    <li><strong>Challenge: Gestione Memoria</strong>
+        <p>Crea una struct <code>Libro</code> con campi <code>titolo: String</code> e <code>autore: String</code>. Scrivi funzioni per:</p>
+        <ul>
+            <li>Creare un nuovo libro (che prende ownership delle stringhe)</li>
+            <li>Stampare info libro (borrowing immutabile)</li>
+            <li>Modificare il titolo (borrowing mutabile)</li>
+        </ul>
+    </li>
+</ol>
+
+            </div>
+
+            <div class="box box-troubleshooting">
+                <h3>⚠️ Troubleshooting</h3>
+                
+<h4>❌ Errore: "value borrowed here after move"</h4>
+<p><strong>Causa:</strong> Stai cercando di usare una variabile dopo aver trasferito l'ownership.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code>// SBAGLIATO:
+let s1 = String::from("hello");
+let s2 = s1;
+println!("{}", s1);  // ERRORE!
+
+// CORRETTO: Usa borrowing
+let s1 = String::from("hello");
+let s2 = &s1;  // Presta invece di spostare
+println!("{} {}", s1, s2);  // ✅ OK
+
+// OPPURE: Clona se serve una copia
+let s1 = String::from("hello");
+let s2 = s1.clone();
+println!("{} {}", s1, s2);  // ✅ OK</code></pre>
+
+<h4>❌ Errore: "cannot borrow as mutable more than once at a time"</h4>
+<p><strong>Causa:</strong> Rust permette solo UN borrow mutabile alla volta per prevenire data races.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code>// SBAGLIATO:
+let mut s = String::from("hello");
+let r1 = &mut s;
+let r2 = &mut s;  // ERRORE!
+
+// CORRETTO: Usa gli scope per separare i borrow
+let mut s = String::from("hello");
+{
+    let r1 = &mut s;
+    r1.push_str(" world");
+}  // r1 esce dallo scope qui
+let r2 = &mut s;  // ✅ OK ora
+r2.push_str("!");</code></pre>
+
+<h4>❌ Errore: "cannot borrow as mutable because it is also borrowed as immutable"</h4>
+<p><strong>Causa:</strong> Non puoi avere borrow mutabili e immutabili contemporaneamente.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code>// SBAGLIATO:
+let mut s = String::from("hello");
+let r1 = &s;
+let r2 = &mut s;  // ERRORE!
+println!("{}", r1);
+
+// CORRETTO: Assicurati che i borrow immutabili finiscano prima
+let mut s = String::from("hello");
+let r1 = &s;
+println!("{}", r1);  // r1 non è più usato dopo questo punto
+let r2 = &mut s;  // ✅ OK ora
+r2.push_str(" world");</code></pre>
+
+<h4>💡 Tip: Capire il Borrow Checker</h4>
+<p>Il borrow checker di Rust segue queste regole:</p>
+<ul>
+    <li>Un valore può avere INFINITI riferimenti immutabili (<code>&amp;T</code>)</li>
+    <li>OPPURE un SOLO riferimento mutabile (<code>&amp;mut T</code>)</li>
+    <li>I riferimenti devono sempre essere validi (no dangling pointers)</li>
+</ul>
+<p>Pensa ai riferimenti come a "permessi di lettura/scrittura". Multipli lettori vanno bene, ma solo uno scrittore alla volta, e nessuno può leggere mentre qualcuno scrive.</p>
+
+<h4>🔍 Debugging: Usa cargo clippy</h4>
+<p>Clippy suggerisce miglioramenti al codice:</p>
+<pre><code>cargo clippy</code></pre>
+<p>Ti aiuterà a identificare pattern non idiomatici e potenziali problemi di ownership.</p>
+
+            </div>
+
+            <nav class="lesson-nav">
+                <a href="lesson-1-3.html">← Lezione Precedente</a>
+                <a href="lesson-2-2.html">Lezione Successiva →</a>
+            </nav>
+        </main>
+    </div>
+
+    
+    <footer>
+        <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
+        <p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | 
+           <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p>
+    </footer>
+    
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPage = window.location.pathname.split('/').pop();
+    const links = document.querySelectorAll('.sidebar a');
+    links.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+    });
+
+    const codeBlocks = document.querySelectorAll('.box-code');
+    codeBlocks.forEach(block => {
+        const button = block.querySelector('.copy-button');
+        if (button) {
+            button.addEventListener('click', () => {
+                const code = block.querySelector('code').textContent;
+                navigator.clipboard.writeText(code);
+                button.textContent = 'Copiato!';
+                setTimeout(() => {
+                    button.textContent = 'Copia';
+                }, 2000);
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

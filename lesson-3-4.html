@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget e Eventi | Corso Rust Linux Desktop</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+header {
+    background: #2a2a2a;
+    padding: 1rem 2rem;
+    border-bottom: 3px solid #DE8E43;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rust-logo {
+    font-size: 2rem;
+    color: #DE8E43;
+}
+
+h1 {
+    font-size: 1.5rem;
+    color: #DE8E43;
+}
+
+.container {
+    display: flex;
+    margin-top: 70px;
+    min-height: calc(100vh - 70px);
+}
+
+.sidebar {
+    width: 280px;
+    background: #252525;
+    padding: 2rem 0;
+    position: fixed;
+    left: 0;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    border-right: 1px solid #3a3a3a;
+}
+
+.sidebar h3 {
+    color: #DE8E43;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li a {
+    display: block;
+    padding: 0.7rem 1.5rem 0.7rem 2.5rem;
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+}
+
+.sidebar li a:hover {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+}
+
+.sidebar li a.active {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+    font-weight: 600;
+}
+
+.content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem 3rem;
+    max-width: 1200px;
+}
+
+.breadcrumb {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.breadcrumb a {
+    color: #4A90E2;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.lesson-title {
+    font-size: 2.5rem;
+    color: #DE8E43;
+    margin-bottom: 1rem;
+}
+
+.box {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.box-theory {
+    background: #2a2a3e;
+    border-left-color: #4A90E2;
+}
+
+.box-steps {
+    background: #2a2a2a;
+    border-left-color: #DE8E43;
+}
+
+.box-code {
+    background: #1e1e1e;
+    border-left-color: #DE8E43;
+    position: relative;
+}
+
+.box-exercises {
+    background: #2d4a2e;
+    border-left-color: #5cb85c;
+}
+
+.box-troubleshooting {
+    background: #4a2d2e;
+    border-left-color: #d9534f;
+}
+
+.box h3 {
+    color: #DE8E43;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.box-theory h3 { color: #4A90E2; }
+.box-exercises h3 { color: #5cb85c; }
+.box-troubleshooting h3 { color: #d9534f; }
+
+code {
+    font-family: 'Fira Code', 'Courier New', monospace;
+    background: #2a2a2a;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: #DE8E43;
+}
+
+pre {
+    background: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: #e0e0e0;
+    display: block;
+}
+
+.copy-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #DE8E43;
+    color: #1a1a1a;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.copy-button:hover {
+    background: #f09d5a;
+}
+
+ol, ul {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+li {
+    margin: 0.5rem 0;
+}
+
+.lesson-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #3a3a3a;
+}
+
+.lesson-nav a {
+    background: #DE8E43;
+    color: #1a1a1a;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.lesson-nav a:hover {
+    background: #f09d5a;
+    transform: translateY(-2px);
+}
+
+.lesson-nav a.disabled {
+    background: #3a3a3a;
+    color: #666;
+    cursor: not-allowed;
+}
+
+footer {
+    background: #252525;
+    padding: 2rem;
+    text-align: center;
+    color: #888;
+    border-top: 1px solid #3a3a3a;
+    margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+}
+</style>
+</head>
+<body>
+    
+    <header>
+        <div class="header-content">
+            <div class="rust-logo">🦀</div>
+            <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
+        </div>
+    </header>
+    
+
+    <div class="container">
+        
+    <aside class="sidebar">
+        <h3>📚 Corso Rust Linux</h3>
+        <ul>
+            <li><a href="index.html">🏠 Home</a></li>
+        </ul>
+
+        <h3>1. Ambiente di Sviluppo</h3>
+        <ul>
+            <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
+            <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
+            <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
+        </ul>
+
+        <h3>2. Rust Base</h3>
+        <ul>
+            <li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li>
+            <li><a href="lesson-2-2.html">2.2 Strutture Controllo</a></li>
+            <li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li>
+            <li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li>
+        </ul>
+
+        <h3>3. Sviluppo GUI</h3>
+        <ul>
+            <li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li>
+            <li><a href="lesson-3-2.html">3.2 Glade Designer</a></li>
+            <li><a href="lesson-3-3.html">3.3 Sviluppo Manuale</a></li>
+            <li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li>
+            <li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li>
+        </ul>
+
+        <h3>4. Progetti Pratici</h3>
+        <ul>
+            <li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li>
+            <li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li>
+            <li><a href="lesson-4-3.html">4.3 Client HTTP</a></li>
+        </ul>
+
+        <h3>5. GitHub & Best Practices</h3>
+        <ul>
+            <li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li>
+            <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
+            <li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li>
+        </ul>
+
+        <h3>📖 Altro</h3>
+        <ul>
+            <li><a href="about.html">ℹ️ Info Corso</a></li>
+            <li><a href="projects.html">🎯 Progetti</a></li>
+            <li><a href="resources.html">🔗 Risorse</a></li>
+            <li><a href="faq.html">❓ FAQ</a></li>
+        </ul>
+    </aside>
+    
+
+        <main class="content">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> > Sezione 3: Sviluppo GUI > Widget e Eventi
+            </nav>
+
+            <h2 class="lesson-title">Widget e Eventi</h2>
+
+            <div class="box box-theory">
+                <h3>📘 Introduzione Teorica</h3>
+                <p>I widget GTK comunicano tramite <strong>signals</strong>. Quando un evento accade (click, focus, ecc.), il widget emette un signal che può essere intercettato con callback.</p>
+<ul><li><strong>Entry</strong>: Input testo</li>
+<li><strong>TextView</strong>: Editor multilinea</li>
+<li><strong>CheckButton</strong>: Checkbox</li>
+<li><strong>RadioButton</strong>: Opzioni multiple</li>
+<li><strong>Signals</strong>: clicked, changed, toggled, ecc.</li></ul>
+            </div>
+
+            <div class="box box-steps">
+                <h3>🔧 Procedura Passo-Passo</h3>
+                <ol>
+<li><strong>Entry con validazione</strong><pre><code>let entry = Entry::new();
+entry.connect_changed(|e| {
+    println!("Testo: {}", e.text());
+});</code></pre></li>
+<li><strong>TextView</strong><pre><code>let textview = TextView::new();
+let buffer = textview.buffer().unwrap();
+buffer.set_text("Hello");</code></pre></li>
+<li><strong>CheckButton</strong><pre><code>let check = CheckButton::with_label("Accetto");
+check.connect_toggled(|c| {
+    println!("Checked: {}", c.is_active());
+});</code></pre></li></ol>
+            </div>
+
+            <div class="box box-code">
+                <h3>💻 Codice Sorgente Commentato</h3>
+                <button class="copy-button">Copia</button>
+                <pre><code>use gtk::prelude::*;
+use gtk::{Application, ApplicationWindow, Box, Entry, TextView, CheckButton, Button, Orientation};
+
+fn build_ui(app: &Application) {
+    let window = ApplicationWindow::builder()
+        .application(app)
+        .title("Widget & Eventi")
+        .default_width(400)
+        .default_height(300)
+        .build();
+
+    let vbox = Box::new(Orientation::Vertical, 10);
+
+    // Entry con validazione email
+    let entry = Entry::new();
+    entry.set_placeholder_text(Some("Email"));
+    entry.connect_changed(|e| {
+        let text = e.text();
+        if text.contains('@') {
+            e.set_icon_from_icon_name(gtk::EntryIconPosition::Secondary, Some("emblem-ok"));
+        } else {
+            e.set_icon_from_icon_name(gtk::EntryIconPosition::Secondary, Some("dialog-error"));
+        }
+    });
+    vbox.pack_start(&entry, false, false, 0);
+
+    // TextView
+    let textview = TextView::new();
+    let buffer = textview.buffer().unwrap();
+    vbox.pack_start(&textview, true, true, 0);
+
+    // CheckButton
+    let check = CheckButton::with_label("Abilita");
+    check.connect_toggled(clone!(@weak textview => move |c| {
+        textview.set_sensitive(c.is_active());
+    }));
+    vbox.pack_start(&check, false, false, 0);
+
+    // Button per stampare
+    let button = Button::with_label("Stampa Testo");
+    button.connect_clicked(move |_| {
+        let text = buffer.text(&buffer.start_iter(), &buffer.end_iter(), false);
+        println!("Contenuto: {}", text);
+    });
+    vbox.pack_start(&button, false, false, 0);
+
+    window.add(&vbox);
+    window.show_all();
+}</code></pre>
+            </div>
+
+            <div class="box box-exercises">
+                <h3>✏️ Esercizi Pratici</h3>
+                <ol>
+<li><strong>Form Validato</strong>: Entry che valida email e mostra errore</li>
+<li><strong>Editor Semplice</strong>: TextView con bottoni Salva/Carica</li>
+<li><strong>Quiz</strong>: RadioButton con risposta corretta</li>
+<li><strong>Settings</strong>: Multiple CheckButton per preferenze</li></ol>
+            </div>
+
+            <div class="box box-troubleshooting">
+                <h3>⚠️ Troubleshooting</h3>
+                <h4>❌ Callback non funziona</h4>
+<p>Usa <code>clone!</code> macro per catturare variabili</p>
+<h4>❌ Entry non aggiorna</h4>
+<p>Usa <code>set_text()</code> sul widget Entry</p>
+            </div>
+
+            <nav class="lesson-nav">
+                <a href="lesson-3-3.html">← Lezione Precedente</a>
+                <a href="lesson-3-5.html">Lezione Successiva →</a>
+            </nav>
+        </main>
+    </div>
+
+    
+    <footer>
+        <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
+        <p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | 
+           <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p>
+    </footer>
+    
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPage = window.location.pathname.split('/').pop();
+    const links = document.querySelectorAll('.sidebar a');
+    links.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+    });
+
+    const codeBlocks = document.querySelectorAll('.box-code');
+    codeBlocks.forEach(block => {
+        const button = block.querySelector('.copy-button');
+        if (button) {
+            button.addEventListener('click', () => {
+                const code = block.querySelector('code').textContent;
+                navigator.clipboard.writeText(code);
+                button.textContent = 'Copiato!';
+                setTimeout(() => {
+                    button.textContent = 'Copia';
+                }, 2000);
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

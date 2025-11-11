@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crate e Gestione delle Dipendenze | Corso Rust Linux Desktop</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+header {
+    background: #2a2a2a;
+    padding: 1rem 2rem;
+    border-bottom: 3px solid #DE8E43;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rust-logo {
+    font-size: 2rem;
+    color: #DE8E43;
+}
+
+h1 {
+    font-size: 1.5rem;
+    color: #DE8E43;
+}
+
+.container {
+    display: flex;
+    margin-top: 70px;
+    min-height: calc(100vh - 70px);
+}
+
+.sidebar {
+    width: 280px;
+    background: #252525;
+    padding: 2rem 0;
+    position: fixed;
+    left: 0;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    border-right: 1px solid #3a3a3a;
+}
+
+.sidebar h3 {
+    color: #DE8E43;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li a {
+    display: block;
+    padding: 0.7rem 1.5rem 0.7rem 2.5rem;
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+}
+
+.sidebar li a:hover {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+}
+
+.sidebar li a.active {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+    font-weight: 600;
+}
+
+.content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem 3rem;
+    max-width: 1200px;
+}
+
+.breadcrumb {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.breadcrumb a {
+    color: #4A90E2;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.lesson-title {
+    font-size: 2.5rem;
+    color: #DE8E43;
+    margin-bottom: 1rem;
+}
+
+.box {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.box-theory {
+    background: #2a2a3e;
+    border-left-color: #4A90E2;
+}
+
+.box-steps {
+    background: #2a2a2a;
+    border-left-color: #DE8E43;
+}
+
+.box-code {
+    background: #1e1e1e;
+    border-left-color: #DE8E43;
+    position: relative;
+}
+
+.box-exercises {
+    background: #2d4a2e;
+    border-left-color: #5cb85c;
+}
+
+.box-troubleshooting {
+    background: #4a2d2e;
+    border-left-color: #d9534f;
+}
+
+.box h3 {
+    color: #DE8E43;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.box-theory h3 { color: #4A90E2; }
+.box-exercises h3 { color: #5cb85c; }
+.box-troubleshooting h3 { color: #d9534f; }
+
+code {
+    font-family: 'Fira Code', 'Courier New', monospace;
+    background: #2a2a2a;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: #DE8E43;
+}
+
+pre {
+    background: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: #e0e0e0;
+    display: block;
+}
+
+.copy-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #DE8E43;
+    color: #1a1a1a;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.copy-button:hover {
+    background: #f09d5a;
+}
+
+ol, ul {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+li {
+    margin: 0.5rem 0;
+}
+
+.lesson-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #3a3a3a;
+}
+
+.lesson-nav a {
+    background: #DE8E43;
+    color: #1a1a1a;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.lesson-nav a:hover {
+    background: #f09d5a;
+    transform: translateY(-2px);
+}
+
+.lesson-nav a.disabled {
+    background: #3a3a3a;
+    color: #666;
+    cursor: not-allowed;
+}
+
+footer {
+    background: #252525;
+    padding: 2rem;
+    text-align: center;
+    color: #888;
+    border-top: 1px solid #3a3a3a;
+    margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+}
+</style>
+</head>
+<body>
+    
+    <header>
+        <div class="header-content">
+            <div class="rust-logo">🦀</div>
+            <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
+        </div>
+    </header>
+    
+
+    <div class="container">
+        
+    <aside class="sidebar">
+        <h3>📚 Corso Rust Linux</h3>
+        <ul>
+            <li><a href="index.html">🏠 Home</a></li>
+        </ul>
+
+        <h3>1. Ambiente di Sviluppo</h3>
+        <ul>
+            <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
+            <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
+            <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
+        </ul>
+
+        <h3>2. Rust Base</h3>
+        <ul>
+            <li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li>
+            <li><a href="lesson-2-2.html">2.2 Strutture Controllo</a></li>
+            <li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li>
+            <li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li>
+        </ul>
+
+        <h3>3. Sviluppo GUI</h3>
+        <ul>
+            <li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li>
+            <li><a href="lesson-3-2.html">3.2 Glade Designer</a></li>
+            <li><a href="lesson-3-3.html">3.3 Sviluppo Manuale</a></li>
+            <li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li>
+            <li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li>
+        </ul>
+
+        <h3>4. Progetti Pratici</h3>
+        <ul>
+            <li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li>
+            <li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li>
+            <li><a href="lesson-4-3.html">4.3 Client HTTP</a></li>
+        </ul>
+
+        <h3>5. GitHub & Best Practices</h3>
+        <ul>
+            <li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li>
+            <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
+            <li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li>
+        </ul>
+
+        <h3>📖 Altro</h3>
+        <ul>
+            <li><a href="about.html">ℹ️ Info Corso</a></li>
+            <li><a href="projects.html">🎯 Progetti</a></li>
+            <li><a href="resources.html">🔗 Risorse</a></li>
+            <li><a href="faq.html">❓ FAQ</a></li>
+        </ul>
+    </aside>
+    
+
+        <main class="content">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> > Sezione 2: Rust Base > Crate e Gestione delle Dipendenze
+            </nav>
+
+            <h2 class="lesson-title">Crate e Gestione delle Dipendenze</h2>
+
+            <div class="box box-theory">
+                <h3>📘 Introduzione Teorica</h3>
+                
+<p>Il sistema di gestione dipendenze di Rust si basa su <strong>Cargo</strong> e <strong>crates.io</strong>, il registry ufficiale delle librerie Rust. Un <strong>crate</strong> è un'unità di compilazione: può essere una libreria o un binario.</p>
+<ul>
+    <li><strong>Cargo.toml</strong>: File di configurazione che specifica dipendenze, metadati e configurazioni di build</li>
+    <li><strong>crates.io</strong>: Repository centrale con oltre 100.000 crate disponibili</li>
+    <li><strong>Semantic Versioning</strong>: Gestione delle versioni con formato MAJOR.MINOR.PATCH</li>
+    <li><strong>Features</strong>: Abilita/disabilita parti opzionali delle dipendenze</li>
+    <li><strong>Cargo.lock</strong>: File generato automaticamente che fissa le versioni esatte usate</li>
+</ul>
+<p>Cargo gestisce automaticamente download, compilazione e aggiornamento delle dipendenze, semplificando notevolmente lo sviluppo.</p>
+
+            </div>
+
+            <div class="box box-steps">
+                <h3>🔧 Procedura Passo-Passo</h3>
+                
+<ol>
+    <li><strong>Aggiungere una dipendenza base</strong>
+        <p>Modifica <code>Cargo.toml</code>:</p>
+        <pre><code>[package]
+name = "mio_progetto"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = "1.0"           # Serialization
+rand = "0.8"            # Numeri random
+chrono = "0.4"          # Date e timestamp</code></pre>
+
+        <p>Esegui <code>cargo build</code> per scaricare e compilare le dipendenze.</p>
+    </li>
+
+    <li><strong>Usare una crate nel codice</strong>
+        <pre><code>// src/main.rs
+use rand::Rng;  // Importa il trait Rng
+use chrono::Local;  // Importa utilità per date
+
+fn main() {
+    // Usa rand
+    let numero = rand::thread_rng().gen_range(1..=100);
+    println!("Numero casuale: {}", numero);
+
+    // Usa chrono
+    let ora = Local::now();
+    println!("Ora attuale: {}", ora.format("%Y-%m-%d %H:%M:%S"));
+}</code></pre>
+    </li>
+
+    <li><strong>Specificare versioni</strong>
+        <pre><code>[dependencies]
+# Versione esatta
+serde = "=1.0.150"
+
+# Versione minima (>= 1.0.0, < 2.0.0)
+serde = "1.0"
+
+# Wildcard
+serde = "1.*"
+
+# Range
+serde = ">=1.0.0, <1.5.0"
+
+# Git repository
+mia_lib = { git = "https://github.com/user/mia_lib" }
+
+# Percorso locale
+mia_lib_locale = { path = "../mia_lib" }</code></pre>
+    </li>
+
+    <li><strong>Features opzionali</strong>
+        <pre><code>[dependencies]
+# Solo features necessarie
+serde = { version = "1.0", features = ["derive"] }
+
+# Disabilita features di default
+tokio = { version = "1.0", default-features = false, features = ["rt"] }</code></pre>
+    </li>
+
+    <li><strong>Dipendenze di sviluppo</strong>
+        <pre><code># Solo per test e bench, non incluse nel binario finale
+[dev-dependencies]
+criterion = "0.5"  # Per benchmark
+mockito = "1.0"    # Per mock nei test</code></pre>
+    </li>
+
+    <li><strong>Profili di compilazione</strong>
+        <pre><code>[profile.dev]
+opt-level = 0  # Nessuna ottimizzazione (veloce da compilare)
+
+[profile.release]
+opt-level = 3         # Massima ottimizzazione
+lto = true            # Link-Time Optimization
+codegen-units = 1     # Singola unità (più lento ma più ottimizzato)
+strip = true          # Rimuovi simboli debug</code></pre>
+    </li>
+</ol>
+
+            </div>
+
+            <div class="box box-code">
+                <h3>💻 Codice Sorgente Commentato</h3>
+                <button class="copy-button">Copia</button>
+                
+<pre><code>// ========================================
+// ESEMPIO COMPLETO: Cargo.toml Avanzato
+// ========================================
+
+/*
+[package]
+name = "mia_app"
+version = "0.1.0"
+edition = "2021"
+authors = ["Il Mio Nome <email@example.com>"]
+license = "MIT"
+description = "Una fantastica applicazione Rust"
+repository = "https://github.com/user/mia_app"
+keywords = ["cli", "tool", "utility"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+# Serializzazione/deserializzazione
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# CLI argument parsing
+clap = { version = "4.0", features = ["derive"] }
+
+# Error handling migliorato
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Logging
+log = "0.4"
+env_logger = "0.10"
+
+# Date e tempo
+chrono = "0.4"
+
+# HTTP client
+reqwest = { version = "0.11", features = ["json", "blocking"] }
+
+# Database
+rusqlite = { version = "0.29", features = ["bundled"] }
+
+# Numeri random
+rand = "0.8"
+
+[dev-dependencies]
+# Test utilities
+assert_cmd = "2.0"
+predicates = "3.0"
+
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+*/
+
+// ========================================
+// ESEMPIO 1: Uso di serde per JSON
+// ========================================
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Person {
+    name: String,
+    age: u32,
+    email: String,
+}
+
+fn esempio_serde() {
+    // Serializzazione: struct -> JSON
+    let person = Person {
+        name: "Mario Rossi".to_string(),
+        age: 30,
+        email: "mario@example.com".to_string(),
+    };
+
+    let json = serde_json::to_string(&person).unwrap();
+    println!("JSON: {}", json);
+
+    // Deserializzazione: JSON -> struct
+    let json_str = r#"{"name":"Luigi Verdi","age":25,"email":"luigi@example.com"}"#;
+    let person: Person = serde_json::from_str(json_str).unwrap();
+    println!("Person: {:?}", person);
+}
+
+// ========================================
+// ESEMPIO 2: CLI con clap
+// ========================================
+use clap::Parser;
+
+#[derive(Parser)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// Nome da salutare
+    #[arg(short, long)]
+    name: String,
+
+    /// Numero di ripetizioni
+    #[arg(short, long, default_value_t = 1)]
+    count: u8,
+}
+
+fn esempio_clap() {
+    let args = Args::parse();
+
+    for _ in 0..args.count {
+        println!("Ciao, {}!", args.name);
+    }
+}
+
+// ========================================
+// ESEMPIO 3: Error handling con anyhow
+// ========================================
+use anyhow::{Context, Result};
+use std::fs;
+
+fn leggi_file(path: &str) -> Result<String> {
+    fs::read_to_string(path)
+        .context(format!("Impossibile leggere il file: {}", path))
+}
+
+fn esempio_anyhow() -> Result<()> {
+    let contenuto = leggi_file("config.txt")?;
+    println!("Contenuto: {}", contenuto);
+    Ok(())
+}
+
+// ========================================
+// ESEMPIO 4: Numeri random con rand
+// ========================================
+use rand::Rng;
+
+fn esempio_rand() {
+    let mut rng = rand::thread_rng();
+
+    // Numero tra 1 e 100
+    let n: i32 = rng.gen_range(1..=100);
+    println!("Numero casuale: {}", n);
+
+    // Booleano random
+    let b: bool = rng.gen();
+    println!("Booleano: {}", b);
+
+    // Shuffle di un vettore
+    use rand::seq::SliceRandom;
+    let mut numeri = vec![1, 2, 3, 4, 5];
+    numeri.shuffle(&mut rng);
+    println!("Shuffled: {:?}", numeri);
+}
+
+// ========================================
+// ESEMPIO 5: Date con chrono
+// ========================================
+use chrono::{DateTime, Local, Duration};
+
+fn esempio_chrono() {
+    // Data e ora corrente
+    let ora = Local::now();
+    println!("Ora: {}", ora);
+
+    // Formattazione
+    println!("Formattata: {}", ora.format("%Y-%m-%d %H:%M:%S"));
+
+    // Operazioni sulle date
+    let domani = ora + Duration::days(1);
+    println!("Domani: {}", domani);
+
+    // Parsing di una stringa
+    use chrono::NaiveDate;
+    let data = NaiveDate::parse_from_str("2024-12-25", "%Y-%m-%d").unwrap();
+    println!("Natale: {}", data);
+}
+
+// ========================================
+// ESEMPIO 6: SQLite con rusqlite
+// ========================================
+use rusqlite::{Connection, Result as SqlResult};
+
+#[derive(Debug)]
+struct User {
+    id: i32,
+    name: String,
+    email: String,
+}
+
+fn esempio_sqlite() -> SqlResult<()> {
+    // Apri/crea database
+    let conn = Connection::open("mio_db.db")?;
+
+    // Crea tabella
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL
+        )",
+        [],
+    )?;
+
+    // Insert
+    conn.execute(
+        "INSERT INTO users (name, email) VALUES (?1, ?2)",
+        ["Mario", "mario@example.com"],
+    )?;
+
+    // Query
+    let mut stmt = conn.prepare("SELECT id, name, email FROM users")?;
+    let users = stmt.query_map([], |row| {
+        Ok(User {
+            id: row.get(0)?,
+            name: row.get(1)?,
+            email: row.get(2)?,
+        })
+    })?;
+
+    for user in users {
+        println!("User: {:?}", user?);
+    }
+
+    Ok(())
+}
+
+// ========================================
+// ESEMPIO 7: HTTP con reqwest
+// ========================================
+use reqwest::blocking;
+
+fn esempio_http() -> Result<()> {
+    // GET request
+    let response = blocking::get("https://api.github.com/users/rust-lang")?
+        .text()?;
+
+    println!("Response: {}", response);
+
+    // POST request
+    let client = blocking::Client::new();
+    let res = client.post("https://httpbin.org/post")
+        .json(&serde_json::json!({
+            "name": "Mario",
+            "age": 30
+        }))
+        .send()?;
+
+    println!("Status: {}", res.status());
+
+    Ok(())
+}
+
+// ========================================
+// MAIN: Esempi combinati
+// ========================================
+fn main() -> Result<()> {
+    println!("=== Esempi Crate Popolari ===
+");
+
+    println!("1. Serde (JSON):");
+    esempio_serde();
+
+    println!("
+2. Rand (Random):");
+    esempio_rand();
+
+    println!("
+3. Chrono (Date):");
+    esempio_chrono();
+
+    // Gli altri esempi richiedono file o network
+    // esempio_sqlite()?;
+    // esempio_http()?;
+
+    Ok(())
+}
+</code></pre>
+
+            </div>
+
+            <div class="box box-exercises">
+                <h3>✏️ Esercizi Pratici</h3>
+                
+<ol>
+    <li><strong>Progetto con Serde</strong>
+        <p>Crea una struct <code>Libro</code> con campi titolo, autore e anno. Usa serde per:</p>
+        <ul>
+            <li>Serializzare un vettore di libri in JSON e salvarlo su file</li>
+            <li>Deserializzare il file JSON in un vettore di libri</li>
+        </ul>
+    </li>
+
+    <li><strong>CLI Tool con Clap</strong>
+        <p>Crea un programma CLI che accetta:</p>
+        <ul>
+            <li><code>--file</code>: percorso file da leggere</li>
+            <li><code>--output</code>: percorso file di output</li>
+            <li><code>--verbose</code>: flag per output dettagliato</li>
+        </ul>
+        <p>Il programma legge un file e lo copia nell'output con log se verbose è attivo.</p>
+    </li>
+
+    <li><strong>Numeri Random con Rand</strong>
+        <p>Crea un gioco "Indovina il Numero":</p>
+        <ul>
+            <li>Genera numero casuale tra 1-100</li>
+            <li>L'utente indovina</li>
+            <li>Dai feedback "troppo alto" o "troppo basso"</li>
+            <li>Conta i tentativi</li>
+        </ul>
+    </li>
+
+    <li><strong>Database SQLite</strong>
+        <p>Crea un'applicazione TODO list con rusqlite:</p>
+        <ul>
+            <li>Tabella tasks (id, title, completed)</li>
+            <li>Funzioni: aggiungi task, lista tasks, completa task, elimina task</li>
+            <li>CLI per interagire con il database</li>
+        </ul>
+    </li>
+
+    <li><strong>HTTP Client</strong>
+        <p>Con reqwest, crea un programma che:</p>
+        <ul>
+            <li>Fa una GET a un'API pubblica (es. GitHub, JSONPlaceholder)</li>
+            <li>Deserializza la risposta JSON con serde</li>
+            <li>Stampa i dati in formato leggibile</li>
+        </ul>
+    </li>
+
+    <li><strong>Challenge: Gestione Dipendenze</strong>
+        <p>Crea un progetto che usa almeno 5 crate diverse. Configura:</p>
+        <ul>
+            <li>Features opzionali</li>
+            <li>Dev dependencies per test</li>
+            <li>Profili di compilazione ottimizzati</li>
+            <li>Documentazione con <code>cargo doc</code></li>
+        </ul>
+    </li>
+</ol>
+
+            </div>
+
+            <div class="box box-troubleshooting">
+                <h3>⚠️ Troubleshooting</h3>
+                
+<h4>❌ Errore: "could not find Cargo.toml"</h4>
+<p><strong>Causa:</strong> Non sei nella directory del progetto Cargo.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code># Naviga nella directory del progetto
+cd mio_progetto
+
+# Verifica che Cargo.toml esista
+ls Cargo.toml</code></pre>
+
+<h4>❌ Errore: "failed to parse manifest"</h4>
+<p><strong>Causa:</strong> Sintassi errata in Cargo.toml.</p>
+<p><strong>Soluzione:</strong></p>
+<ul>
+    <li>Verifica l'indentazione (usa spazi, non tab)</li>
+    <li>Controlla le virgolette</li>
+    <li>Usa <code>cargo check</code> per vedere l'errore dettagliato</li>
+</ul>
+
+<h4>❌ Errore: "version cannot be empty"</h4>
+<p><strong>Causa:</strong> Versione della dipendenza non specificata correttamente.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code># SBAGLIATO:
+[dependencies]
+serde = ""
+
+# CORRETTO:
+[dependencies]
+serde = "1.0"</code></pre>
+
+<h4>❌ Errore: "no matching version found"</h4>
+<p><strong>Causa:</strong> La versione richiesta non esiste su crates.io.</p>
+<p><strong>Soluzione:</strong></p>
+<ul>
+    <li>Cerca su <a href="https://crates.io" style="color: #DE8E43;">crates.io</a> la versione corretta</li>
+    <li>Usa <code>cargo search nome_crate</code></li>
+    <li>Controlla se il nome è scritto correttamente</li>
+</ul>
+
+<h4>❌ Compilazione molto lenta</h4>
+<p><strong>Causa:</strong> Troppe dipendenze o compilazione da zero.</p>
+<p><strong>Soluzioni:</strong></p>
+<ul>
+    <li>Usa <code>cargo check</code> invece di <code>cargo build</code> durante sviluppo</li>
+    <li>Abilita cache con <code>sccache</code></li>
+    <li>Disabilita features non necessarie</li>
+    <li>Compila in modalità incrementale (default in dev)</li>
+</ul>
+
+<h4>💡 Tip: Cercare Crate</h4>
+<pre><code># Cerca crate dal terminale
+cargo search json
+
+# Oppure visita:
+# https://crates.io
+# https://lib.rs (interfaccia alternativa migliore)</code></pre>
+
+<h4>💡 Tip: Aggiornare Dipendenze</h4>
+<pre><code># Mostra dipendenze obsolete
+cargo outdated
+
+# Aggiorna a versioni compatibili
+cargo update
+
+# Aggiorna Cargo.toml a ultime versioni
+cargo upgrade  # (richiede cargo-edit)</code></pre>
+
+<h4>💡 Tip: Features Condizionali</h4>
+<p>Puoi abilitare codice in base alle features:</p>
+<pre><code>// In Cargo.toml:
+// [features]
+// web = ["reqwest"]
+// database = ["rusqlite"]
+
+#[cfg(feature = "web")]
+fn fetch_data() {
+    // Codice per HTTP
+}
+
+#[cfg(feature = "database")]
+fn save_to_db() {
+    // Codice per DB
+}</code></pre>
+
+<h4>🔍 Comandi Cargo Utili</h4>
+<pre><code># Albero delle dipendenze
+cargo tree
+
+# Verifica vulnerabilità di sicurezza
+cargo audit
+
+# Pulisci cache di compilazione
+cargo clean
+
+# Genera documentazione
+cargo doc --open
+
+# Controlla codice senza compilare
+cargo check</code></pre>
+
+            </div>
+
+            <nav class="lesson-nav">
+                <a href="lesson-2-3.html">← Lezione Precedente</a>
+                <a href="lesson-3-1.html">Lezione Successiva →</a>
+            </nav>
+        </main>
+    </div>
+
+    
+    <footer>
+        <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
+        <p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | 
+           <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p>
+    </footer>
+    
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPage = window.location.pathname.split('/').pop();
+    const links = document.querySelectorAll('.sidebar a');
+    links.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+    });
+
+    const codeBlocks = document.querySelectorAll('.box-code');
+    codeBlocks.forEach(block => {
+        const button = block.querySelector('.copy-button');
+        if (button) {
+            button.addEventListener('click', () => {
+                const code = block.querySelector('code').textContent;
+                navigator.clipboard.writeText(code);
+                button.textContent = 'Copiato!';
+                setTimeout(() => {
+                    button.textContent = 'Copia';
+                }, 2000);
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

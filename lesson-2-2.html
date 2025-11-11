@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strutture di Controllo | Corso Rust Linux Desktop</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+header {
+    background: #2a2a2a;
+    padding: 1rem 2rem;
+    border-bottom: 3px solid #DE8E43;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rust-logo {
+    font-size: 2rem;
+    color: #DE8E43;
+}
+
+h1 {
+    font-size: 1.5rem;
+    color: #DE8E43;
+}
+
+.container {
+    display: flex;
+    margin-top: 70px;
+    min-height: calc(100vh - 70px);
+}
+
+.sidebar {
+    width: 280px;
+    background: #252525;
+    padding: 2rem 0;
+    position: fixed;
+    left: 0;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    border-right: 1px solid #3a3a3a;
+}
+
+.sidebar h3 {
+    color: #DE8E43;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li a {
+    display: block;
+    padding: 0.7rem 1.5rem 0.7rem 2.5rem;
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+}
+
+.sidebar li a:hover {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+}
+
+.sidebar li a.active {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+    font-weight: 600;
+}
+
+.content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem 3rem;
+    max-width: 1200px;
+}
+
+.breadcrumb {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.breadcrumb a {
+    color: #4A90E2;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.lesson-title {
+    font-size: 2.5rem;
+    color: #DE8E43;
+    margin-bottom: 1rem;
+}
+
+.box {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.box-theory {
+    background: #2a2a3e;
+    border-left-color: #4A90E2;
+}
+
+.box-steps {
+    background: #2a2a2a;
+    border-left-color: #DE8E43;
+}
+
+.box-code {
+    background: #1e1e1e;
+    border-left-color: #DE8E43;
+    position: relative;
+}
+
+.box-exercises {
+    background: #2d4a2e;
+    border-left-color: #5cb85c;
+}
+
+.box-troubleshooting {
+    background: #4a2d2e;
+    border-left-color: #d9534f;
+}
+
+.box h3 {
+    color: #DE8E43;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.box-theory h3 { color: #4A90E2; }
+.box-exercises h3 { color: #5cb85c; }
+.box-troubleshooting h3 { color: #d9534f; }
+
+code {
+    font-family: 'Fira Code', 'Courier New', monospace;
+    background: #2a2a2a;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: #DE8E43;
+}
+
+pre {
+    background: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: #e0e0e0;
+    display: block;
+}
+
+.copy-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #DE8E43;
+    color: #1a1a1a;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.copy-button:hover {
+    background: #f09d5a;
+}
+
+ol, ul {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+li {
+    margin: 0.5rem 0;
+}
+
+.lesson-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #3a3a3a;
+}
+
+.lesson-nav a {
+    background: #DE8E43;
+    color: #1a1a1a;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.lesson-nav a:hover {
+    background: #f09d5a;
+    transform: translateY(-2px);
+}
+
+.lesson-nav a.disabled {
+    background: #3a3a3a;
+    color: #666;
+    cursor: not-allowed;
+}
+
+footer {
+    background: #252525;
+    padding: 2rem;
+    text-align: center;
+    color: #888;
+    border-top: 1px solid #3a3a3a;
+    margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+}
+</style>
+</head>
+<body>
+    
+    <header>
+        <div class="header-content">
+            <div class="rust-logo">🦀</div>
+            <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
+        </div>
+    </header>
+    
+
+    <div class="container">
+        
+    <aside class="sidebar">
+        <h3>📚 Corso Rust Linux</h3>
+        <ul>
+            <li><a href="index.html">🏠 Home</a></li>
+        </ul>
+
+        <h3>1. Ambiente di Sviluppo</h3>
+        <ul>
+            <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
+            <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
+            <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
+        </ul>
+
+        <h3>2. Rust Base</h3>
+        <ul>
+            <li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li>
+            <li><a href="lesson-2-2.html">2.2 Strutture Controllo</a></li>
+            <li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li>
+            <li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li>
+        </ul>
+
+        <h3>3. Sviluppo GUI</h3>
+        <ul>
+            <li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li>
+            <li><a href="lesson-3-2.html">3.2 Glade Designer</a></li>
+            <li><a href="lesson-3-3.html">3.3 Sviluppo Manuale</a></li>
+            <li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li>
+            <li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li>
+        </ul>
+
+        <h3>4. Progetti Pratici</h3>
+        <ul>
+            <li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li>
+            <li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li>
+            <li><a href="lesson-4-3.html">4.3 Client HTTP</a></li>
+        </ul>
+
+        <h3>5. GitHub & Best Practices</h3>
+        <ul>
+            <li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li>
+            <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
+            <li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li>
+        </ul>
+
+        <h3>📖 Altro</h3>
+        <ul>
+            <li><a href="about.html">ℹ️ Info Corso</a></li>
+            <li><a href="projects.html">🎯 Progetti</a></li>
+            <li><a href="resources.html">🔗 Risorse</a></li>
+            <li><a href="faq.html">❓ FAQ</a></li>
+        </ul>
+    </aside>
+    
+
+        <main class="content">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> > Sezione 2: Rust Base > Strutture di Controllo
+            </nav>
+
+            <h2 class="lesson-title">Strutture di Controllo</h2>
+
+            <div class="box box-theory">
+                <h3>📘 Introduzione Teorica</h3>
+                
+<p>Le <strong>strutture di controllo</strong> determinano il flusso di esecuzione del programma. Rust offre costrutti familiari ma con alcune caratteristiche uniche:</p>
+<ul>
+    <li><strong>if/else</strong>: Condizioni che ritornano valori (è un'espressione, non solo uno statement)</li>
+    <li><strong>loop</strong>: Ciclo infinito che continua finché non incontri un <code>break</code></li>
+    <li><strong>while</strong>: Ciclo condizionale classico</li>
+    <li><strong>for</strong>: Itera su collezioni o range in modo sicuro</li>
+    <li><strong>match</strong>: Pattern matching potentissimo, simile a switch ma molto più espressivo</li>
+</ul>
+<p>In Rust, quasi tutto è un'espressione che ritorna un valore. Questo rende il codice più conciso ed elegante.</p>
+
+            </div>
+
+            <div class="box box-steps">
+                <h3>🔧 Procedura Passo-Passo</h3>
+                
+<ol>
+    <li><strong>If come espressione</strong>
+        <pre><code>let numero = 7;
+
+// if può ritornare un valore
+let messaggio = if numero > 5 {
+    "Grande"
+} else {
+    "Piccolo"
+};
+
+println!("{}", messaggio);  // Stampa "Grande"</code></pre>
+        <p>Nota: non serve <code>return</code>, l'ultima espressione viene ritornata automaticamente.</p>
+    </li>
+
+    <li><strong>Loop infinito con break</strong>
+        <pre><code>let mut contatore = 0;
+
+// loop ritorna un valore quando fai break
+let risultato = loop {
+    contatore += 1;
+
+    if contatore == 10 {
+        break contatore * 2;  // Ritorna 20
+    }
+};
+
+println!("Risultato: {}", risultato);</code></pre>
+    </li>
+
+    <li><strong>While condizionale</strong>
+        <pre><code>let mut numero = 5;
+
+while numero != 0 {
+    println!("{}!", numero);
+    numero -= 1;
+}
+
+println!("LIFT OFF!!!");</code></pre>
+    </li>
+
+    <li><strong>For loop su range e collezioni</strong>
+        <pre><code>// Range (0, 1, 2, 3, 4)
+for i in 0..5 {
+    println!("{}", i);
+}
+
+// Range inclusivo (1, 2, 3, 4, 5)
+for i in 1..=5 {
+    println!("{}", i);
+}
+
+// Iterare su un array
+let array = [10, 20, 30, 40, 50];
+for elemento in array.iter() {
+    println!("{}", elemento);
+}
+
+// Con indice ed elemento
+for (indice, valore) in array.iter().enumerate() {
+    println!("array[{}] = {}", indice, valore);
+}</code></pre>
+    </li>
+
+    <li><strong>Match: pattern matching potente</strong>
+        <pre><code>let numero = 42;
+
+match numero {
+    0 => println!("Zero"),
+    1 | 2 => println!("Uno o due"),  // Multipli pattern
+    3..=9 => println!("Da 3 a 9"),   // Range
+    n if n % 2 == 0 => println!("Pari: {}", n),  // Guard
+    _ => println!("Altro"),  // Default (obbligatorio!)
+}
+
+// Match con Option
+let valore: Option<i32> = Some(5);
+match valore {
+    Some(n) if n > 0 => println!("Positivo: {}", n),
+    Some(n) => println!("Non positivo: {}", n),
+    None => println!("Nessun valore"),
+}</code></pre>
+    </li>
+</ol>
+
+            </div>
+
+            <div class="box box-code">
+                <h3>💻 Codice Sorgente Commentato</h3>
+                <button class="copy-button">Copia</button>
+                
+<pre><code>// Esempi completi di strutture di controllo in Rust
+
+fn main() {
+    // ========================================
+    // 1. IF COME ESPRESSIONE
+    // ========================================
+    let numero = 21;
+
+    // If ritorna un valore
+    let categoria = if numero < 18 {
+        "Minorenne"
+    } else if numero < 65 {
+        "Adulto"
+    } else {
+        "Senior"
+    };
+    println!("Categoria: {}", categoria);
+
+    // ========================================
+    // 2. LOOP CON BREAK E CONTINUE
+    // ========================================
+    let mut contatore = 0;
+    let risultato = loop {
+        contatore += 1;
+
+        if contatore % 2 == 0 {
+            continue;  // Salta i numeri pari
+        }
+
+        if contatore > 10 {
+            break contatore;  // Esce e ritorna il valore
+        }
+
+        println!("Contatore: {}", contatore);
+    };
+    println!("Loop terminato con: {}", risultato);
+
+    // ========================================
+    // 3. WHILE CLASSICO
+    // ========================================
+    let mut numero = 3;
+    while numero != 0 {
+        println!("{}...", numero);
+        numero -= 1;
+    }
+    println!("GO!");
+
+    // ========================================
+    // 4. FOR SU RANGE E COLLEZIONI
+    // ========================================
+
+    // Range esclusivo
+    println!("
+Range 0..5:");
+    for i in 0..5 {
+        print!("{} ", i);
+    }
+
+    // Range inclusivo
+    println!("
+
+Range 1..=5:");
+    for i in 1..=5 {
+        print!("{} ", i);
+    }
+
+    // Iterare su vettore
+    let numeri = vec![10, 20, 30, 40, 50];
+    println!("
+
+Vettore:");
+    for num in &numeri {
+        print!("{} ", num);
+    }
+
+    // Con enumerate (indice + valore)
+    println!("
+
+Con indice:");
+    for (i, num) in numeri.iter().enumerate() {
+        println!("numeri[{}] = {}", i, num);
+    }
+
+    // ========================================
+    // 5. MATCH: PATTERN MATCHING
+    // ========================================
+
+    let numero = 42;
+
+    match numero {
+        0 => println!("È zero"),
+        1 | 2 | 3 => println!("Piccolo (1, 2 o 3)"),
+        4..=10 => println!("Medio (da 4 a 10)"),
+        n if n % 2 == 0 => println!("Pari: {}", n),
+        n if n % 2 != 0 => println!("Dispari: {}", n),
+        _ => println!("Altro valore"),
+    }
+
+    // Match con Option
+    let forse_numero: Option<i32> = Some(7);
+
+    let messaggio = match forse_numero {
+        Some(n) if n < 0 => "Negativo",
+        Some(n) if n == 0 => "Zero",
+        Some(n) if n > 0 => "Positivo",
+        None => "Nessun valore",
+        _ => "Impossibile",
+    };
+    println!("Il numero è: {}", messaggio);
+
+    // Match con Result
+    let risultato: Result<i32, &str> = Ok(10);
+
+    match risultato {
+        Ok(valore) => println!("Successo: {}", valore),
+        Err(errore) => println!("Errore: {}", errore),
+    }
+
+    // ========================================
+    // 6. ESEMPI PRATICI
+    // ========================================
+
+    // Calcolatrice semplice
+    println!("
+=== CALCOLATRICE ===");
+    let a = 10;
+    let b = 5;
+    let operazione = "+";
+
+    let risultato = match operazione {
+        "+" => a + b,
+        "-" => a - b,
+        "*" => a * b,
+        "/" => if b != 0 { a / b } else { 0 },
+        _ => {
+            println!("Operazione non valida");
+            0
+        }
+    };
+    println!("{} {} {} = {}", a, operazione, b, risultato);
+
+    // FizzBuzz con match
+    println!("
+=== FIZZBUZZ ===");
+    for num in 1..=15 {
+        let output = match (num % 3, num % 5) {
+            (0, 0) => "FizzBuzz".to_string(),
+            (0, _) => "Fizz".to_string(),
+            (_, 0) => "Buzz".to_string(),
+            _ => num.to_string(),
+        };
+        println!("{}", output);
+    }
+
+    // Validazione input
+    println!("
+=== VALIDAZIONE ===");
+    let eta = 25;
+
+    if eta < 0 {
+        println!("Età non valida");
+    } else if eta < 18 {
+        println!("Minorenne");
+    } else if eta >= 18 && eta < 65 {
+        println!("Adulto");
+    } else {
+        println!("Senior");
+    }
+}
+
+// ========================================
+// FUNZIONI HELPER
+// ========================================
+
+// Determina se un numero è primo
+fn is_primo(n: u32) -> bool {
+    if n <= 1 {
+        return false;
+    }
+
+    for i in 2..=(n as f64).sqrt() as u32 {
+        if n % i == 0 {
+            return false;
+        }
+    }
+
+    true
+}
+
+// Fibonacci con loop
+fn fibonacci(n: u32) -> u32 {
+    if n == 0 {
+        return 0;
+    }
+    if n == 1 {
+        return 1;
+    }
+
+    let mut a = 0;
+    let mut b = 1;
+    let mut contatore = 2;
+
+    loop {
+        let temp = a + b;
+        a = b;
+        b = temp;
+
+        if contatore == n {
+            break b;
+        }
+
+        contatore += 1;
+    }
+}
+</code></pre>
+
+            </div>
+
+            <div class="box box-exercises">
+                <h3>✏️ Esercizi Pratici</h3>
+                
+<ol>
+    <li><strong>Numero Primo</strong>
+        <p>Scrivi una funzione <code>fn is_primo(n: u32) -> bool</code> che determina se un numero è primo usando <code>for</code> e <code>if</code>. Testa con i numeri da 1 a 20.</p>
+    </li>
+
+    <li><strong>Calcolatrice Console</strong>
+        <p>Crea una funzione <code>fn calcola(a: i32, b: i32, op: &str) -> i32</code> che usa <code>match</code> per implementare le 4 operazioni base (+, -, *, /). Gestisci la divisione per zero.</p>
+    </li>
+
+    <li><strong>FizzBuzz Completo</strong>
+        <p>Implementa FizzBuzz per i numeri da 1 a 100 usando <code>match</code>. Regole:</p>
+        <ul>
+            <li>Multipli di 3: stampa "Fizz"</li>
+            <li>Multipli di 5: stampa "Buzz"</li>
+            <li>Multipli di entrambi: stampa "FizzBuzz"</li>
+            <li>Altri: stampa il numero</li>
+        </ul>
+    </li>
+
+    <li><strong>Loop Infinito Controllato</strong>
+        <p>Crea un ciclo infinito che stampa solo i primi 10 numeri dispari, poi esce con <code>break</code>. Usa <code>continue</code> per saltare i pari.</p>
+    </li>
+
+    <li><strong>Analisi Vettore</strong>
+        <p>Dato un vettore di numeri, scrivi un programma che:</p>
+        <ul>
+            <li>Conta quanti sono pari e quanti dispari</li>
+            <li>Trova il massimo e il minimo</li>
+            <li>Calcola la somma e la media</li>
+        </ul>
+        <p>Usa <code>for</code> per iterare e <code>match</code> o <code>if</code> per le condizioni.</p>
+    </li>
+
+    <li><strong>Challenge: Fibonacci</strong>
+        <p>Implementa una funzione che calcola l'n-esimo numero di Fibonacci usando:</p>
+        <ul>
+            <li>Versione con <code>loop</code></li>
+            <li>Versione con <code>while</code></li>
+            <li>Versione con <code>for</code></li>
+        </ul>
+        <p>Confronta le tre implementazioni.</p>
+    </li>
+</ol>
+
+            </div>
+
+            <div class="box box-troubleshooting">
+                <h3>⚠️ Troubleshooting</h3>
+                
+<h4>❌ Errore: "expected expression, found statement"</h4>
+<p><strong>Causa:</strong> Stai usando <code>;</code> dopo l'ultimo valore in un blocco if/match che dovrebbe ritornare un valore.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code>// SBAGLIATO:
+let x = if condizione {
+    5;  // Il ; lo rende uno statement invece che espressione
+} else {
+    10;
+};
+
+// CORRETTO:
+let x = if condizione {
+    5  // Nessun ; alla fine
+} else {
+    10
+};</code></pre>
+
+<h4>❌ Errore: "pattern is not exhaustive"</h4>
+<p><strong>Causa:</strong> Il <code>match</code> non copre tutti i casi possibili.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code>// SBAGLIATO:
+let numero = 5;
+match numero {
+    1 => println!("Uno"),
+    2 => println!("Due"),
+    // Mancano tutti gli altri numeri!
+}
+
+// CORRETTO: Aggiungi _ per il caso default
+match numero {
+    1 => println!("Uno"),
+    2 => println!("Due"),
+    _ => println!("Altro numero"),
+}</code></pre>
+
+<h4>❌ Errore: "if and else have incompatible types"</h4>
+<p><strong>Causa:</strong> I rami dell'if ritornano tipi diversi.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code>// SBAGLIATO:
+let x = if condizione {
+    5      // i32
+} else {
+    "cinque"  // &str - TIPO DIVERSO!
+};
+
+// CORRETTO: Stesso tipo in tutti i rami
+let x = if condizione {
+    5
+} else {
+    10  // Entrambi i32
+};</code></pre>
+
+<h4>💡 Tip: Loop vs While vs For</h4>
+<p>Quando usare quale?</p>
+<ul>
+    <li><strong>loop</strong>: Quando serve un ciclo infinito o vuoi ritornare un valore dal loop</li>
+    <li><strong>while</strong>: Quando hai una condizione chiara da verificare ad ogni iterazione</li>
+    <li><strong>for</strong>: Quando iteri su una collezione o un range (più sicuro e idiomatico)</li>
+</ul>
+
+<h4>💡 Tip: Match vs If/Else</h4>
+<p>Preferisci <code>match</code> quando:</p>
+<ul>
+    <li>Hai molte condizioni discrete da gestire</li>
+    <li>Lavori con enum o Option/Result</li>
+    <li>Vuoi pattern matching (range, guard, destructuring)</li>
+</ul>
+<p>Usa <code>if/else</code> per condizioni booleane semplici.</p>
+
+<h4>🔍 Debug: Stampa durante i loop</h4>
+<p>Per capire cosa succede nei loop, aggiungi print strategici:</p>
+<pre><code>for i in 0..10 {
+    println!("Iterazione {}: valore = {}", i, qualche_valore);
+    // ... resto del codice
+}</code></pre>
+
+            </div>
+
+            <nav class="lesson-nav">
+                <a href="lesson-2-1.html">← Lezione Precedente</a>
+                <a href="lesson-2-3.html">Lezione Successiva →</a>
+            </nav>
+        </main>
+    </div>
+
+    
+    <footer>
+        <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
+        <p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | 
+           <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p>
+    </footer>
+    
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPage = window.location.pathname.split('/').pop();
+    const links = document.querySelectorAll('.sidebar a');
+    links.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+    });
+
+    const codeBlocks = document.querySelectorAll('.box-code');
+    codeBlocks.forEach(block => {
+        const button = block.querySelector('.copy-button');
+        if (button) {
+            button.addEventListener('click', () => {
+                const code = block.querySelector('code').textContent;
+                navigator.clipboard.writeText(code);
+                button.textContent = 'Copiato!';
+                setTimeout(() => {
+                    button.textContent = 'Copia';
+                }, 2000);
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

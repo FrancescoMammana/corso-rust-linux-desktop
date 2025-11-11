@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurazione Visual Studio Code | Corso Rust Linux Desktop</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+header {
+    background: #2a2a2a;
+    padding: 1rem 2rem;
+    border-bottom: 3px solid #DE8E43;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rust-logo {
+    font-size: 2rem;
+    color: #DE8E43;
+}
+
+h1 {
+    font-size: 1.5rem;
+    color: #DE8E43;
+}
+
+.container {
+    display: flex;
+    margin-top: 70px;
+    min-height: calc(100vh - 70px);
+}
+
+.sidebar {
+    width: 280px;
+    background: #252525;
+    padding: 2rem 0;
+    position: fixed;
+    left: 0;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    border-right: 1px solid #3a3a3a;
+}
+
+.sidebar h3 {
+    color: #DE8E43;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li a {
+    display: block;
+    padding: 0.7rem 1.5rem 0.7rem 2.5rem;
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+}
+
+.sidebar li a:hover {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+}
+
+.sidebar li a.active {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+    font-weight: 600;
+}
+
+.content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem 3rem;
+    max-width: 1200px;
+}
+
+.breadcrumb {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.breadcrumb a {
+    color: #4A90E2;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.lesson-title {
+    font-size: 2.5rem;
+    color: #DE8E43;
+    margin-bottom: 1rem;
+}
+
+.box {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.box-theory {
+    background: #2a2a3e;
+    border-left-color: #4A90E2;
+}
+
+.box-steps {
+    background: #2a2a2a;
+    border-left-color: #DE8E43;
+}
+
+.box-code {
+    background: #1e1e1e;
+    border-left-color: #DE8E43;
+    position: relative;
+}
+
+.box-exercises {
+    background: #2d4a2e;
+    border-left-color: #5cb85c;
+}
+
+.box-troubleshooting {
+    background: #4a2d2e;
+    border-left-color: #d9534f;
+}
+
+.box h3 {
+    color: #DE8E43;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.box-theory h3 { color: #4A90E2; }
+.box-exercises h3 { color: #5cb85c; }
+.box-troubleshooting h3 { color: #d9534f; }
+
+code {
+    font-family: 'Fira Code', 'Courier New', monospace;
+    background: #2a2a2a;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: #DE8E43;
+}
+
+pre {
+    background: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: #e0e0e0;
+    display: block;
+}
+
+.copy-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #DE8E43;
+    color: #1a1a1a;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.copy-button:hover {
+    background: #f09d5a;
+}
+
+ol, ul {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+li {
+    margin: 0.5rem 0;
+}
+
+.lesson-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #3a3a3a;
+}
+
+.lesson-nav a {
+    background: #DE8E43;
+    color: #1a1a1a;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.lesson-nav a:hover {
+    background: #f09d5a;
+    transform: translateY(-2px);
+}
+
+.lesson-nav a.disabled {
+    background: #3a3a3a;
+    color: #666;
+    cursor: not-allowed;
+}
+
+footer {
+    background: #252525;
+    padding: 2rem;
+    text-align: center;
+    color: #888;
+    border-top: 1px solid #3a3a3a;
+    margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+}
+</style>
+</head>
+<body>
+    
+    <header>
+        <div class="header-content">
+            <div class="rust-logo">🦀</div>
+            <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
+        </div>
+    </header>
+    
+
+    <div class="container">
+        
+    <aside class="sidebar">
+        <h3>📚 Corso Rust Linux</h3>
+        <ul>
+            <li><a href="index.html">🏠 Home</a></li>
+        </ul>
+
+        <h3>1. Ambiente di Sviluppo</h3>
+        <ul>
+            <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
+            <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
+            <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
+        </ul>
+
+        <h3>2. Rust Base</h3>
+        <ul>
+            <li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li>
+            <li><a href="lesson-2-2.html">2.2 Strutture Controllo</a></li>
+            <li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li>
+            <li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li>
+        </ul>
+
+        <h3>3. Sviluppo GUI</h3>
+        <ul>
+            <li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li>
+            <li><a href="lesson-3-2.html">3.2 Glade Designer</a></li>
+            <li><a href="lesson-3-3.html">3.3 Sviluppo Manuale</a></li>
+            <li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li>
+            <li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li>
+        </ul>
+
+        <h3>4. Progetti Pratici</h3>
+        <ul>
+            <li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li>
+            <li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li>
+            <li><a href="lesson-4-3.html">4.3 Client HTTP</a></li>
+        </ul>
+
+        <h3>5. GitHub & Best Practices</h3>
+        <ul>
+            <li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li>
+            <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
+            <li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li>
+        </ul>
+
+        <h3>📖 Altro</h3>
+        <ul>
+            <li><a href="about.html">ℹ️ Info Corso</a></li>
+            <li><a href="projects.html">🎯 Progetti</a></li>
+            <li><a href="resources.html">🔗 Risorse</a></li>
+            <li><a href="faq.html">❓ FAQ</a></li>
+        </ul>
+    </aside>
+    
+
+        <main class="content">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> > Sezione 1: Ambiente di Sviluppo > Configurazione Visual Studio Code
+            </nav>
+
+            <h2 class="lesson-title">Configurazione Visual Studio Code</h2>
+
+            <div class="box box-theory">
+                <h3>📘 Introduzione Teorica</h3>
+                
+<p><strong>Visual Studio Code</strong> è uno degli editor più popolari per lo sviluppo Rust grazie alla sua flessibilità e al supporto eccellente tramite estensioni. L'estensione <code>rust-analyzer</code> fornisce:</p>
+<ul>
+    <li><strong>IntelliSense avanzato</strong>: Autocompletamento intelligente del codice</li>
+    <li><strong>Error checking in tempo reale</strong>: Evidenzia errori mentre scrivi</li>
+    <li><strong>Code navigation</strong>: Vai alla definizione, trova riferimenti</li>
+    <li><strong>Refactoring</strong>: Rinomina simboli, estrai funzioni</li>
+    <li><strong>Inline documentation</strong>: Visualizza la documentazione al passaggio del mouse</li>
+</ul>
+<p>Configureremo anche il debugging per poter eseguire step-by-step il codice Rust direttamente da VS Code.</p>
+
+            </div>
+
+            <div class="box box-steps">
+                <h3>🔧 Procedura Passo-Passo</h3>
+                
+<ol>
+    <li><strong>Installa Visual Studio Code su Debian</strong>
+        <pre><code># Scarica il pacchetto .deb
+wget -O code.deb 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64'
+
+# Installa
+sudo apt install ./code.deb
+
+# Verifica installazione
+code --version</code></pre>
+    </li>
+
+    <li><strong>Avvia VS Code e installa rust-analyzer</strong>
+        <p>Apri VS Code e vai su Extensions (Ctrl+Shift+X). Cerca "rust-analyzer" e clicca Install. Questa è l'estensione ufficiale del team Rust.</p>
+    </li>
+
+    <li><strong>Installa CodeLLDB per il debugging</strong>
+        <p>Sempre nella sezione Extensions, cerca "CodeLLDB" e installalo. Questo permette di fare debugging di codice Rust.</p>
+    </li>
+
+    <li><strong>Installa Better TOML</strong>
+        <p>Cerca "Better TOML" per avere syntax highlighting e validazione dei file Cargo.toml.</p>
+    </li>
+
+    <li><strong>Apri un progetto Rust</strong>
+        <p>File > Open Folder... e seleziona la directory del tuo progetto Rust creato nella lezione precedente.</p>
+    </li>
+</ol>
+
+            </div>
+
+            <div class="box box-code">
+                <h3>💻 Codice Sorgente Commentato</h3>
+                <button class="copy-button">Copia</button>
+                
+<pre><code>// File: .vscode/settings.json
+// Configurazione ottimale per progetti Rust
+{
+    // Rust Analyzer
+    "rust-analyzer.check.command": "clippy",
+    "rust-analyzer.cargo.allFeatures": true,
+    "rust-analyzer.inlayHints.enable": true,
+
+    // Formattazione automatica al salvataggio
+    "[rust]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "rust-lang.rust-analyzer"
+    },
+
+    // Editor
+    "editor.rulers": [100],
+    "editor.renderWhitespace": "boundary",
+    "files.trimTrailingWhitespace": true
+}
+
+// File: .vscode/launch.json
+// Configurazione debugging
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=${workspaceFolderBasename}",
+                    "--package=${workspaceFolderBasename}"
+                ],
+                "filter": {
+                    "name": "${workspaceFolderBasename}",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
+</code></pre>
+
+            </div>
+
+            <div class="box box-exercises">
+                <h3>✏️ Esercizi Pratici</h3>
+                
+<ol>
+    <li><strong>Configura VS Code</strong>
+        <p>Crea la cartella <code>.vscode</code> nel tuo progetto e aggiungi i file <code>settings.json</code> e <code>launch.json</code> con le configurazioni mostrate sopra.</p>
+    </li>
+
+    <li><strong>Testa l'autocompletamento</strong>
+        <p>Apri <code>main.rs</code> e inizia a scrivere <code>std::</code>. Dovresti vedere suggerimenti automatici. Prova a navigare alla definizione di <code>println!</code> con Ctrl+Click.</p>
+    </li>
+
+    <li><strong>Usa il debugging</strong>
+        <p>Imposta un breakpoint cliccando a sinistra del numero di riga in <code>main.rs</code>. Premi F5 per avviare il debug. Il programma si fermerà al breakpoint.</p>
+    </li>
+
+    <li><strong>Testa clippy</strong>
+        <p>Scrivi del codice con warning (es. variabile non usata). Dovresti vedere suggerimenti di clippy inline.</p>
+    </li>
+
+    <li><strong>Formattazione automatica</strong>
+        <p>Scrivi codice mal formattato, salva il file (Ctrl+S) e osserva la formattazione automatica.</p>
+    </li>
+</ol>
+
+            </div>
+
+            <div class="box box-troubleshooting">
+                <h3>⚠️ Troubleshooting</h3>
+                
+<h4>Problema: rust-analyzer non funziona</h4>
+<p><strong>Soluzione:</strong> Verifica che rust-analyzer possa trovare Rust:</p>
+<pre><code># Apri Output panel in VS Code (Ctrl+Shift+U)
+# Seleziona "Rust Analyzer Language Server" dal dropdown
+# Controlla eventuali errori
+
+# Assicurati che rustc sia nel PATH:
+which rustc
+# Se non trovato, esegui:
+source $HOME/.cargo/env</code></pre>
+
+<h4>Problema: Debugger non si avvia</h4>
+<p><strong>Soluzione:</strong> Installa lldb:</p>
+<pre><code>sudo apt install lldb -y</code></pre>
+<p>Poi riavvia VS Code.</p>
+
+<h4>Problema: "cargo check" troppo lento</h4>
+<p><strong>Spiegazione:</strong> Il primo check è lento perché compila tutte le dipendenze. Modifica la configurazione per usare <code>cargo check</code> invece di <code>cargo build</code>:</p>
+<pre><code>"rust-analyzer.check.command": "check"</code></pre>
+
+<h4>Problema: IntelliSense non mostra suggerimenti</h4>
+<p><strong>Soluzione:</strong> Attendi che rust-analyzer termini l'indicizzazione (vedi barra di stato in basso). Nei progetti grandi può richiedere qualche minuto la prima volta.</p>
+
+            </div>
+
+            <nav class="lesson-nav">
+                <a href="lesson-1-1.html">← Lezione Precedente</a>
+                <a href="lesson-1-3.html">Lezione Successiva →</a>
+            </nav>
+        </main>
+    </div>
+
+    
+    <footer>
+        <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
+        <p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | 
+           <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p>
+    </footer>
+    
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Highlight active page in sidebar
+    const currentPage = window.location.pathname.split('/').pop();
+    const links = document.querySelectorAll('.sidebar a');
+    links.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+    });
+
+    // Copy code functionality
+    const codeBlocks = document.querySelectorAll('.box-code');
+    codeBlocks.forEach(block => {
+        const button = block.querySelector('.copy-button');
+        if (button) {
+            button.addEventListener('click', () => {
+                const code = block.querySelector('code').textContent;
+                navigator.clipboard.writeText(code);
+                button.textContent = 'Copiato!';
+                setTimeout(() => {
+                    button.textContent = 'Copia';
+                }, 2000);
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

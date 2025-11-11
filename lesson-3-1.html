@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduzione a GTK-rs | Corso Rust Linux Desktop</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #1a1a1a;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+header {
+    background: #2a2a2a;
+    padding: 1rem 2rem;
+    border-bottom: 3px solid #DE8E43;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rust-logo {
+    font-size: 2rem;
+    color: #DE8E43;
+}
+
+h1 {
+    font-size: 1.5rem;
+    color: #DE8E43;
+}
+
+.container {
+    display: flex;
+    margin-top: 70px;
+    min-height: calc(100vh - 70px);
+}
+
+.sidebar {
+    width: 280px;
+    background: #252525;
+    padding: 2rem 0;
+    position: fixed;
+    left: 0;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    border-right: 1px solid #3a3a3a;
+}
+
+.sidebar h3 {
+    color: #DE8E43;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li a {
+    display: block;
+    padding: 0.7rem 1.5rem 0.7rem 2.5rem;
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+}
+
+.sidebar li a:hover {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+}
+
+.sidebar li a.active {
+    background: #2f2f2f;
+    color: #DE8E43;
+    border-left: 3px solid #DE8E43;
+    font-weight: 600;
+}
+
+.content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 2rem 3rem;
+    max-width: 1200px;
+}
+
+.breadcrumb {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.breadcrumb a {
+    color: #4A90E2;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.lesson-title {
+    font-size: 2.5rem;
+    color: #DE8E43;
+    margin-bottom: 1rem;
+}
+
+.box {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.box-theory {
+    background: #2a2a3e;
+    border-left-color: #4A90E2;
+}
+
+.box-steps {
+    background: #2a2a2a;
+    border-left-color: #DE8E43;
+}
+
+.box-code {
+    background: #1e1e1e;
+    border-left-color: #DE8E43;
+    position: relative;
+}
+
+.box-exercises {
+    background: #2d4a2e;
+    border-left-color: #5cb85c;
+}
+
+.box-troubleshooting {
+    background: #4a2d2e;
+    border-left-color: #d9534f;
+}
+
+.box h3 {
+    color: #DE8E43;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.box-theory h3 { color: #4A90E2; }
+.box-exercises h3 { color: #5cb85c; }
+.box-troubleshooting h3 { color: #d9534f; }
+
+code {
+    font-family: 'Fira Code', 'Courier New', monospace;
+    background: #2a2a2a;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: #DE8E43;
+}
+
+pre {
+    background: #1e1e1e;
+    padding: 1.5rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: #e0e0e0;
+    display: block;
+}
+
+.copy-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #DE8E43;
+    color: #1a1a1a;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.copy-button:hover {
+    background: #f09d5a;
+}
+
+ol, ul {
+    margin-left: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+li {
+    margin: 0.5rem 0;
+}
+
+.lesson-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #3a3a3a;
+}
+
+.lesson-nav a {
+    background: #DE8E43;
+    color: #1a1a1a;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.lesson-nav a:hover {
+    background: #f09d5a;
+    transform: translateY(-2px);
+}
+
+.lesson-nav a.disabled {
+    background: #3a3a3a;
+    color: #666;
+    cursor: not-allowed;
+}
+
+footer {
+    background: #252525;
+    padding: 2rem;
+    text-align: center;
+    color: #888;
+    border-top: 1px solid #3a3a3a;
+    margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+}
+</style>
+</head>
+<body>
+    
+    <header>
+        <div class="header-content">
+            <div class="rust-logo">🦀</div>
+            <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
+        </div>
+    </header>
+    
+
+    <div class="container">
+        
+    <aside class="sidebar">
+        <h3>📚 Corso Rust Linux</h3>
+        <ul>
+            <li><a href="index.html">🏠 Home</a></li>
+        </ul>
+
+        <h3>1. Ambiente di Sviluppo</h3>
+        <ul>
+            <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
+            <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
+            <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
+        </ul>
+
+        <h3>2. Rust Base</h3>
+        <ul>
+            <li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li>
+            <li><a href="lesson-2-2.html">2.2 Strutture Controllo</a></li>
+            <li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li>
+            <li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li>
+        </ul>
+
+        <h3>3. Sviluppo GUI</h3>
+        <ul>
+            <li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li>
+            <li><a href="lesson-3-2.html">3.2 Glade Designer</a></li>
+            <li><a href="lesson-3-3.html">3.3 Sviluppo Manuale</a></li>
+            <li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li>
+            <li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li>
+        </ul>
+
+        <h3>4. Progetti Pratici</h3>
+        <ul>
+            <li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li>
+            <li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li>
+            <li><a href="lesson-4-3.html">4.3 Client HTTP</a></li>
+        </ul>
+
+        <h3>5. GitHub & Best Practices</h3>
+        <ul>
+            <li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li>
+            <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
+            <li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li>
+        </ul>
+
+        <h3>📖 Altro</h3>
+        <ul>
+            <li><a href="about.html">ℹ️ Info Corso</a></li>
+            <li><a href="projects.html">🎯 Progetti</a></li>
+            <li><a href="resources.html">🔗 Risorse</a></li>
+            <li><a href="faq.html">❓ FAQ</a></li>
+        </ul>
+    </aside>
+    
+
+        <main class="content">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> > Sezione 3: Sviluppo GUI > Introduzione a GTK-rs
+            </nav>
+
+            <h2 class="lesson-title">Introduzione a GTK-rs</h2>
+
+            <div class="box box-theory">
+                <h3>📘 Introduzione Teorica</h3>
+                
+<p><strong>GTK (GIMP Toolkit)</strong> è uno dei framework GUI più popolari per Linux, utilizzato da GNOME e molte applicazioni professionali. <strong>GTK-rs</strong> fornisce bindings Rust sicuri e idiomatici per GTK.</p>
+<ul>
+    <li><strong>Cross-platform</strong>: Funziona su Linux, Windows e macOS</li>
+    <li><strong>Widget ricchi</strong>: Bottoni, entry, label, menu, toolbar, dialog e molto altro</li>
+    <li><strong>Architettura event-driven</strong>: Basata su signals e callbacks</li>
+    <li><strong>Themes</strong>: Si integra perfettamente con il tema del sistema</li>
+    <li><strong>Glade support</strong>: Crea UI visualmente o via codice</li>
+</ul>
+<p>GTK-rs sfrutta il sistema di ownership di Rust per garantire sicurezza nella gestione dei widget e degli eventi, prevenendo memory leaks e data races.</p>
+
+            </div>
+
+            <div class="box box-steps">
+                <h3>🔧 Procedura Passo-Passo</h3>
+                
+<ol>
+    <li><strong>Installazione dipendenze GTK su Debian</strong>
+        <pre><code># Installa librerie GTK di sviluppo
+sudo apt install libgtk-3-dev libglib2.0-dev pkg-config -y
+
+# Verifica installazione
+pkg-config --modversion gtk+-3.0</code></pre>
+    </li>
+
+    <li><strong>Configura Cargo.toml</strong>
+        <pre><code>[package]
+name = "hello_gtk"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gtk = { version = "0.18", features = ["v3_24"] }
+glib = "0.18"</code></pre>
+    </li>
+
+    <li><strong>Primo programma GTK: Hello World</strong>
+        <pre><code>use gtk::prelude::*;
+use gtk::{Application, ApplicationWindow};
+
+fn main() {
+    let app = Application::builder()
+        .application_id("com.example.HelloGTK")
+        .build();
+
+    app.connect_activate(|app| {
+        let window = ApplicationWindow::builder()
+            .application(app)
+            .title("Hello GTK")
+            .default_width(350)
+            .default_height(200)
+            .build();
+
+        window.show_all();
+    });
+
+    app.run();
+}</code></pre>
+    </li>
+
+    <li><strong>Compila ed esegui</strong>
+        <pre><code>cargo build
+cargo run</code></pre>
+        <p>Si aprirà una finestra vuota con titolo "Hello GTK".</p>
+    </li>
+
+    <li><strong>Aggiungere un widget (Button)</strong>
+        <pre><code>use gtk::{Button, ApplicationWindow};
+
+app.connect_activate(|app| {
+    let window = ApplicationWindow::builder()
+        .application(app)
+        .title("Button Example")
+        .default_width(350)
+        .default_height(200)
+        .build();
+
+    let button = Button::with_label("Click me!");
+    button.connect_clicked(|_| {
+        println!("Button clicked!");
+    });
+
+    window.add(&button);
+    window.show_all();
+});</code></pre>
+    </li>
+</ol>
+
+            </div>
+
+            <div class="box box-code">
+                <h3>💻 Codice Sorgente Commentato</h3>
+                <button class="copy-button">Copia</button>
+                
+<pre><code>// ========================================
+// ESEMPIO COMPLETO: Hello World GTK
+// ========================================
+
+use gtk::prelude::*;
+use gtk::{Application, ApplicationWindow, Button, Box, Orientation, Label};
+use glib::clone;
+
+fn main() {
+    // Crea l'applicazione con un ID univoco
+    let app = Application::builder()
+        .application_id("com.example.FirstGTK")
+        .build();
+
+    // Collega il callback per quando l'app si attiva
+    app.connect_activate(build_ui);
+
+    // Avvia l'applicazione
+    app.run();
+}
+
+fn build_ui(app: &Application) {
+    // ========================================
+    // 1. CREARE LA FINESTRA
+    // ========================================
+    let window = ApplicationWindow::builder()
+        .application(app)
+        .title("Prima Applicazione GTK")
+        .default_width(400)
+        .default_height(300)
+        .border_width(10)
+        .build();
+
+    // ========================================
+    // 2. CONTAINER VERTICALE (Box)
+    // ========================================
+    let vbox = Box::new(Orientation::Vertical, 10);
+
+    // ========================================
+    // 3. LABEL (Etichetta)
+    // ========================================
+    let label = Label::new(Some("Benvenuto in GTK-rs!"));
+    label.set_markup("<big><b>Benvenuto in GTK-rs!</b></big>");
+    vbox.pack_start(&label, false, false, 0);
+
+    // ========================================
+    // 4. BUTTON CON CALLBACK
+    // ========================================
+    let button = Button::with_label("Cliccami!");
+
+    // Variabile condivisa per contare i click
+    let counter = std::rc::Rc::new(std::cell::Cell::new(0));
+
+    // Clone per usare nel callback
+    let label_clone = label.clone();
+    let counter_clone = counter.clone();
+
+    button.connect_clicked(move |_| {
+        // Incrementa contatore
+        let count = counter_clone.get() + 1;
+        counter_clone.set(count);
+
+        // Aggiorna label
+        label_clone.set_markup(&format!(
+            "<big><b>Hai cliccato {} volte!</b></big>", 
+            count
+        ));
+
+        println!("Button cliccato {} volte", count);
+    });
+
+    vbox.pack_start(&button, false, false, 0);
+
+    // ========================================
+    // 5. BUTTON PER RESET
+    // ========================================
+    let reset_button = Button::with_label("Reset");
+
+    reset_button.connect_clicked(clone!(@weak label, @strong counter => move |_| {
+        counter.set(0);
+        label.set_markup("<big><b>Benvenuto in GTK-rs!</b></big>");
+        println!("Counter resettato");
+    }));
+
+    vbox.pack_start(&reset_button, false, false, 0);
+
+    // ========================================
+    // 6. BUTTON PER CHIUDERE
+    // ========================================
+    let quit_button = Button::with_label("Esci");
+
+    quit_button.connect_clicked(clone!(@weak window => move |_| {
+        window.close();
+    }));
+
+    vbox.pack_start(&quit_button, true, true, 0);
+
+    // ========================================
+    // 7. AGGIUNGI TUTTO ALLA FINESTRA
+    // ========================================
+    window.add(&vbox);
+
+    // Mostra tutti i widget
+    window.show_all();
+}
+
+// ========================================
+// ESEMPIO 2: Finestra con Menu
+// ========================================
+use gtk::{Menu, MenuItem, MenuBar};
+
+fn build_ui_con_menu(app: &Application) {
+    let window = ApplicationWindow::builder()
+        .application(app)
+        .title("App con Menu")
+        .default_width(600)
+        .default_height(400)
+        .build();
+
+    let vbox = Box::new(Orientation::Vertical, 0);
+
+    // ========================================
+    // MENU BAR
+    // ========================================
+    let menubar = MenuBar::new();
+
+    // Menu File
+    let file_menu = Menu::new();
+    let file_item = MenuItem::with_label("File");
+    file_item.set_submenu(Some(&file_menu));
+
+    let new_item = MenuItem::with_label("Nuovo");
+    new_item.connect_activate(|_| {
+        println!("Nuovo selezionato");
+    });
+    file_menu.append(&new_item);
+
+    let quit_item = MenuItem::with_label("Esci");
+    quit_item.connect_activate(clone!(@weak window => move |_| {
+        window.close();
+    }));
+    file_menu.append(&quit_item);
+
+    menubar.append(&file_item);
+
+    // Menu Help
+    let help_menu = Menu::new();
+    let help_item = MenuItem::with_label("?");
+    help_item.set_submenu(Some(&help_menu));
+
+    let about_item = MenuItem::with_label("Info");
+    about_item.connect_activate(|_| {
+        println!("Versione 1.0.0");
+    });
+    help_menu.append(&about_item);
+
+    menubar.append(&help_item);
+
+    vbox.pack_start(&menubar, false, false, 0);
+
+    // Area centrale
+    let label = Label::new(Some("Area contenuto principale"));
+    vbox.pack_start(&label, true, true, 10);
+
+    window.add(&vbox);
+    window.show_all();
+}
+
+// ========================================
+// ESEMPIO 3: Gestione eventi finestra
+// ========================================
+fn build_ui_eventi(app: &Application) {
+    let window = ApplicationWindow::builder()
+        .application(app)
+        .title("Eventi Finestra")
+        .default_width(400)
+        .default_height(300)
+        .build();
+
+    // Evento: finestra in primo piano
+    window.connect_focus_in_event(|_, _| {
+        println!("Finestra ha ricevuto il focus");
+        Inhibit(false)
+    });
+
+    // Evento: finestra perde focus
+    window.connect_focus_out_event(|_, _| {
+        println!("Finestra ha perso il focus");
+        Inhibit(false)
+    });
+
+    // Evento: finestra viene chiusa
+    window.connect_delete_event(|_, _| {
+        println!("Finestra sta per chiudersi");
+        Inhibit(false)  // false = permetti chiusura
+    });
+
+    let label = Label::new(Some("Osserva la console per gli eventi"));
+    window.add(&label);
+    window.show_all();
+}
+</code></pre>
+
+            </div>
+
+            <div class="box box-exercises">
+                <h3>✏️ Esercizi Pratici</h3>
+                
+<ol>
+    <li><strong>Finestra Vuota</strong>
+        <p>Crea una finestra GTK con titolo "Mia Prima App", dimensioni 500x400 e bordo di 20px. Non aggiungere widget.</p>
+    </li>
+
+    <li><strong>Button con Messaggio</strong>
+        <p>Aggiungi un bottone che quando cliccato stampa "Hello from GTK!" nella console. Usa <code>connect_clicked</code>.</p>
+    </li>
+
+    <li><strong>Counter App</strong>
+        <p>Crea un'app con:</p>
+        <ul>
+            <li>Label che mostra un numero (inizialmente 0)</li>
+            <li>Button "+" che incrementa</li>
+            <li>Button "-" che decrementa</li>
+            <li>Button "Reset" che riporta a 0</li>
+        </ul>
+    </li>
+
+    <li><strong>Layout con Box</strong>
+        <p>Usa <code>Box</code> verticale per organizzare 4 bottoni uno sotto l'altro. Ogni bottone stampa il proprio numero quando cliccato.</p>
+    </li>
+
+    <li><strong>Finestra Dinamica</strong>
+        <p>Crea un'app dove un bottone cambia il titolo della finestra ogni volta che viene cliccato (es: "Click 1", "Click 2", ecc.).</p>
+    </li>
+
+    <li><strong>Challenge: Calcolatrice Semplice</strong>
+        <p>Crea un'interfaccia con:</p>
+        <ul>
+            <li>Label per mostrare il risultato</li>
+            <li>Bottoni per numeri 0-9</li>
+            <li>Bottoni per operazioni +, -, =, C (clear)</li>
+        </ul>
+        <p>Implementa la logica base per somme e sottrazioni.</p>
+    </li>
+</ol>
+
+            </div>
+
+            <div class="box box-troubleshooting">
+                <h3>⚠️ Troubleshooting</h3>
+                
+<h4>❌ Errore: "failed to run custom build command for gtk"</h4>
+<p><strong>Causa:</strong> Librerie GTK di sviluppo non installate.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code>sudo apt install libgtk-3-dev libglib2.0-dev pkg-config -y
+
+# Verifica
+pkg-config --modversion gtk+-3.0</code></pre>
+
+<h4>❌ Errore: "could not find native pkg-config"</h4>
+<p><strong>Causa:</strong> pkg-config non installato.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code>sudo apt install pkg-config -y</code></pre>
+
+<h4>❌ Errore: "Couldn't find any package by regex 'gtk+-3.0'"</h4>
+<p><strong>Causa:</strong> Versione GTK non trovata.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code># Installa tutte le dipendenze necessarie
+sudo apt install build-essential libgtk-3-dev libglib2.0-dev \
+    libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev \
+    libatk1.0-dev pkg-config -y</code></pre>
+
+<h4>❌ Errore: "borrow of moved value"</h4>
+<p><strong>Causa:</strong> Stai cercando di usare un widget dopo averlo "mosso" nel callback.</p>
+<p><strong>Soluzione:</strong> Usa <code>clone!</code> macro o <code>Rc</code>:</p>
+<pre><code>// SBAGLIATO:
+let button = Button::new();
+button.connect_clicked(move |_| {
+    // button è stato mosso qui
+});
+// button non è più accessibile
+
+// CORRETTO:
+use glib::clone;
+let button = Button::new();
+button.connect_clicked(clone!(@weak button => move |_| {
+    // Ora possiamo usare button
+}));</code></pre>
+
+<h4>⚠️ Compilazione GTK Molto Lenta</h4>
+<p><strong>Spiegazione:</strong> La prima compilazione di GTK-rs richiede 5-10 minuti perché compila tutte le dipendenze C.</p>
+<p><strong>Soluzione:</strong></p>
+<ul>
+    <li>Le compilazioni successive saranno molto più veloci (incrementali)</li>
+    <li>Usa <code>cargo check</code> durante lo sviluppo invece di <code>cargo build</code></li>
+    <li>Considera di usare <code>sccache</code> per cache condivisa</li>
+</ul>
+
+<h4>💡 Tip: Debug Widget</h4>
+<p>Per capire la struttura dei widget:</p>
+<pre><code>// Stampa la gerarchia dei widget
+use gtk::prelude::*;
+window.foreach(|widget| {
+    println!("Widget: {:?}", widget);
+});</code></pre>
+
+<h4>💡 Tip: Hot Reload</h4>
+<p>Per sviluppo più veloce, usa <code>cargo watch</code>:</p>
+<pre><code># Installa
+cargo install cargo-watch
+
+# Ricompila automaticamente al salvataggio
+cargo watch -x run</code></pre>
+
+<h4>🔍 Risorse Utili</h4>
+<ul>
+    <li><a href="https://gtk-rs.org" style="color: #DE8E43;">GTK-rs Official Site</a></li>
+    <li><a href="https://gtk-rs.org/gtk4-rs/stable/latest/book/" style="color: #DE8E43;">GTK-rs Book</a></li>
+    <li><a href="https://docs.rs/gtk/latest/gtk/" style="color: #DE8E43;">GTK-rs API Docs</a></li>
+    <li><a href="https://developer.gnome.org/gtk3/" style="color: #DE8E43;">GTK C Documentation</a></li>
+</ul>
+
+            </div>
+
+            <nav class="lesson-nav">
+                <a href="lesson-2-4.html">← Lezione Precedente</a>
+                <a href="lesson-3-2.html">Lezione Successiva →</a>
+            </nav>
+        </main>
+    </div>
+
+    
+    <footer>
+        <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
+        <p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | 
+           <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p>
+    </footer>
+    
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPage = window.location.pathname.split('/').pop();
+    const links = document.querySelectorAll('.sidebar a');
+    links.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+    });
+
+    const codeBlocks = document.querySelectorAll('.box-code');
+    codeBlocks.forEach(block => {
+        const button = block.querySelector('.copy-button');
+        if (button) {
+            button.addEventListener('click', () => {
+                const code = block.querySelector('code').textContent;
+                navigator.clipboard.writeText(code);
+                button.textContent = 'Copiato!';
+                setTimeout(() => {
+                    button.textContent = 'Copia';
+                }, 2000);
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>
