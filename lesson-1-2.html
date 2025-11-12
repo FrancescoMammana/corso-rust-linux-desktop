@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurazione Visual Studio Code | Corso Rust Linux Desktop</title>
+    <title>Configurazione VS Code | Corso Rust Linux Desktop</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
 * {
     margin: 0;
@@ -27,6 +28,9 @@ header {
     left: 0;
     right: 0;
     z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .header-content {
@@ -45,6 +49,16 @@ h1 {
     color: #DE8E43;
 }
 
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #DE8E43;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
 .container {
     display: flex;
     margin-top: 70px;
@@ -60,6 +74,7 @@ h1 {
     height: calc(100vh - 70px);
     overflow-y: auto;
     border-right: 1px solid #3a3a3a;
+    z-index: 999;
 }
 
 .sidebar h3 {
@@ -225,6 +240,7 @@ li {
     margin-top: 3rem;
     padding-top: 2rem;
     border-top: 1px solid #3a3a3a;
+    gap: 1rem;
 }
 
 .lesson-nav a {
@@ -235,6 +251,7 @@ li {
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s;
+    text-align: center;
 }
 
 .lesson-nav a:hover {
@@ -257,48 +274,128 @@ footer {
     margin-top: 3rem;
 }
 
-@media (max-width: 768px) {
+/* ========================================
+   RESPONSIVE DESIGN - TABLET E MOBILE
+   ======================================== */
+
+@media (max-width: 900px) {
+    .menu-toggle {
+        display: block;
+    }
+
     .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s;
+        position: fixed;
+        left: -280px;
+        top: 70px;
+        height: calc(100vh - 70px);
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.5);
     }
 
     .sidebar.open {
-        transform: translateX(0);
+        left: 0;
     }
 
     .content {
         margin-left: 0;
+        padding: 1.5rem;
+        width: 100%;
+    }
+
+    .lesson-title {
+        font-size: 2rem;
+    }
+
+    .box {
+        margin: 1.5rem 0;
+        padding: 1.2rem;
+    }
+
+    .lesson-nav {
+        flex-direction: column;
+    }
+
+    .lesson-nav a {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 0.8rem 1rem;
+    }
+
+    h1 {
+        font-size: 1.1rem;
+    }
+
+    .rust-logo {
+        font-size: 1.5rem;
+    }
+
+    .sidebar {
+        width: 85vw;
+        left: -85vw;
+    }
+
+    .content {
         padding: 1rem;
+    }
+
+    .lesson-title {
+        font-size: 1.6rem;
+    }
+
+    .box {
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+
+    .box h3 {
+        font-size: 1.1rem;
+    }
+
+    pre {
+        padding: 1rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 400px) {
+    h1 {
+        font-size: 0.95rem;
+    }
+
+    .sidebar {
+        width: 100vw;
+        left: -100vw;
+    }
+
+    .lesson-title {
+        font-size: 1.4rem;
     }
 }
 </style>
 </head>
 <body>
-    
     <header>
         <div class="header-content">
             <div class="rust-logo">🦀</div>
             <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
         </div>
+        <button class="menu-toggle" aria-label="Menu">☰</button>
     </header>
-    
 
     <div class="container">
-        
-    <aside class="sidebar">
+        <aside class="sidebar">
         <h3>📚 Corso Rust Linux</h3>
-        <ul>
-            <li><a href="index.html">🏠 Home</a></li>
-        </ul>
-
+        <ul><li><a href="index.html">🏠 Home</a></li></ul>
         <h3>1. Ambiente di Sviluppo</h3>
         <ul>
             <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
             <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
             <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
         </ul>
-
         <h3>2. Rust Base</h3>
         <ul>
             <li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li>
@@ -306,7 +403,6 @@ footer {
             <li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li>
             <li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li>
         </ul>
-
         <h3>3. Sviluppo GUI</h3>
         <ul>
             <li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li>
@@ -315,21 +411,18 @@ footer {
             <li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li>
             <li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li>
         </ul>
-
         <h3>4. Progetti Pratici</h3>
         <ul>
             <li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li>
             <li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li>
             <li><a href="lesson-4-3.html">4.3 Client HTTP</a></li>
         </ul>
-
         <h3>5. GitHub & Best Practices</h3>
         <ul>
             <li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li>
             <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
             <li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li>
         </ul>
-
         <h3>📖 Altro</h3>
         <ul>
             <li><a href="about.html">ℹ️ Info Corso</a></li>
@@ -338,27 +431,25 @@ footer {
             <li><a href="faq.html">❓ FAQ</a></li>
         </ul>
     </aside>
-    
 
         <main class="content">
             <nav class="breadcrumb">
-                <a href="index.html">Home</a> > Sezione 1: Ambiente di Sviluppo > Configurazione Visual Studio Code
+                <a href="index.html">Home</a> > Sezione 1: Ambiente di Sviluppo > Configurazione VS Code
             </nav>
 
-            <h2 class="lesson-title">Configurazione Visual Studio Code</h2>
+            <h2 class="lesson-title">Configurazione VS Code</h2>
 
             <div class="box box-theory">
                 <h3>📘 Introduzione Teorica</h3>
                 
-<p><strong>Visual Studio Code</strong> è uno degli editor più popolari per lo sviluppo Rust grazie alla sua flessibilità e al supporto eccellente tramite estensioni. L'estensione <code>rust-analyzer</code> fornisce:</p>
+<p><strong>Visual Studio Code</strong> è l'editor più popolare per sviluppare in Rust grazie alle estensioni potenti e all'integrazione con rust-analyzer.</p>
 <ul>
-    <li><strong>IntelliSense avanzato</strong>: Autocompletamento intelligente del codice</li>
-    <li><strong>Error checking in tempo reale</strong>: Evidenzia errori mentre scrivi</li>
-    <li><strong>Code navigation</strong>: Vai alla definizione, trova riferimenti</li>
-    <li><strong>Refactoring</strong>: Rinomina simboli, estrai funzioni</li>
-    <li><strong>Inline documentation</strong>: Visualizza la documentazione al passaggio del mouse</li>
+    <li><strong>rust-analyzer</strong>: Language server per autocompletamento, diagnostics, refactoring</li>
+    <li><strong>CodeLLDB</strong>: Debugger per Rust</li>
+    <li><strong>Even Better TOML</strong>: Syntax highlighting per Cargo.toml</li>
+    <li><strong>Error Lens</strong>: Mostra errori inline</li>
 </ul>
-<p>Configureremo anche il debugging per poter eseguire step-by-step il codice Rust direttamente da VS Code.</p>
+<p>Con la configurazione corretta, VS Code diventa un IDE completo per Rust.</p>
 
             </div>
 
@@ -366,31 +457,59 @@ footer {
                 <h3>🔧 Procedura Passo-Passo</h3>
                 
 <ol>
-    <li><strong>Installa Visual Studio Code su Debian</strong>
-        <pre><code># Scarica il pacchetto .deb
-wget -O code.deb 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64'
-
-# Installa
-sudo apt install ./code.deb
-
-# Verifica installazione
-code --version</code></pre>
+    <li><strong>Installa VS Code su Debian</strong>
+        <pre><code># Download .deb da code.visualstudio.com o:
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+sudo apt update
+sudo apt install code -y</code></pre>
     </li>
 
-    <li><strong>Avvia VS Code e installa rust-analyzer</strong>
-        <p>Apri VS Code e vai su Extensions (Ctrl+Shift+X). Cerca "rust-analyzer" e clicca Install. Questa è l'estensione ufficiale del team Rust.</p>
+    <li><strong>Installa rust-analyzer</strong>
+        <p>Apri VS Code e vai su Extensions (Ctrl+Shift+X), cerca "rust-analyzer" e installa.</p>
     </li>
 
-    <li><strong>Installa CodeLLDB per il debugging</strong>
-        <p>Sempre nella sezione Extensions, cerca "CodeLLDB" e installalo. Questo permette di fare debugging di codice Rust.</p>
+    <li><strong>Installa estensioni consigliate</strong>
+        <ul>
+            <li><strong>CodeLLDB</strong>: Per debugging</li>
+            <li><strong>Even Better TOML</strong>: Syntax per Cargo.toml</li>
+            <li><strong>Error Lens</strong>: Errori inline</li>
+            <li><strong>crates</strong>: Gestione dipendenze</li>
+        </ul>
     </li>
 
-    <li><strong>Installa Better TOML</strong>
-        <p>Cerca "Better TOML" per avere syntax highlighting e validazione dei file Cargo.toml.</p>
+    <li><strong>Configura settings.json</strong>
+        <p>Premi Ctrl+Shift+P, cerca "Preferences: Open Settings (JSON)" e aggiungi:</p>
+        <pre><code>{
+    "rust-analyzer.checkOnSave.command": "clippy",
+    "rust-analyzer.cargo.allFeatures": true,
+    "editor.formatOnSave": true,
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer"
+    }
+}</code></pre>
     </li>
 
-    <li><strong>Apri un progetto Rust</strong>
-        <p>File > Open Folder... e seleziona la directory del tuo progetto Rust creato nella lezione precedente.</p>
+    <li><strong>Crea launch.json per debugging</strong>
+        <p>Nella cartella .vscode/ del progetto:</p>
+        <pre><code>{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug",
+            "program": "${workspaceFolder}/target/debug/${workspaceFolderBasename}",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}</code></pre>
+    </li>
+
+    <li><strong>Verifica setup</strong>
+        <p>Apri un progetto Rust, dovresti vedere autocompletamento, diagnostics e suggerimenti in tempo reale.</p>
     </li>
 </ol>
 
@@ -400,28 +519,39 @@ code --version</code></pre>
                 <h3>💻 Codice Sorgente Commentato</h3>
                 <button class="copy-button">Copia</button>
                 
-<pre><code>// File: .vscode/settings.json
-// Configurazione ottimale per progetti Rust
-{
-    // Rust Analyzer
-    "rust-analyzer.check.command": "clippy",
-    "rust-analyzer.cargo.allFeatures": true,
-    "rust-analyzer.inlayHints.enable": true,
+<pre><code>// ========================================
+// CONFIGURAZIONE VS CODE PER RUST
+// ========================================
 
-    // Formattazione automatica al salvataggio
-    "[rust]": {
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "rust-lang.rust-analyzer"
-    },
+// File: .vscode/settings.json (workspace)
+{
+    // Rust-analyzer
+    "rust-analyzer.checkOnSave.command": "clippy",
+    "rust-analyzer.cargo.allFeatures": true,
+    "rust-analyzer.procMacro.enable": true,
 
     // Editor
-    "editor.rulers": [100],
-    "editor.renderWhitespace": "boundary",
-    "files.trimTrailingWhitespace": true
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer",
+        "editor.tabSize": 4
+    },
+
+    // Error Lens
+    "errorLens.enabled": true,
+    "errorLens.fontSize": "0.9em",
+
+    // Files
+    "files.watcherExclude": {
+        "**/target/**": true
+    }
 }
 
-// File: .vscode/launch.json
-// Configurazione debugging
+// ========================================
+// File: .vscode/launch.json (debugging)
+// ========================================
+
 {
     "version": "0.2.0",
     "configurations": [
@@ -442,6 +572,119 @@ code --version</code></pre>
             },
             "args": [],
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=${workspaceFolderBasename}",
+                    "--package=${workspaceFolderBasename}"
+                ],
+                "filter": {
+                    "name": "${workspaceFolderBasename}",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
+
+// ========================================
+// SCORCIATOIE TASTIERA UTILI
+// ========================================
+
+// Navigazione
+Ctrl+P          // Quick file open
+Ctrl+Shift+P    // Command palette
+F12             // Go to definition
+Alt+Left/Right  // Navigate back/forward
+Ctrl+Click      // Go to definition
+
+// Editing
+Ctrl+Space      // Trigger autocomplete
+Ctrl+.          // Quick fix / code actions
+F2              // Rename symbol
+Ctrl+/          // Toggle comment
+Shift+Alt+F     // Format document
+
+// Build & Run
+Ctrl+Shift+B    // Build (cargo build)
+F5              // Start debugging
+Shift+F5        // Stop debugging
+F9              // Toggle breakpoint
+F10             // Step over
+F11             // Step into
+
+// Terminal
+Ctrl+`          // Toggle terminal
+Ctrl+Shift+`    // New terminal
+
+// Search
+Ctrl+F          // Find
+Ctrl+H          // Find and replace
+Ctrl+Shift+F    // Find in files
+
+// ========================================
+// ESTENSIONI CONSIGLIATE
+// ========================================
+
+// Essenziali
+- rust-analyzer (rust-lang.rust-analyzer)
+- CodeLLDB (vadimcn.vscode-lldb)
+
+// Utili
+- Even Better TOML (tamasfe.even-better-toml)
+- Error Lens (usernamehw.errorlens)
+- crates (serayuzgur.crates)
+- GitLens (eamodio.gitlens)
+- Better Comments (aaron-bond.better-comments)
+
+// Temi (opzionali)
+- One Dark Pro
+- Material Theme
+- Dracula Official
+
+// ========================================
+// TASKS.JSON PER CARGO COMMANDS
+// ========================================
+
+// File: .vscode/tasks.json
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cargo",
+            "command": "build",
+            "problemMatcher": ["$rustc"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "label": "rust: cargo build"
+        },
+        {
+            "type": "cargo",
+            "command": "run",
+            "problemMatcher": ["$rustc"],
+            "label": "rust: cargo run"
+        },
+        {
+            "type": "cargo",
+            "command": "test",
+            "problemMatcher": ["$rustc"],
+            "label": "rust: cargo test"
+        },
+        {
+            "type": "cargo",
+            "command": "clippy",
+            "problemMatcher": ["$rustc"],
+            "label": "rust: cargo clippy"
         }
     ]
 }
@@ -453,24 +696,28 @@ code --version</code></pre>
                 <h3>✏️ Esercizi Pratici</h3>
                 
 <ol>
-    <li><strong>Configura VS Code</strong>
-        <p>Crea la cartella <code>.vscode</code> nel tuo progetto e aggiungi i file <code>settings.json</code> e <code>launch.json</code> con le configurazioni mostrate sopra.</p>
+    <li><strong>Installa VS Code</strong>
+        <p>Scarica e installa VS Code su Debian seguendo la procedura.</p>
     </li>
 
-    <li><strong>Testa l'autocompletamento</strong>
-        <p>Apri <code>main.rs</code> e inizia a scrivere <code>std::</code>. Dovresti vedere suggerimenti automatici. Prova a navigare alla definizione di <code>println!</code> con Ctrl+Click.</p>
+    <li><strong>Configura rust-analyzer</strong>
+        <p>Installa rust-analyzer e verifica che funzioni aprendo un progetto Rust.</p>
     </li>
 
-    <li><strong>Usa il debugging</strong>
-        <p>Imposta un breakpoint cliccando a sinistra del numero di riga in <code>main.rs</code>. Premi F5 per avviare il debug. Il programma si fermerà al breakpoint.</p>
+    <li><strong>Installa tutte le estensioni</strong>
+        <p>Installa CodeLLDB, Even Better TOML, Error Lens, crates.</p>
     </li>
 
-    <li><strong>Testa clippy</strong>
-        <p>Scrivi del codice con warning (es. variabile non usata). Dovresti vedere suggerimenti di clippy inline.</p>
+    <li><strong>Configura settings.json</strong>
+        <p>Copia la configurazione suggerita e personalizzala.</p>
     </li>
 
-    <li><strong>Formattazione automatica</strong>
-        <p>Scrivi codice mal formattato, salva il file (Ctrl+S) e osserva la formattazione automatica.</p>
+    <li><strong>Test Debugging</strong>
+        <p>Crea un programma semplice, metti un breakpoint (F9) e avvia debug (F5). Prova step over (F10) e step into (F11).</p>
+    </li>
+
+    <li><strong>Challenge: Personalizza</strong>
+        <p>Installa un tema che ti piace, configura font e dimensioni, personalizza keybindings.</p>
     </li>
 </ol>
 
@@ -479,49 +726,56 @@ code --version</code></pre>
             <div class="box box-troubleshooting">
                 <h3>⚠️ Troubleshooting</h3>
                 
-<h4>Problema: rust-analyzer non funziona</h4>
-<p><strong>Soluzione:</strong> Verifica che rust-analyzer possa trovare Rust:</p>
-<pre><code># Apri Output panel in VS Code (Ctrl+Shift+U)
-# Seleziona "Rust Analyzer Language Server" dal dropdown
-# Controlla eventuali errori
+<h4>❌ rust-analyzer non funziona</h4>
+<p><strong>Causa:</strong> Rust non nel PATH o rust-analyzer non installato.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code>rustup component add rust-analyzer
+# Riavvia VS Code</code></pre>
 
-# Assicurati che rustc sia nel PATH:
-which rustc
-# Se non trovato, esegui:
-source $HOME/.cargo/env</code></pre>
+<h4>❌ Debugging non funziona</h4>
+<p><strong>Causa:</strong> CodeLLDB non installato.</p>
+<p><strong>Soluzione:</strong> Installa estensione CodeLLDB da marketplace.</p>
 
-<h4>Problema: Debugger non si avvia</h4>
-<p><strong>Soluzione:</strong> Installa lldb:</p>
-<pre><code>sudo apt install lldb -y</code></pre>
-<p>Poi riavvia VS Code.</p>
+<h4>❌ Autocompletamento lento</h4>
+<p><strong>Causa:</strong> Progetto grande o primo avvio.</p>
+<p><strong>Soluzione:</strong> Aspetta che rust-analyzer finisca l'indicizzazione (vedi status bar).</p>
 
-<h4>Problema: "cargo check" troppo lento</h4>
-<p><strong>Spiegazione:</strong> Il primo check è lento perché compila tutte le dipendenze. Modifica la configurazione per usare <code>cargo check</code> invece di <code>cargo build</code>:</p>
-<pre><code>"rust-analyzer.check.command": "check"</code></pre>
+<h4>❌ Errori "cannot find crate"</h4>
+<p><strong>Causa:</strong> Cargo.toml non valido o dipendenze non scaricate.</p>
+<p><strong>Soluzione:</strong></p>
+<pre><code>cargo build  # Scarica dipendenze
+# Riavvia rust-analyzer (Ctrl+Shift+P → "Restart server")</code></pre>
 
-<h4>Problema: IntelliSense non mostra suggerimenti</h4>
-<p><strong>Soluzione:</strong> Attendi che rust-analyzer termini l'indicizzazione (vedi barra di stato in basso). Nei progetti grandi può richiedere qualche minuto la prima volta.</p>
+<h4>💡 Tip: Performance</h4>
+<p>Escludi la cartella <code>target/</code> dal file watcher per migliorare performance.</p>
+
+<h4>💡 Tip: Snippets</h4>
+<p>rust-analyzer include snippets utili. Prova a digitare <code>fn</code> e premere Tab.</p>
+
+<h4>🔍 Risorse</h4>
+<ul>
+    <li><a href="https://rust-analyzer.github.io" style="color: #DE8E43;">rust-analyzer docs</a></li>
+    <li><a href="https://code.visualstudio.com/docs/languages/rust" style="color: #DE8E43;">VS Code Rust Guide</a></li>
+</ul>
 
             </div>
 
             <nav class="lesson-nav">
-                <a href="lesson-1-1.html">← Lezione Precedente</a>
-                <a href="lesson-1-3.html">Lezione Successiva →</a>
+                <a href="lesson-1-1.html">← Precedente</a>
+                <a href="lesson-1-3.html">Successiva →</a>
             </nav>
         </main>
     </div>
 
-    
     <footer>
         <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
         <p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | 
            <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p>
     </footer>
-    
 
     <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Highlight active page in sidebar
+    // Sidebar active link
     const currentPage = window.location.pathname.split('/').pop();
     const links = document.querySelectorAll('.sidebar a');
     links.forEach(link => {
@@ -530,7 +784,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Copy code functionality
+    // Copy button
     const codeBlocks = document.querySelectorAll('.box-code');
     codeBlocks.forEach(block => {
         const button = block.querySelector('.copy-button');
@@ -545,6 +799,35 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    // Menu toggle per mobile
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // Chiudi sidebar quando si clicca su un link
+        const sidebarLinks = sidebar.querySelectorAll('a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 900) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        });
+
+        // Chiudi sidebar quando si clicca fuori
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 900) {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            }
+        });
+    }
 });
 </script>
 </body>

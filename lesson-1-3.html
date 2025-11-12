@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strumenti Aggiuntivi | Corso Rust Linux Desktop</title>
+    <title>Strumenti Aggiuntivi (GTK) | Corso Rust Linux Desktop</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
 * {
     margin: 0;
@@ -27,6 +28,9 @@ header {
     left: 0;
     right: 0;
     z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .header-content {
@@ -45,6 +49,16 @@ h1 {
     color: #DE8E43;
 }
 
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #DE8E43;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
 .container {
     display: flex;
     margin-top: 70px;
@@ -60,6 +74,7 @@ h1 {
     height: calc(100vh - 70px);
     overflow-y: auto;
     border-right: 1px solid #3a3a3a;
+    z-index: 999;
 }
 
 .sidebar h3 {
@@ -225,6 +240,7 @@ li {
     margin-top: 3rem;
     padding-top: 2rem;
     border-top: 1px solid #3a3a3a;
+    gap: 1rem;
 }
 
 .lesson-nav a {
@@ -235,6 +251,7 @@ li {
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s;
+    text-align: center;
 }
 
 .lesson-nav a:hover {
@@ -257,48 +274,128 @@ footer {
     margin-top: 3rem;
 }
 
-@media (max-width: 768px) {
+/* ========================================
+   RESPONSIVE DESIGN - TABLET E MOBILE
+   ======================================== */
+
+@media (max-width: 900px) {
+    .menu-toggle {
+        display: block;
+    }
+
     .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s;
+        position: fixed;
+        left: -280px;
+        top: 70px;
+        height: calc(100vh - 70px);
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.5);
     }
 
     .sidebar.open {
-        transform: translateX(0);
+        left: 0;
     }
 
     .content {
         margin-left: 0;
+        padding: 1.5rem;
+        width: 100%;
+    }
+
+    .lesson-title {
+        font-size: 2rem;
+    }
+
+    .box {
+        margin: 1.5rem 0;
+        padding: 1.2rem;
+    }
+
+    .lesson-nav {
+        flex-direction: column;
+    }
+
+    .lesson-nav a {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 0.8rem 1rem;
+    }
+
+    h1 {
+        font-size: 1.1rem;
+    }
+
+    .rust-logo {
+        font-size: 1.5rem;
+    }
+
+    .sidebar {
+        width: 85vw;
+        left: -85vw;
+    }
+
+    .content {
         padding: 1rem;
+    }
+
+    .lesson-title {
+        font-size: 1.6rem;
+    }
+
+    .box {
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+
+    .box h3 {
+        font-size: 1.1rem;
+    }
+
+    pre {
+        padding: 1rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 400px) {
+    h1 {
+        font-size: 0.95rem;
+    }
+
+    .sidebar {
+        width: 100vw;
+        left: -100vw;
+    }
+
+    .lesson-title {
+        font-size: 1.4rem;
     }
 }
 </style>
 </head>
 <body>
-    
     <header>
         <div class="header-content">
             <div class="rust-logo">🦀</div>
             <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
         </div>
+        <button class="menu-toggle" aria-label="Menu">☰</button>
     </header>
-    
 
     <div class="container">
-        
-    <aside class="sidebar">
+        <aside class="sidebar">
         <h3>📚 Corso Rust Linux</h3>
-        <ul>
-            <li><a href="index.html">🏠 Home</a></li>
-        </ul>
-
+        <ul><li><a href="index.html">🏠 Home</a></li></ul>
         <h3>1. Ambiente di Sviluppo</h3>
         <ul>
             <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
             <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
             <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
         </ul>
-
         <h3>2. Rust Base</h3>
         <ul>
             <li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li>
@@ -306,7 +403,6 @@ footer {
             <li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li>
             <li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li>
         </ul>
-
         <h3>3. Sviluppo GUI</h3>
         <ul>
             <li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li>
@@ -315,21 +411,18 @@ footer {
             <li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li>
             <li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li>
         </ul>
-
         <h3>4. Progetti Pratici</h3>
         <ul>
             <li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li>
             <li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li>
             <li><a href="lesson-4-3.html">4.3 Client HTTP</a></li>
         </ul>
-
         <h3>5. GitHub & Best Practices</h3>
         <ul>
             <li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li>
             <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
             <li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li>
         </ul>
-
         <h3>📖 Altro</h3>
         <ul>
             <li><a href="about.html">ℹ️ Info Corso</a></li>
@@ -338,27 +431,25 @@ footer {
             <li><a href="faq.html">❓ FAQ</a></li>
         </ul>
     </aside>
-    
 
         <main class="content">
             <nav class="breadcrumb">
-                <a href="index.html">Home</a> > Sezione 1: Ambiente di Sviluppo > Strumenti Aggiuntivi
+                <a href="index.html">Home</a> > Sezione 1: Ambiente di Sviluppo > Strumenti Aggiuntivi (GTK)
             </nav>
 
-            <h2 class="lesson-title">Strumenti Aggiuntivi</h2>
+            <h2 class="lesson-title">Strumenti Aggiuntivi (GTK)</h2>
 
             <div class="box box-theory">
                 <h3>📘 Introduzione Teorica</h3>
                 
-<p>Oltre a Rust e VS Code, abbiamo bisogno di strumenti aggiuntivi per sviluppare applicazioni desktop GTK su Debian:</p>
+<p>Per sviluppare applicazioni desktop Linux con GTK, servono strumenti aggiuntivi oltre a Rust base:</p>
 <ul>
-    <li><strong>Cargo</strong>: Build system e package manager (già installato con Rust)</li>
-    <li><strong>rustfmt</strong>: Formatta il codice secondo le convenzioni Rust</li>
-    <li><strong>clippy</strong>: Linter che suggerisce miglioramenti al codice</li>
-    <li><strong>GTK libraries</strong>: Le librerie grafiche necessarie per GTK</li>
-    <li><strong>Glade</strong>: Designer visuale per creare interfacce GTK</li>
+    <li><strong>GTK+ 3.0</strong>: Librerie grafiche per interfacce desktop</li>
+    <li><strong>pkg-config</strong>: Tool per trovare librerie di sistema</li>
+    <li><strong>Glade</strong>: Designer visuale per interfacce GTK</li>
+    <li><strong>Development headers</strong>: File .h per compilare contro GTK</li>
 </ul>
-<p>Questi strumenti sono essenziali per un workflow di sviluppo professionale.</p>
+<p>Questi strumenti permettono di creare applicazioni GUI native che si integrano perfettamente con GNOME e altri desktop environment Linux.</p>
 
             </div>
 
@@ -366,38 +457,36 @@ footer {
                 <h3>🔧 Procedura Passo-Passo</h3>
                 
 <ol>
-    <li><strong>Installa componenti Rust aggiuntivi</strong>
-        <pre><code># rustfmt per la formattazione
-rustup component add rustfmt
-
-# clippy per il linting
-rustup component add clippy
-
-# Verifica
-cargo fmt --version
-cargo clippy --version</code></pre>
-    </li>
-
-    <li><strong>Installa librerie GTK di sviluppo</strong>
+    <li><strong>Installa GTK+ development libraries</strong>
         <pre><code>sudo apt install libgtk-3-dev libglib2.0-dev -y</code></pre>
-        Queste librerie sono necessarie per compilare applicazioni GTK.
-    </li>
-
-    <li><strong>Installa Glade (UI Designer)</strong>
-        <pre><code>sudo apt install glade -y
-
-# Verifica installazione
-glade --version</code></pre>
     </li>
 
     <li><strong>Installa pkg-config</strong>
         <pre><code>sudo apt install pkg-config -y</code></pre>
-        Questo tool aiuta cargo a trovare le librerie di sistema.
     </li>
 
-    <li><strong>Testa la configurazione GTK</strong>
+    <li><strong>Verifica installazione GTK</strong>
         <pre><code>pkg-config --modversion gtk+-3.0</code></pre>
-        Dovrebbe mostrare la versione di GTK installata (es. 3.24.x).
+        <p>Dovresti vedere la versione (es. 3.24.38).</p>
+    </li>
+
+    <li><strong>Installa Glade (opzionale ma consigliato)</strong>
+        <pre><code>sudo apt install glade -y</code></pre>
+    </li>
+
+    <li><strong>Installa librerie aggiuntive utili</strong>
+        <pre><code>sudo apt install libcairo2-dev libpango1.0-dev \
+                 libgdk-pixbuf2.0-dev libatk1.0-dev -y</code></pre>
+    </li>
+
+    <li><strong>Test progetto GTK Rust</strong>
+        <pre><code>cargo new test_gtk
+cd test_gtk</code></pre>
+        <p>Aggiungi al Cargo.toml:</p>
+        <pre><code>[dependencies]
+gtk = { version = "0.18", features = ["v3_24"] }</code></pre>
+        <p>Compila per verificare:</p>
+        <pre><code>cargo build</code></pre>
     </li>
 </ol>
 
@@ -407,38 +496,175 @@ glade --version</code></pre>
                 <h3>💻 Codice Sorgente Commentato</h3>
                 <button class="copy-button">Copia</button>
                 
-<pre><code># File: Cargo.toml
-# Configurazione per un progetto GTK
+<pre><code>// ========================================
+// TEST INSTALLAZIONE GTK-rs
+// ========================================
 
+// File: Cargo.toml
 [package]
-name = "mia_app_gtk"
+name = "test_gtk"
 version = "0.1.0"
-edition = "2021"  # Usa l'edizione Rust 2021
+edition = "2021"
 
-# Dipendenze
 [dependencies]
-# GTK bindings per Rust
 gtk = { version = "0.18", features = ["v3_24"] }
-# GLib bindings
 glib = "0.18"
 
-# Dipendenze opzionali per funzionalità avanzate
-[dependencies.serde]
-version = "1.0"
-features = ["derive"]
-optional = true
+// ========================================
+// File: src/main.rs - Hello GTK
+// ========================================
 
-# Features del progetto
-[features]
-default = []
-serialization = ["serde"]
+use gtk::prelude::*;
+use gtk::{Application, ApplicationWindow, Button};
 
-# Profilo di compilazione ottimizzato
-[profile.release]
-opt-level = 3        # Massima ottimizzazione
-lto = true           # Link-Time Optimization
-codegen-units = 1    # Migliori ottimizzazioni
-strip = true         # Rimuovi simboli debug</code></pre>
+fn main() {
+    let app = Application::builder()
+        .application_id("com.example.TestGTK")
+        .build();
+
+    app.connect_activate(|app| {
+        let window = ApplicationWindow::builder()
+            .application(app)
+            .title("Test GTK")
+            .default_width(350)
+            .default_height(200)
+            .build();
+
+        let button = Button::with_label("Cliccami!");
+        button.connect_clicked(|_| {
+            println!("Bottone cliccato!");
+        });
+
+        window.add(&button);
+        window.show_all();
+    });
+
+    app.run();
+}
+
+// ========================================
+// COMANDI UTILI
+// ========================================
+
+// Verifica versione GTK installata
+$ pkg-config --modversion gtk+-3.0
+3.24.38
+
+// Lista tutte le librerie GTK disponibili
+$ pkg-config --list-all | grep gtk
+
+// Mostra flags di compilazione per GTK
+$ pkg-config --cflags gtk+-3.0
+-pthread -I/usr/include/gtk-3.0 ...
+
+// Mostra flags di linking per GTK
+$ pkg-config --libs gtk+-3.0
+-lgtk-3 -lgdk-3 -lpangocairo-1.0 ...
+
+// ========================================
+// VERIFICA DIPENDENZE COMPLETE
+// ========================================
+
+$ dpkg -l | grep libgtk-3
+ii  libgtk-3-0:amd64    3.24.38-2   GTK graphical user interface library
+ii  libgtk-3-dev        3.24.38-2   Development files
+
+$ dpkg -l | grep glade
+ii  glade               3.40.0-3    GTK User Interface Builder
+
+// ========================================
+// TROUBLESHOOTING BUILD GTK
+// ========================================
+
+// Se cargo build fallisce con errori GTK:
+
+// 1. Verifica pkg-config
+$ which pkg-config
+/usr/bin/pkg-config
+
+// 2. Verifica GTK trovata
+$ pkg-config --exists gtk+-3.0 && echo "GTK OK" || echo "GTK MANCANTE"
+
+// 3. Reinstalla dipendenze
+$ sudo apt install --reinstall libgtk-3-dev pkg-config
+
+// 4. Pulisci e ricompila
+$ cargo clean
+$ cargo build
+
+// ========================================
+// ESEMPIO COMPLETO: FINESTRA GTK
+// ========================================
+
+use gtk::prelude::*;
+use gtk::{Application, ApplicationWindow, Box, Button, Label, Orientation};
+
+fn main() {
+    let app = Application::builder()
+        .application_id("com.example.CompleteTest")
+        .build();
+
+    app.connect_activate(build_ui);
+    app.run();
+}
+
+fn build_ui(app: &Application) {
+    // Finestra principale
+    let window = ApplicationWindow::builder()
+        .application(app)
+        .title("Test Completo GTK")
+        .default_width(400)
+        .default_height(300)
+        .border_width(10)
+        .build();
+
+    // Container verticale
+    let vbox = Box::new(Orientation::Vertical, 10);
+
+    // Label
+    let label = Label::new(Some("GTK funziona correttamente!"));
+    vbox.pack_start(&label, false, false, 0);
+
+    // Button
+    let button = Button::with_label("Clicca per test");
+    button.connect_clicked(move |_| {
+        println!("✅ GTK-rs funziona!");
+        label.set_text("Bottone cliccato!");
+    });
+    vbox.pack_start(&button, false, false, 0);
+
+    // Button per chiudere
+    let quit_button = Button::with_label("Esci");
+    quit_button.connect_clicked(glib::clone!(@weak window => move |_| {
+        window.close();
+    }));
+    vbox.pack_start(&quit_button, false, false, 0);
+
+    window.add(&vbox);
+    window.show_all();
+}
+
+// ========================================
+// GLADE TEST
+// ========================================
+
+// Per testare Glade:
+$ glade
+
+// Crea una nuova interfaccia
+// Aggiungi una Window
+// Aggiungi un Button
+// Salva come test.glade
+
+// Poi carica in Rust con Builder:
+use gtk::Builder;
+
+let builder = Builder::from_file("test.glade");
+let window: gtk::Window = builder
+    .object("main_window")
+    .expect("Could not find main_window");
+window.show_all();
+</code></pre>
 
             </div>
 
@@ -446,24 +672,34 @@ strip = true         # Rimuovi simboli debug</code></pre>
                 <h3>✏️ Esercizi Pratici</h3>
                 
 <ol>
-    <li><strong>Usa cargo fmt</strong>
-        <p>Scrivi codice Rust con indentazione inconsistente, poi esegui <code>cargo fmt</code>. Osserva come viene formattato automaticamente.</p>
+    <li><strong>Installa GTK</strong>
+        <p>Installa tutte le librerie GTK development e verifica con pkg-config.</p>
     </li>
 
-    <li><strong>Analizza con clippy</strong>
-        <p>Esegui <code>cargo clippy</code> su un progetto. Clippy suggerirà miglioramenti come rimuovere variabili inutilizzate o semplificare espressioni.</p>
+    <li><strong>Primo Progetto GTK</strong>
+        <p>Crea progetto <code>hello_gtk</code>, aggiungi dipendenza GTK-rs e compila con successo.</p>
     </li>
 
-    <li><strong>Crea progetto GTK</strong>
-        <p>Crea un nuovo progetto con <code>cargo new gtk_hello</code> e aggiungi le dipendenze GTK al Cargo.toml come mostrato sopra. Poi esegui <code>cargo check</code>.</p>
+    <li><strong>Test Finestra</strong>
+        <p>Copia il codice di esempio "Hello GTK" e fai apparire una finestra con bottone funzionante.</p>
     </li>
 
-    <li><strong>Esplora Glade</strong>
-        <p>Apri Glade con il comando <code>glade</code>. Crea una finestra semplice con un bottone. Salva il file come <code>interface.glade</code> e ispeziona il suo contenuto XML.</p>
+    <li><strong>Installa Glade</strong>
+        <p>Installa Glade e crea una semplice interfaccia con 2-3 widget.</p>
     </li>
 
-    <li><strong>Compila in release</strong>
-        <p>In un progetto Rust, esegui <code>cargo build --release</code> e confronta la dimensione del binario in <code>target/debug</code> vs <code>target/release</code>.</p>
+    <li><strong>Test Completo</strong>
+        <p>Copia il codice "Finestra GTK" completo e verifica che tutti i widget funzionino.</p>
+    </li>
+
+    <li><strong>Challenge: Interfaccia Personalizzata</strong>
+        <p>Crea una finestra GTK con:</p>
+        <ul>
+            <li>Un titolo personalizzato</li>
+            <li>2 Label con testi diversi</li>
+            <li>3 Button con azioni diverse</li>
+            <li>Layout organizzato con Box</li>
+        </ul>
     </li>
 </ol>
 
@@ -472,43 +708,56 @@ strip = true         # Rimuovi simboli debug</code></pre>
             <div class="box box-troubleshooting">
                 <h3>⚠️ Troubleshooting</h3>
                 
-<h4>Problema: "failed to run custom build command for gtk"</h4>
-<p><strong>Soluzione:</strong> Mancano le librerie GTK dev. Installa:</p>
+<h4>❌ Errore "failed to run custom build command for gtk"</h4>
+<p><strong>Causa:</strong> GTK development libraries non installate.</p>
+<p><strong>Soluzione:</strong></p>
 <pre><code>sudo apt install libgtk-3-dev libglib2.0-dev pkg-config -y</code></pre>
 
-<h4>Problema: "could not find native pkg-config"</h4>
-<p><strong>Soluzione:</strong> Installa pkg-config:</p>
+<h4>❌ Errore "could not find native pkg-config"</h4>
+<p><strong>Causa:</strong> pkg-config mancante.</p>
+<p><strong>Soluzione:</strong></p>
 <pre><code>sudo apt install pkg-config -y</code></pre>
 
-<h4>Problema: clippy non trova errori noti</h4>
-<p><strong>Spiegazione:</strong> Clippy potrebbe essere una versione vecchia. Aggiorna:</p>
-<pre><code>rustup update
-rustup component add clippy --force</code></pre>
+<h4>❌ Compilazione GTK molto lenta (10+ minuti)</h4>
+<p><strong>Causa:</strong> Prima compilazione GTK-rs richiede tempo.</p>
+<p><strong>Soluzione:</strong> Normale. Le compilazioni successive saranno molto più veloci (incrementali).</p>
 
-<h4>Problema: Compilazione GTK estremamente lenta</h4>
-<p><strong>Spiegazione:</strong> La prima compilazione di GTK può richiedere 5-10 minuti perché compila molte dipendenze C. Le compilazioni successive saranno molto più rapide.</p>
-<p><strong>Suggerimento:</strong> Usa <code>cargo check</code> durante lo sviluppo invece di <code>cargo build</code> per feedback più rapido.</p>
+<h4>❌ Finestra GTK non appare</h4>
+<p><strong>Causa:</strong> Manca <code>window.show_all()</code> o ambiente grafico non disponibile.</p>
+<p><strong>Soluzione:</strong> Verifica di chiamare <code>show_all()</code> e di essere in ambiente desktop.</p>
+
+<h4>💡 Tip: Versioni GTK</h4>
+<p>Questo corso usa GTK 3. GTK 4 è disponibile ma ha API diverse. Per iniziare consigliamo GTK 3.</p>
+
+<h4>💡 Tip: Debug GTK</h4>
+<p>Per debug verbose GTK:</p>
+<pre><code>GTK_DEBUG=all cargo run</code></pre>
+
+<h4>🔍 Risorse GTK</h4>
+<ul>
+    <li><a href="https://gtk-rs.org" style="color: #DE8E43;">GTK-rs Official</a></li>
+    <li><a href="https://gtk-rs.org/gtk4-rs/stable/latest/book/" style="color: #DE8E43;">GTK-rs Book</a></li>
+    <li><a href="https://developer.gnome.org/gtk3/" style="color: #DE8E43;">GTK 3 Reference</a></li>
+</ul>
 
             </div>
 
             <nav class="lesson-nav">
-                <a href="lesson-1-2.html">← Lezione Precedente</a>
-                <a href="lesson-2-1.html">Lezione Successiva →</a>
+                <a href="lesson-1-2.html">← Precedente</a>
+                <a href="lesson-2-1.html">Successiva →</a>
             </nav>
         </main>
     </div>
 
-    
     <footer>
         <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
         <p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | 
            <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p>
     </footer>
-    
 
     <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Highlight active page in sidebar
+    // Sidebar active link
     const currentPage = window.location.pathname.split('/').pop();
     const links = document.querySelectorAll('.sidebar a');
     links.forEach(link => {
@@ -517,7 +766,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Copy code functionality
+    // Copy button
     const codeBlocks = document.querySelectorAll('.box-code');
     codeBlocks.forEach(block => {
         const button = block.querySelector('.copy-button');
@@ -532,6 +781,35 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    // Menu toggle per mobile
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // Chiudi sidebar quando si clicca su un link
+        const sidebarLinks = sidebar.querySelectorAll('a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 900) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        });
+
+        // Chiudi sidebar quando si clicca fuori
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 900) {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            }
+        });
+    }
 });
 </script>
 </body>
