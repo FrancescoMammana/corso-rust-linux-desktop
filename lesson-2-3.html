@@ -1,883 +1,108 @@
 <!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Struttura di un Progetto Rust | Corso Rust Linux Desktop</title>
-    <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+<html lang="it"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Struttura di un Progetto | Corso Rust Linux Desktop</title><link rel="icon" type="image/png" href="favicon.png"><style>* {margin: 0; padding: 0; box-sizing: border-box;}
+body {font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a1a; color: #e0e0e0; line-height: 1.6;}
+header {background: #2a2a2a; padding: 1rem 2rem; border-bottom: 3px solid #DE8E43; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between;}
+.header-content {display: flex; align-items: center; gap: 1rem;} .rust-logo {font-size: 2rem; color: #DE8E43;} h1 {font-size: 1.5rem; color: #DE8E43;}
+.menu-toggle {display: none; background: none; border: none; color: #DE8E43; font-size: 2rem; cursor: pointer; padding: 0.5rem;}
+.container {display: flex; margin-top: 70px; min-height: calc(100vh - 70px);}
+.sidebar {width: 280px; background: #252525; padding: 2rem 0; position: fixed; left: 0; height: calc(100vh - 70px); overflow-y: auto; border-right: 1px solid #3a3a3a; z-index: 999;}
+.sidebar h3 {color: #DE8E43; padding: 0.5rem 1.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 1rem;}
+.sidebar ul {list-style: none;} .sidebar li a {display: block; padding: 0.7rem 1.5rem 0.7rem 2.5rem; color: #b0b0b0; text-decoration: none; transition: all 0.3s; font-size: 0.95rem;}
+.sidebar li a:hover {background: #2f2f2f; color: #DE8E43; border-left: 3px solid #DE8E43;}
+.sidebar li a.active {background: #2f2f2f; color: #DE8E43; border-left: 3px solid #DE8E43; font-weight: 600;}
+.content {flex: 1; margin-left: 280px; padding: 2rem 3rem; max-width: 1200px;}
+.breadcrumb {color: #888; font-size: 0.9rem; margin-bottom: 2rem;} .breadcrumb a {color: #4A90E2; text-decoration: none;} .breadcrumb a:hover {text-decoration: underline;}
+.lesson-title {font-size: 2.5rem; color: #DE8E43; margin-bottom: 1rem;}
+.box {margin: 2rem 0; padding: 1.5rem; border-radius: 8px; border-left: 4px solid;}
+.box-theory {background: #2a2a3e; border-left-color: #4A90E2;} .box-steps {background: #2a2a2a; border-left-color: #DE8E43;} .box-code {background: #1e1e1e; border-left-color: #DE8E43; position: relative;} .box-exercises {background: #2d4a2e; border-left-color: #5cb85c;} .box-troubleshooting {background: #4a2d2e; border-left-color: #d9534f;}
+.box h3 {color: #DE8E43; margin-bottom: 1rem; font-size: 1.3rem;} .box-theory h3 {color: #4A90E2;} .box-exercises h3 {color: #5cb85c;} .box-troubleshooting h3 {color: #d9534f;}
+code {font-family: 'Fira Code', 'Courier New', monospace; background: #2a2a2a; padding: 0.2rem 0.4rem; border-radius: 3px; font-size: 0.9rem; color: #DE8E43;}
+pre {background: #1e1e1e; padding: 1.5rem; border-radius: 5px; overflow-x: auto; margin: 1rem 0;} pre code {background: none; padding: 0; color: #e0e0e0; display: block;}
+.copy-button {position: absolute; top: 1rem; right: 1rem; background: #DE8E43; color: #1a1a1a; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600;} .copy-button:hover {background: #f09d5a;}
+ol, ul {margin-left: 1.5rem; margin-top: 0.5rem;} li {margin: 0.5rem 0;}
+.lesson-nav {display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #3a3a3a; gap: 1rem;}
+.lesson-nav a {background: #DE8E43; color: #1a1a1a; padding: 0.8rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: 600; transition: all 0.3s; text-align: center;}
+.lesson-nav a:hover {background: #f09d5a; transform: translateY(-2px);} .lesson-nav a.disabled {background: #3a3a3a; color: #666; cursor: not-allowed;}
+footer {background: #252525; padding: 2rem; text-align: center; color: #888; border-top: 1px solid #3a3a3a; margin-top: 3rem;}
+@media (max-width: 900px) {.menu-toggle {display: block;} .sidebar {position: fixed; left: -280px; top: 70px; height: calc(100vh - 70px); transition: left 0.3s ease; box-shadow: 2px 0 10px rgba(0,0,0,0.5);} .sidebar.open {left: 0;} .content {margin-left: 0; padding: 1.5rem; width: 100%;} .lesson-title {font-size: 2rem;} .box {margin: 1.5rem 0; padding: 1.2rem;} .lesson-nav {flex-direction: column;} .lesson-nav a {width: 100%;}}
+@media (max-width: 600px) {header {padding: 0.8rem 1rem;} h1 {font-size: 1.1rem;} .rust-logo {font-size: 1.5rem;} .sidebar {width: 85vw; left: -85vw;} .content {padding: 1rem;} .lesson-title {font-size: 1.6rem;} .box {margin: 1rem 0; padding: 1rem;} .box h3 {font-size: 1.1rem;} pre {padding: 1rem; font-size: 0.85rem;}}
+@media (max-width: 400px) {h1 {font-size: 0.95rem;} .sidebar {width: 100vw; left: -100vw;} .lesson-title {font-size: 1.4rem;}}</style></head>
+<body><header><div class="header-content"><div class="rust-logo">🦀</div><h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1></div><button class="menu-toggle" aria-label="Menu">☰</button></header><div class="container"><aside class="sidebar"><h3>📚 Corso Rust Linux</h3><ul><li><a href="index.html">🏠 Home</a></li></ul>
+<h3>1. Ambiente di Sviluppo</h3><ul><li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li><li><a href="lesson-1-2.html">1.2 Config VS Code</a></li><li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li></ul>
+<h3>2. Rust Base</h3><ul><li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li><li><a href="lesson-2-2.html">2.2 Strutture Controllo</a></li><li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li><li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li></ul>
+<h3>3. Sviluppo GUI</h3><ul><li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li><li><a href="lesson-3-2.html">3.2 Glade Designer</a></li><li><a href="lesson-3-3.html">3.3 Sviluppo Manuale</a></li><li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li><li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li></ul>
+<h3>4. Progetti Pratici</h3><ul><li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li><li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li><li><a href="lesson-4-3.html">4.3 Client HTTP</a></li></ul>
+<h3>5. GitHub & Best Practices</h3><ul><li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li><li><a href="lesson-5-2.html">5.2 Documentazione</a></li><li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li></ul>
+<h3>📖 Altro</h3><ul><li><a href="about.html">ℹ️ Info Corso</a></li><li><a href="projects.html">🎯 Progetti</a></li><li><a href="resources.html">🔗 Risorse</a></li><li><a href="faq.html">❓ FAQ</a></li></ul></aside><main class="content">
+<nav class="breadcrumb"><a href="index.html">Home</a> > Sezione 2: Rust Base > Struttura di un Progetto</nav><h2 class="lesson-title">Struttura di un Progetto</h2>
+<div class="box box-theory"><h3>📘 Introduzione Teorica</h3><p>Progetti Rust si organizzano in moduli:</p><ul>
+<li><strong>main.rs</strong>: Entry point binario</li>
+<li><strong>lib.rs</strong>: Root libreria</li>
+<li><strong>mod</strong>: Dichiarazione moduli</li>
+<li><strong>pub</strong>: Visibilità pubblica</li>
+<li><strong>use</strong>: Import simboli</li></ul></div>
+<div class="box box-steps"><h3>🔧 Procedura Passo-Passo</h3><ol><li><strong>Crea modulo</strong>
+<pre><code>// src/utils.rs
+pub fn saluta() {
+    println!("Ciao!");
 }
 
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #1a1a1a;
-    color: #e0e0e0;
-    line-height: 1.6;
-}
-
-header {
-    background: #2a2a2a;
-    padding: 1rem 2rem;
-    border-bottom: 3px solid #DE8E43;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-}
-
-.header-content {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.rust-logo {
-    font-size: 2rem;
-    color: #DE8E43;
-}
-
-h1 {
-    font-size: 1.5rem;
-    color: #DE8E43;
-}
-
-.container {
-    display: flex;
-    margin-top: 70px;
-    min-height: calc(100vh - 70px);
-}
-
-.sidebar {
-    width: 280px;
-    background: #252525;
-    padding: 2rem 0;
-    position: fixed;
-    left: 0;
-    height: calc(100vh - 70px);
-    overflow-y: auto;
-    border-right: 1px solid #3a3a3a;
-}
-
-.sidebar h3 {
-    color: #DE8E43;
-    padding: 0.5rem 1.5rem;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 1rem;
-}
-
-.sidebar ul {
-    list-style: none;
-}
-
-.sidebar li a {
-    display: block;
-    padding: 0.7rem 1.5rem 0.7rem 2.5rem;
-    color: #b0b0b0;
-    text-decoration: none;
-    transition: all 0.3s;
-    font-size: 0.95rem;
-}
-
-.sidebar li a:hover {
-    background: #2f2f2f;
-    color: #DE8E43;
-    border-left: 3px solid #DE8E43;
-}
-
-.sidebar li a.active {
-    background: #2f2f2f;
-    color: #DE8E43;
-    border-left: 3px solid #DE8E43;
-    font-weight: 600;
-}
-
-.content {
-    flex: 1;
-    margin-left: 280px;
-    padding: 2rem 3rem;
-    max-width: 1200px;
-}
-
-.breadcrumb {
-    color: #888;
-    font-size: 0.9rem;
-    margin-bottom: 2rem;
-}
-
-.breadcrumb a {
-    color: #4A90E2;
-    text-decoration: none;
-}
-
-.breadcrumb a:hover {
-    text-decoration: underline;
-}
-
-.lesson-title {
-    font-size: 2.5rem;
-    color: #DE8E43;
-    margin-bottom: 1rem;
-}
-
-.box {
-    margin: 2rem 0;
-    padding: 1.5rem;
-    border-radius: 8px;
-    border-left: 4px solid;
-}
-
-.box-theory {
-    background: #2a2a3e;
-    border-left-color: #4A90E2;
-}
-
-.box-steps {
-    background: #2a2a2a;
-    border-left-color: #DE8E43;
-}
-
-.box-code {
-    background: #1e1e1e;
-    border-left-color: #DE8E43;
-    position: relative;
-}
-
-.box-exercises {
-    background: #2d4a2e;
-    border-left-color: #5cb85c;
-}
-
-.box-troubleshooting {
-    background: #4a2d2e;
-    border-left-color: #d9534f;
-}
-
-.box h3 {
-    color: #DE8E43;
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
-}
-
-.box-theory h3 { color: #4A90E2; }
-.box-exercises h3 { color: #5cb85c; }
-.box-troubleshooting h3 { color: #d9534f; }
-
-code {
-    font-family: 'Fira Code', 'Courier New', monospace;
-    background: #2a2a2a;
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-    font-size: 0.9rem;
-    color: #DE8E43;
-}
-
-pre {
-    background: #1e1e1e;
-    padding: 1.5rem;
-    border-radius: 5px;
-    overflow-x: auto;
-    margin: 1rem 0;
-}
-
-pre code {
-    background: none;
-    padding: 0;
-    color: #e0e0e0;
-    display: block;
-}
-
-.copy-button {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: #DE8E43;
-    color: #1a1a1a;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-.copy-button:hover {
-    background: #f09d5a;
-}
-
-ol, ul {
-    margin-left: 1.5rem;
-    margin-top: 0.5rem;
-}
-
-li {
-    margin: 0.5rem 0;
-}
-
-.lesson-nav {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid #3a3a3a;
-}
-
-.lesson-nav a {
-    background: #DE8E43;
-    color: #1a1a1a;
-    padding: 0.8rem 1.5rem;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s;
-}
-
-.lesson-nav a:hover {
-    background: #f09d5a;
-    transform: translateY(-2px);
-}
-
-.lesson-nav a.disabled {
-    background: #3a3a3a;
-    color: #666;
-    cursor: not-allowed;
-}
-
-footer {
-    background: #252525;
-    padding: 2rem;
-    text-align: center;
-    color: #888;
-    border-top: 1px solid #3a3a3a;
-    margin-top: 3rem;
-}
-
-@media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s;
-    }
-
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
-    .content {
-        margin-left: 0;
-        padding: 1rem;
-    }
-}
-</style>
-</head>
-<body>
-    
-    <header>
-        <div class="header-content">
-            <div class="rust-logo">🦀</div>
-            <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
-        </div>
-    </header>
-    
-
-    <div class="container">
-        
-    <aside class="sidebar">
-        <h3>📚 Corso Rust Linux</h3>
-        <ul>
-            <li><a href="index.html">🏠 Home</a></li>
-        </ul>
-
-        <h3>1. Ambiente di Sviluppo</h3>
-        <ul>
-            <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
-            <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
-            <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
-        </ul>
-
-        <h3>2. Rust Base</h3>
-        <ul>
-            <li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li>
-            <li><a href="lesson-2-2.html">2.2 Strutture Controllo</a></li>
-            <li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li>
-            <li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li>
-        </ul>
-
-        <h3>3. Sviluppo GUI</h3>
-        <ul>
-            <li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li>
-            <li><a href="lesson-3-2.html">3.2 Glade Designer</a></li>
-            <li><a href="lesson-3-3.html">3.3 Sviluppo Manuale</a></li>
-            <li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li>
-            <li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li>
-        </ul>
-
-        <h3>4. Progetti Pratici</h3>
-        <ul>
-            <li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li>
-            <li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li>
-            <li><a href="lesson-4-3.html">4.3 Client HTTP</a></li>
-        </ul>
-
-        <h3>5. GitHub & Best Practices</h3>
-        <ul>
-            <li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li>
-            <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
-            <li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li>
-        </ul>
-
-        <h3>📖 Altro</h3>
-        <ul>
-            <li><a href="about.html">ℹ️ Info Corso</a></li>
-            <li><a href="projects.html">🎯 Progetti</a></li>
-            <li><a href="resources.html">🔗 Risorse</a></li>
-            <li><a href="faq.html">❓ FAQ</a></li>
-        </ul>
-    </aside>
-    
-
-        <main class="content">
-            <nav class="breadcrumb">
-                <a href="index.html">Home</a> > Sezione 2: Rust Base > Struttura di un Progetto Rust
-            </nav>
-
-            <h2 class="lesson-title">Struttura di un Progetto Rust</h2>
-
-            <div class="box box-theory">
-                <h3>📘 Introduzione Teorica</h3>
-                
-<p>Un progetto Rust ben organizzato facilita la manutenzione, la collaborazione e il riutilizzo del codice. La struttura segue convenzioni precise:</p>
-<ul>
-    <li><strong>src/main.rs</strong>: Punto di ingresso per applicazioni eseguibili (binari)</li>
-    <li><strong>src/lib.rs</strong>: Punto di ingresso per librerie riutilizzabili</li>
-    <li><strong>Cargo.toml</strong>: File di configurazione con metadati e dipendenze</li>
-    <li><strong>Moduli</strong>: Organizzano il codice in namespace separati</li>
-    <li><strong>Visibilità</strong>: <code>pub</code> rende pubblici elementi accessibili da altri moduli</li>
-</ul>
-<p>Una buona organizzazione previene conflitti di nomi, migliora la leggibilità e permette di scalare il progetto.</p>
-
-            </div>
-
-            <div class="box box-steps">
-                <h3>🔧 Procedura Passo-Passo</h3>
-                
-<ol>
-    <li><strong>Creazione progetto base</strong>
-        <pre><code># Crea un nuovo progetto binario
-cargo new mio_progetto
-cd mio_progetto
-
-# Struttura creata:
-# mio_progetto/
-# ├── Cargo.toml
-# └── src/
-#     └── main.rs</code></pre>
-    </li>
-
-    <li><strong>Creare un modulo in un file separato</strong>
-        <p>Crea <code>src/utils.rs</code>:</p>
-        <pre><code>// src/utils.rs
-pub fn saluta(nome: &str) {
-    println!("Ciao, {}!", nome);
-}
-
-pub fn somma(a: i32, b: i32) -> i32 {
-    a + b
-}
-
-// Funzione privata (non pub)
-fn helper_privato() {
-    println!("Solo per uso interno");
-}</code></pre>
-
-        <p>Usa il modulo in <code>src/main.rs</code>:</p>
-        <pre><code>// src/main.rs
-mod utils;  // Dichiara il modulo
-
+// src/main.rs
+mod utils;
 fn main() {
-    utils::saluta("Mario");
-    let risultato = utils::somma(5, 7);
-    println!("Somma: {}", risultato);
+    utils::saluta();
+}</code></pre></li>
+<li><strong>Sottmoduli</strong>
+<pre><code>// src/network/mod.rs
+pub mod server;
+pub mod client;</code></pre></li>
+<li><strong>Visibilità</strong>
+<pre><code>pub fn pubblica() {}
+pub(crate) fn solo_crate() {}
+fn privata() {}</code></pre></li></ol></div>
+<div class="box box-code"><h3>💻 Codice Sorgente Commentato</h3><button class="copy-button">Copia</button><pre><code>// PROGETTO ORGANIZZATO
+my_project/
+├── Cargo.toml
+└── src/
+    ├── main.rs
+    ├── lib.rs
+    ├── utils.rs
+    └── network/
+        ├── mod.rs
+        ├── server.rs
+        └── client.rs
 
-    // utils::helper_privato();  // ❌ ERRORE: funzione privata
-}</code></pre>
-    </li>
-
-    <li><strong>Moduli in sottocartelle</strong>
-        <p>Per organizzazioni più complesse:</p>
-        <pre><code># Struttura:
-# src/
-# ├── main.rs
-# └── matematica/
-#     ├── mod.rs       # Punto di ingresso del modulo
-#     ├── aritmetica.rs
-#     └── geometria.rs</code></pre>
-
-        <p>File <code>src/matematica/mod.rs</code>:</p>
-        <pre><code>// Dichiara i sottomoduli
-pub mod aritmetica;
-pub mod geometria;</code></pre>
-
-        <p>File <code>src/matematica/aritmetica.rs</code>:</p>
-        <pre><code>pub fn somma(a: i32, b: i32) -> i32 {
-    a + b
-}
-
-pub fn sottrazione(a: i32, b: i32) -> i32 {
-    a - b
-}</code></pre>
-
-        <p>Uso in <code>main.rs</code>:</p>
-        <pre><code>mod matematica;
-
-fn main() {
-    let s = matematica::aritmetica::somma(10, 5);
-    println!("Somma: {}", s);
-}</code></pre>
-    </li>
-
-    <li><strong>Creare una libreria (lib.rs)</strong>
-        <pre><code>// src/lib.rs
+// src/lib.rs
 pub mod utils;
-pub mod matematica;
+pub mod network;
 
-// Re-export per semplificare l'uso
-pub use matematica::aritmetica::somma;</code></pre>
+// src/utils.rs
+pub fn helper() {
+    println!("Helper!");
+}
 
-        <p>Gli utenti della libreria possono fare:</p>
-        <pre><code>use mio_progetto::somma;  // Uso diretto
-use mio_progetto::matematica::aritmetica;  // Percorso completo</code></pre>
-    </li>
-
-    <li><strong>Controllo visibilità</strong>
-        <pre><code>// src/lib.rs
-pub mod pubblico {
-    pub fn accessibile() {
-        println!("Tutti possono chiamarmi");
-    }
-
-    fn privato() {
-        println!("Solo interno al modulo");
-    }
-
-    pub(crate) fn solo_crate() {
-        println!("Solo in questo crate");
-    }
-}</code></pre>
-    </li>
-</ol>
-
-            </div>
-
-            <div class="box box-code">
-                <h3>💻 Codice Sorgente Commentato</h3>
-                <button class="copy-button">Copia</button>
-                
-<pre><code>// ========================================
-// ESEMPIO COMPLETO: Progetto Organizzato
-// ========================================
-
-// ========================================
-// File: src/main.rs
-// ========================================
-mod database;
-mod models;
-mod utils;
-
-use models::User;
-use database::Database;
-
+// src/main.rs
+use my_project::utils;
 fn main() {
-    println!("=== Applicazione Utenti ===
-");
-
-    let mut db = Database::new();
-
-    // Crea utenti
-    let user1 = User::new("Mario", "mario@example.com", 30);
-    let user2 = User::new("Luigi", "luigi@example.com", 28);
-
-    db.add_user(user1);
-    db.add_user(user2);
-
-    // Lista utenti
-    println!("Utenti registrati:");
-    db.list_users();
-
-    // Cerca utente
-    if let Some(user) = db.find_user("Mario") {
-        println!("
-Utente trovato: {}", user.info());
-    }
-}
-
-// ========================================
-// File: src/models.rs
-// ========================================
-// mod models;
-
-/// Rappresenta un utente del sistema
-#[derive(Debug, Clone)]
-pub struct User {
-    pub name: String,
-    pub email: String,
-    pub age: u32,
-}
-
-impl User {
-    /// Crea un nuovo utente
-    pub fn new(name: &str, email: &str, age: u32) -> Self {
-        User {
-            name: name.to_string(),
-            email: email.to_string(),
-            age,
-        }
-    }
-
-    /// Ritorna informazioni formattate
-    pub fn info(&self) -> String {
-        format!("{} ({}) - {} anni", self.name, self.email, self.age)
-    }
-
-    /// Verifica se è maggiorenne
-    pub fn is_adulto(&self) -> bool {
-        self.age >= 18
-    }
-}
-
-// ========================================
-// File: src/database.rs
-// ========================================
-// mod database;
-
-use crate::models::User;
-
-/// Database in-memory per gli utenti
-pub struct Database {
-    users: Vec<User>,
-}
-
-impl Database {
-    /// Crea un nuovo database vuoto
-    pub fn new() -> Self {
-        Database {
-            users: Vec::new(),
-        }
-    }
-
-    /// Aggiunge un utente
-    pub fn add_user(&mut self, user: User) {
-        self.users.push(user);
-    }
-
-    /// Lista tutti gli utenti
-    pub fn list_users(&self) {
-        for (i, user) in self.users.iter().enumerate() {
-            println!("{}. {}", i + 1, user.info());
-        }
-    }
-
-    /// Cerca un utente per nome
-    pub fn find_user(&self, name: &str) -> Option<&User> {
-        self.users.iter().find(|u| u.name == name)
-    }
-
-    /// Conta utenti adulti
-    pub fn conta_adulti(&self) -> usize {
-        self.users.iter().filter(|u| u.is_adulto()).count()
-    }
-}
-
-// ========================================
-// File: src/utils.rs
-// ========================================
-// mod utils;
-
-/// Funzioni di utilità
-
-pub fn formatta_titolo(testo: &str) -> String {
-    format!("=== {} ===", testo.to_uppercase())
-}
-
-pub fn valida_email(email: &str) -> bool {
-    email.contains('@') && email.contains('.')
-}
-
-// Funzione privata (solo per uso interno)
-fn helper() {
-    println!("Helper interno");
-}
-
-// ========================================
-// ESEMPIO CON SOTTOCARTELLE
-// ========================================
-
-// Struttura progetto complesso:
-// src/
-// ├── main.rs
-// ├── lib.rs
-// ├── models/
-// │   ├── mod.rs
-// │   ├── user.rs
-// │   └── product.rs
-// ├── database/
-// │   ├── mod.rs
-// │   ├── connection.rs
-// │   └── queries.rs
-// └── utils/
-//     ├── mod.rs
-//     ├── validation.rs
-//     └── formatting.rs
-
-// File: src/models/mod.rs
-/*
-pub mod user;
-pub mod product;
-
-// Re-export per semplificare
-pub use user::User;
-pub use product::Product;
-*/
-
-// File: src/models/user.rs
-/*
-#[derive(Debug)]
-pub struct User {
-    pub id: u32,
-    pub name: String,
-}
-
-impl User {
-    pub fn new(id: u32, name: String) -> Self {
-        User { id, name }
-    }
-}
-*/
-
-// Uso in main.rs:
-/*
-mod models;
-
-use models::User;  // Grazie al re-export
-
-fn main() {
-    let user = User::new(1, "Mario".to_string());
-    println!("{:?}", user);
-}
-*/
-
-// ========================================
-// ESEMPIO LIB.RS PER LIBRERIA
-// ========================================
-
-// File: src/lib.rs (per creare una libreria)
-/*
-//! # Mia Libreria Utenti
-//! 
-//! Questa libreria fornisce funzionalità per gestire utenti.
-
-pub mod models;
-pub mod database;
-mod utils;  // Privato
-
-// Re-export delle API pubbliche
-pub use models::User;
-pub use database::Database;
-
-// Funzione di livello top
-pub fn versione() -> &'static str {
-    "1.0.0"
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_versione() {
-        assert_eq!(versione(), "1.0.0");
-    }
-}
-*/
-</code></pre>
-
-            </div>
-
-            <div class="box box-exercises">
-                <h3>✏️ Esercizi Pratici</h3>
-                
-<ol>
-    <li><strong>Modulo Math</strong>
-        <p>Crea un modulo <code>math</code> in <code>src/math.rs</code> con funzioni pubbliche:</p>
-        <ul>
-            <li><code>somma(a: i32, b: i32) -> i32</code></li>
-            <li><code>moltiplicazione(a: i32, b: i32) -> i32</code></li>
-            <li><code>potenza(base: i32, esp: u32) -> i32</code></li>
-        </ul>
-        <p>Usale in <code>main.rs</code>.</p>
-    </li>
-
-    <li><strong>Modulo con Sottocartella</strong>
-        <p>Crea una struttura:</p>
-        <pre><code>src/
-├── main.rs
-└── stringhe/
-    ├── mod.rs
-    ├── uppercase.rs
-    └── reverse.rs</code></pre>
-        <p>Implementa funzioni per manipolare stringhe e chiamale dal main.</p>
-    </li>
-
-    <li><strong>Visibilità pub/private</strong>
-        <p>Crea un modulo con:</p>
-        <ul>
-            <li>2 funzioni pubbliche (<code>pub</code>)</li>
-            <li>1 funzione privata (no <code>pub</code>)</li>
-            <li>1 funzione visibile solo nel crate (<code>pub(crate)</code>)</li>
-        </ul>
-        <p>Verifica quali puoi chiamare da <code>main.rs</code>.</p>
-    </li>
-
-    <li><strong>Libreria Riutilizzabile</strong>
-        <p>Crea un progetto con sia <code>lib.rs</code> che <code>main.rs</code>:</p>
-        <ul>
-            <li><code>lib.rs</code>: Definisce una struct <code>Calcolatrice</code> con metodi</li>
-            <li><code>main.rs</code>: Usa la libreria per fare calcoli</li>
-        </ul>
-    </li>
-
-    <li><strong>Progetto Complesso</strong>
-        <p>Crea un sistema di gestione libri con:</p>
-        <ul>
-            <li><code>models/libro.rs</code>: Struct Libro</li>
-            <li><code>models/autore.rs</code>: Struct Autore</li>
-            <li><code>database/mod.rs</code>: Gestione collezione libri</li>
-            <li><code>utils/formattazione.rs</code>: Utility per output</li>
-        </ul>
-        <p>Organizza tutto con <code>mod.rs</code> appropriati.</p>
-    </li>
-
-    <li><strong>Challenge: Re-export</strong>
-        <p>In <code>lib.rs</code>, usa <code>pub use</code> per semplificare l'accesso alle API. Ad esempio, invece di <code>use mio_crate::models::user::User</code>, permetti <code>use mio_crate::User</code>.</p>
-    </li>
-</ol>
-
-            </div>
-
-            <div class="box box-troubleshooting">
-                <h3>⚠️ Troubleshooting</h3>
-                
-<h4>❌ Errore: "file not found for module"</h4>
-<p><strong>Causa:</strong> Rust non trova il file del modulo.</p>
-<p><strong>Soluzione:</strong></p>
-<pre><code>// In main.rs dichiari:
-mod utils;
-
-// Rust cerca (in ordine):
-// 1. src/utils.rs
-// 2. src/utils/mod.rs
-
-// Assicurati che uno dei due esista!</code></pre>
-
-<h4>❌ Errore: "function is private"</h4>
-<p><strong>Causa:</strong> Stai chiamando una funzione non marcata <code>pub</code>.</p>
-<p><strong>Soluzione:</strong></p>
-<pre><code>// Nel modulo, aggiungi pub:
-pub fn mia_funzione() {  // Ora è pubblica
-    // ...
-}</code></pre>
-
-<h4>❌ Errore: "use of undeclared crate or module"</h4>
-<p><strong>Causa:</strong> Non hai dichiarato il modulo con <code>mod</code>.</p>
-<p><strong>Soluzione:</strong></p>
-<pre><code>// SBAGLIATO:
-use utils::saluta;  // ❌ utils non dichiarato
-
-// CORRETTO:
-mod utils;  // Prima dichiara
-use utils::saluta;  // Poi usa</code></pre>
-
-<h4>❌ Errore: "circular module dependency"</h4>
-<p><strong>Causa:</strong> Due moduli si importano a vicenda.</p>
-<p><strong>Soluzione:</strong> Ristruttura il codice. Spesso indica un problema di design. Considera di:</p>
-<ul>
-    <li>Estrarre il codice condiviso in un terzo modulo</li>
-    <li>Usare traits per invertire le dipendenze</li>
-    <li>Ripensare l'architettura</li>
-</ul>
-
-<h4>💡 Tip: Convenzioni di Naming</h4>
-<ul>
-    <li><strong>File/moduli</strong>: snake_case (<code>mio_modulo.rs</code>)</li>
-    <li><strong>Struct/Enum</strong>: PascalCase (<code>MiaStruct</code>)</li>
-    <li><strong>Funzioni/variabili</strong>: snake_case (<code>mia_funzione</code>)</li>
-    <li><strong>Costanti</strong>: SCREAMING_SNAKE_CASE (<code>MAX_SIZE</code>)</li>
-</ul>
-
-<h4>💡 Tip: Quando Usare lib.rs</h4>
-<p>Usa <code>lib.rs</code> quando:</p>
-<ul>
-    <li>Vuoi creare codice riutilizzabile da altri progetti</li>
-    <li>Vuoi separare logica di business da interfaccia utente</li>
-    <li>Stai creando una libreria da pubblicare su crates.io</li>
-</ul>
-
-<h4>🔍 Strumenti Utili</h4>
-<pre><code># Visualizza la struttura del progetto
-tree src/
-
-# Controlla se il codice compila senza generare binari
-cargo check
-
-# Genera la documentazione della tua libreria
-cargo doc --open</code></pre>
-
-            </div>
-
-            <nav class="lesson-nav">
-                <a href="lesson-2-2.html">← Lezione Precedente</a>
-                <a href="lesson-2-4.html">Lezione Successiva →</a>
-            </nav>
-        </main>
-    </div>
-
-    
-    <footer>
-        <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
-        <p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | 
-           <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p>
-    </footer>
-    
-
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const currentPage = window.location.pathname.split('/').pop();
-    const links = document.querySelectorAll('.sidebar a');
-    links.forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
-            link.classList.add('active');
-        }
-    });
-
-    const codeBlocks = document.querySelectorAll('.box-code');
-    codeBlocks.forEach(block => {
-        const button = block.querySelector('.copy-button');
-        if (button) {
-            button.addEventListener('click', () => {
-                const code = block.querySelector('code').textContent;
-                navigator.clipboard.writeText(code);
-                button.textContent = 'Copiato!';
-                setTimeout(() => {
-                    button.textContent = 'Copia';
-                }, 2000);
-            });
-        }
-    });
-});
-</script>
-</body>
-</html>
+    utils::helper();
+}</code></pre></div>
+<div class="box box-exercises"><h3>✏️ Esercizi Pratici</h3><ol>
+<li><strong>Crea modulo math</strong> con funzioni somma, sottrazione in math.rs.</li>
+<li><strong>Organizza in sottocartelle</strong>: network/client.rs, network/server.rs.</li>
+<li><strong>Test visibilità</strong>: pub vs pub(crate) vs private.</li></ol></div>
+<div class="box box-troubleshooting"><h3>⚠️ Troubleshooting</h3><h4>❌ Errore "unresolved import"</h4>
+<p><strong>Soluzione:</strong> Usa <code>mod nome;</code> prima di use.</p>
+<h4>💡 Tip: Re-export</h4>
+<p>Usa <code>pub use</code> per re-esportare simboli.</p></div>
+<nav class="lesson-nav"><a href="lesson-2-2.html">← Precedente</a><a href="lesson-2-4.html">Successiva →</a></nav></main></div><footer><p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
+<p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p></footer><script>document.addEventListener('DOMContentLoaded', function() {
+const currentPage = window.location.pathname.split('/').pop(); const links = document.querySelectorAll('.sidebar a');
+links.forEach(link => {if (link.getAttribute('href') === currentPage) {link.classList.add('active');}});
+const codeBlocks = document.querySelectorAll('.box-code'); codeBlocks.forEach(block => {const button = block.querySelector('.copy-button');
+if (button) {button.addEventListener('click', () => {const code = block.querySelector('code').textContent; navigator.clipboard.writeText(code);
+button.textContent = 'Copiato!'; setTimeout(() => {button.textContent = 'Copia';}, 2000);});}});
+const menuToggle = document.querySelector('.menu-toggle'); const sidebar = document.querySelector('.sidebar');
+if (menuToggle && sidebar) {menuToggle.addEventListener('click', () => {sidebar.classList.toggle('open');});
+const sidebarLinks = sidebar.querySelectorAll('a'); sidebarLinks.forEach(link => {link.addEventListener('click', () => {if (window.innerWidth <= 900) {sidebar.classList.remove('open');}});});
+document.addEventListener('click', (e) => {if (window.innerWidth <= 900) {if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {sidebar.classList.remove('open');}}});}});</script></body></html>

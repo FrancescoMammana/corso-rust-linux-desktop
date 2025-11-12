@@ -1,306 +1,163 @@
 <!DOCTYPE html>
 <html lang="it"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Repository GitHub | Corso Rust Linux Desktop</title><style>* {margin: 0; padding: 0; box-sizing: border-box;}
-body {font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a1a; color: #e0e0e0; line-height: 1.6;}
-header {background: #2a2a2a; padding: 1rem 2rem; border-bottom: 3px solid #DE8E43; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;}
+<title>Repository GitHub | Corso Rust Linux Desktop</title><link rel="icon" type="image/png" href="favicon.png"><style>* {margin: 0; padding: 0; box-sizing: border-box;}
+body {font-family: 'Inter', sans-serif; background: #1a1a1a; color: #e0e0e0; line-height: 1.6;}
+header {background: #2a2a2a; padding: 1rem 2rem; border-bottom: 3px solid #DE8E43; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between;}
 .header-content {display: flex; align-items: center; gap: 1rem;} .rust-logo {font-size: 2rem; color: #DE8E43;} h1 {font-size: 1.5rem; color: #DE8E43;}
+.menu-toggle {display: none; background: none; border: none; color: #DE8E43; font-size: 2rem; cursor: pointer; padding: 0.5rem;}
 .container {display: flex; margin-top: 70px; min-height: calc(100vh - 70px);}
-.sidebar {width: 280px; background: #252525; padding: 2rem 0; position: fixed; left: 0; height: calc(100vh - 70px); overflow-y: auto; border-right: 1px solid #3a3a3a;}
-.sidebar h3 {color: #DE8E43; padding: 0.5rem 1.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 1rem;}
-.sidebar ul {list-style: none;} .sidebar li a {display: block; padding: 0.7rem 1.5rem 0.7rem 2.5rem; color: #b0b0b0; text-decoration: none; transition: all 0.3s; font-size: 0.95rem;}
-.sidebar li a:hover {background: #2f2f2f; color: #DE8E43; border-left: 3px solid #DE8E43;}
-.sidebar li a.active {background: #2f2f2f; color: #DE8E43; border-left: 3px solid #DE8E43; font-weight: 600;}
+.sidebar {width: 280px; background: #252525; padding: 2rem 0; position: fixed; left: 0; height: calc(100vh - 70px); overflow-y: auto; border-right: 1px solid #3a3a3a; z-index: 999;}
+.sidebar h3 {color: #DE8E43; padding: 0.5rem 1.5rem; font-size: 0.9rem; text-transform: uppercase;}
+.sidebar ul {list-style: none;} .sidebar li a {display: block; padding: 0.7rem 1.5rem 0.7rem 2.5rem; color: #b0b0b0; text-decoration: none; transition: all 0.3s;}
+.sidebar li a:hover, .sidebar li a.active {background: #2f2f2f; color: #DE8E43; border-left: 3px solid #DE8E43;}
 .content {flex: 1; margin-left: 280px; padding: 2rem 3rem; max-width: 1200px;}
-.breadcrumb {color: #888; font-size: 0.9rem; margin-bottom: 2rem;} .breadcrumb a {color: #4A90E2; text-decoration: none;} .breadcrumb a:hover {text-decoration: underline;}
+.breadcrumb {color: #888; font-size: 0.9rem; margin-bottom: 2rem;} .breadcrumb a {color: #4A90E2; text-decoration: none;}
 .lesson-title {font-size: 2.5rem; color: #DE8E43; margin-bottom: 1rem;}
 .box {margin: 2rem 0; padding: 1.5rem; border-radius: 8px; border-left: 4px solid;}
-.box-theory {background: #2a2a3e; border-left-color: #4A90E2;} .box-steps {background: #2a2a2a; border-left-color: #DE8E43;} .box-code {background: #1e1e1e; border-left-color: #DE8E43; position: relative;} .box-exercises {background: #2d4a2e; border-left-color: #5cb85c;} .box-troubleshooting {background: #4a2d2e; border-left-color: #d9534f;}
+.box-theory {background: #2a2a3e; border-left-color: #4A90E2;} .box-steps {background: #2a2a2a; border-left-color: #DE8E43;} 
+.box-code {background: #1e1e1e; border-left-color: #DE8E43; position: relative;} .box-exercises {background: #2d4a2e; border-left-color: #5cb85c;} 
+.box-troubleshooting {background: #4a2d2e; border-left-color: #d9534f;}
 .box h3 {color: #DE8E43; margin-bottom: 1rem; font-size: 1.3rem;} .box-theory h3 {color: #4A90E2;} .box-exercises h3 {color: #5cb85c;} .box-troubleshooting h3 {color: #d9534f;}
-code {font-family: 'Fira Code', 'Courier New', monospace; background: #2a2a2a; padding: 0.2rem 0.4rem; border-radius: 3px; font-size: 0.9rem; color: #DE8E43;}
+code {font-family: 'Fira Code', monospace; background: #2a2a2a; padding: 0.2rem 0.4rem; border-radius: 3px; color: #DE8E43;}
 pre {background: #1e1e1e; padding: 1.5rem; border-radius: 5px; overflow-x: auto; margin: 1rem 0;} pre code {background: none; padding: 0; color: #e0e0e0; display: block;}
-.copy-button {position: absolute; top: 1rem; right: 1rem; background: #DE8E43; color: #1a1a1a; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600;} .copy-button:hover {background: #f09d5a;}
+.copy-button {position: absolute; top: 1rem; right: 1rem; background: #DE8E43; color: #1a1a1a; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-weight: 600;}
 ol, ul {margin-left: 1.5rem; margin-top: 0.5rem;} li {margin: 0.5rem 0;}
-.lesson-nav {display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #3a3a3a;}
-.lesson-nav a {background: #DE8E43; color: #1a1a1a; padding: 0.8rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: 600; transition: all 0.3s;}
-.lesson-nav a:hover {background: #f09d5a; transform: translateY(-2px);} .lesson-nav a.disabled {background: #3a3a3a; color: #666; cursor: not-allowed;}
+.lesson-nav {display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #3a3a3a; gap: 1rem;}
+.lesson-nav a {background: #DE8E43; color: #1a1a1a; padding: 0.8rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: 600; text-align: center; transition: all 0.3s;}
+.lesson-nav a:hover {background: #f09d5a;} .lesson-nav a.disabled {background: #3a3a3a; color: #666; cursor: not-allowed;}
 footer {background: #252525; padding: 2rem; text-align: center; color: #888; border-top: 1px solid #3a3a3a; margin-top: 3rem;}
-@media (max-width: 768px) {.sidebar {transform: translateX(-100%); transition: transform 0.3s;} .sidebar.open {transform: translateX(0);} .content {margin-left: 0; padding: 1rem;}}</style></head>
-<body><header><div class="header-content"><div class="rust-logo">🦀</div><h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1></div></header><div class="container"><aside class="sidebar"><h3>📚 Corso Rust Linux</h3><ul><li><a href="index.html">🏠 Home</a></li></ul>
-<h3>1. Ambiente di Sviluppo</h3><ul><li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li><li><a href="lesson-1-2.html">1.2 Config VS Code</a></li><li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li></ul>
-<h3>2. Rust Base</h3><ul><li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li><li><a href="lesson-2-2.html">2.2 Strutture Controllo</a></li><li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li><li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li></ul>
-<h3>3. Sviluppo GUI</h3><ul><li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li><li><a href="lesson-3-2.html">3.2 Glade Designer</a></li><li><a href="lesson-3-3.html">3.3 Sviluppo Manuale</a></li><li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li><li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li></ul>
-<h3>4. Progetti Pratici</h3><ul><li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li><li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li><li><a href="lesson-4-3.html">4.3 Client HTTP</a></li></ul>
-<h3>5. GitHub & Best Practices</h3><ul><li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li><li><a href="lesson-5-2.html">5.2 Documentazione</a></li><li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li></ul>
-<h3>📖 Altro</h3><ul><li><a href="about.html">ℹ️ Info Corso</a></li><li><a href="projects.html">🎯 Progetti</a></li><li><a href="resources.html">🔗 Risorse</a></li><li><a href="faq.html">❓ FAQ</a></li></ul></aside><main class="content">
-<nav class="breadcrumb"><a href="index.html">Home</a> > Sezione 5: GitHub & Best Practices > Repository GitHub</nav>
-<h2 class="lesson-title">Repository GitHub</h2>
-<div class="box box-theory"><h3>📘 Introduzione Teorica</h3>
-<p><strong>GitHub</strong> è il principale platform per versionare, collaborare e pubblicare progetti open source. Un buon repository attrae contributors e dimostra professionismo.</p>
+@media (max-width: 900px) {.menu-toggle {display: block;} .sidebar {position: fixed; left: -280px; top: 70px; transition: left 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.5);} .sidebar.open {left: 0;} .content {margin-left: 0; padding: 1.5rem; width: 100%;} .lesson-title {font-size: 2rem;} .box {margin: 1.5rem 0; padding: 1.2rem;} .lesson-nav {flex-direction: column;} .lesson-nav a {width: 100%;}}
+@media (max-width: 600px) {header {padding: 0.8rem 1rem;} h1 {font-size: 1.1rem;} .rust-logo {font-size: 1.5rem;} .sidebar {width: 85vw; left: -85vw;} .content {padding: 1rem;} .lesson-title {font-size: 1.6rem;} .box {margin: 1rem 0; padding: 1rem;} .box h3 {font-size: 1.1rem;} pre {padding: 1rem; font-size: 0.85rem;}}
+@media (max-width: 400px) {h1 {font-size: 0.95rem;} .sidebar {width: 100vw; left: -100vw;} .lesson-title {font-size: 1.4rem;}}</style></head>
+<body><header><div class="header-content"><div class="rust-logo">🦀</div><h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1></div><button class="menu-toggle" aria-label="Menu">☰</button></header>
+<div class="container"><aside class="sidebar"><h3>📚 Corso</h3><ul><li><a href="index.html">🏠 Home</a></li></ul>
+<h3>1. Ambiente</h3><ul><li><a href="lesson-1-1.html">1.1 Rust</a></li><li><a href="lesson-1-2.html">1.2 VS Code</a></li><li><a href="lesson-1-3.html">1.3 GTK</a></li></ul>
+<h3>2. Rust Base</h3><ul><li><a href="lesson-2-1.html">2.1 Sintassi</a></li><li><a href="lesson-2-2.html">2.2 Controllo</a></li><li><a href="lesson-2-3.html">2.3 Progetto</a></li><li><a href="lesson-2-4.html">2.4 Crate</a></li></ul>
+<h3>3. GUI</h3><ul><li><a href="lesson-3-1.html">3.1 GTK-rs</a></li><li><a href="lesson-3-2.html">3.2 Glade</a></li><li><a href="lesson-3-3.html">3.3 Manuale</a></li><li><a href="lesson-3-4.html">3.4 Widget</a></li><li><a href="lesson-3-5.html">3.5 Menu</a></li></ul>
+<h3>4. Progetti</h3><ul><li><a href="lesson-4-1.html">4.1 Editor</a></li><li><a href="lesson-4-2.html">4.2 Note DB</a></li><li><a href="lesson-4-3.html">4.3 HTTP</a></li></ul>
+<h3>5. GitHub</h3><ul><li><a href="lesson-5-1.html">5.1 Repo</a></li><li><a href="lesson-5-2.html">5.2 Docs</a></li><li><a href="lesson-5-3.html">5.3 Test</a></li></ul></aside><main class="content">
+<nav class="breadcrumb"><a href="index.html">Home</a> > Sezione 5: GitHub & Best Practices > Repository GitHub</nav><h2 class="lesson-title">Repository GitHub</h2>
+<div class="box box-theory"><h3>📘 Introduzione Teorica</h3><p><strong>GitHub</strong> è il platform principale per versionare e collaborare:</p>
 <ul>
     <li><strong>Git fundamentals</strong>: Commit, push, pull, branch, merge</li>
-    <li><strong>Repository structure</strong>: README, LICENSE, .gitignore, src/</li>
+    <li><strong>Repository structure</strong>: README, LICENSE, .gitignore</li>
     <li><strong>Branching strategy</strong>: main, develop, feature branches</li>
-    <li><strong>Pull requests</strong>: Code review e collaborazione</li>
-    <li><strong>Issues & labels</strong>: Tracciamento bug e features</li>
-    <li><strong>Releases & tags</strong>: Versioni pubbliche e semantic versioning</li>
+    <li><strong>Pull requests</strong>: Code review workflow</li>
+    <li><strong>Releases & tags</strong>: Semantic versioning</li>
     <li><strong>GitHub Actions</strong>: CI/CD automatica</li>
 </ul>
-<p>Padroneggiare GitHub è essenziale per ogni developer professionista.</p>
-</div>
-<div class="box box-steps"><h3>🔧 Procedura Passo-Passo</h3>
-<ol>
-    <li><strong>Crea un account GitHub</strong>
-        <p>Visita <a href="https://github.com" style="color: #DE8E43;">github.com</a> e registrati con email.</p>
-    </li>
-
-    <li><strong>Crea repository locale</strong>
-        <pre><code># Naviga nella directory progetto
-cd mio_progetto
-
-# Inizializza git
-git init
-
-# Aggiungi file
-git add .
-
-# Commit iniziale
-git commit -m "Initial commit"</code></pre>
+<p>Padroneggiare GitHub è essenziale per developer professionisti.</p></div>
+<div class="box box-steps"><h3>🔧 Procedura Passo-Passo</h3><ol>
+    <li><strong>Setup Git locale</strong>
+        <pre><code>git config --global user.name "Nome"
+git config --global user.email "email@example.com"
+cd progetto && git init</code></pre>
     </li>
 
     <li><strong>Crea repository su GitHub</strong>
-        <p>Dashboard → New repository → Scegli nome, descrizione, visibility (Public/Private)</p>
+        <p>Dashboard → New repository → scegli Public/Private</p>
     </li>
 
     <li><strong>Connetti locale a remoto</strong>
-        <pre><code># Aggiungi remoto (sostituisci username/repo)
-git remote add origin https://github.com/username/repo.git
-
-# Push verso GitHub
+        <pre><code>git remote add origin https://github.com/user/repo.git
 git branch -M main
 git push -u origin main</code></pre>
     </li>
 
-    <li><strong>Configura .gitignore</strong>
-        <pre><code># File: .gitignore
-target/
-*.swp
-*.swo
-.DS_Store
-Cargo.lock</code></pre>
+    <li><strong>Workflow branching</strong>
+        <pre><code>git checkout -b feature/nome-feature
+# Lavora e commit
+git add . && git commit -m "feat: descrizione"
+git push origin feature/nome-feature
+# Crea Pull Request su GitHub</code></pre>
     </li>
 
     <li><strong>Setup SSH per autenticazione</strong>
-        <pre><code># Genera chiave SSH
-ssh-keygen -t ed25519 -C "email@example.com"
-
-# Copia public key
-cat ~/.ssh/id_ed25519.pub
-
-# Aggiungi in GitHub Settings → SSH keys</code></pre>
+        <pre><code>ssh-keygen -t ed25519 -C "email@example.com"
+cat ~/.ssh/id_ed25519.pub  # Copia in GitHub Settings</code></pre>
     </li>
-</ol>
-</div>
-<div class="box box-code"><h3>💻 Codice Sorgente Commentato</h3><button class="copy-button">Copia</button>
-<pre><code>// ========================================
+</ol></div>
+<div class="box box-code"><h3>💻 Codice Sorgente Commentato</h3><button class="copy-button">Copia</button><pre><code>// ========================================
 // GIT WORKFLOW COMPLETO
 // ========================================
 
-// ========================================
-// 1. SETUP INIZIALE
-// ========================================
+// Setup iniziale
+$ git config --global user.name "Mario Rossi"
+$ git config --global user.email "mario@example.com"
 
-$ git config --global user.name "Il Tuo Nome"
-$ git config --global user.email "email@example.com"
-
+// Crea repository locale
 $ cd mio_progetto
 $ git init
 $ git add .
-$ git commit -m "Initial commit: struttura base progetto"
+$ git commit -m "Initial commit"
 
 // ========================================
-// 2. LAVORARE CON BRANCHES
+// BRANCHING WORKFLOW
 // ========================================
 
-// Crea feature branch
+// Feature branch
 $ git checkout -b feature/add-search
-
-// Lavora e commit
 $ git add src/search.rs
-$ git commit -m "Add search functionality"
-$ git commit -m "Add tests for search"
+$ git commit -m "feat: add search functionality"
+$ git push origin feature/add-search
+// → Crea Pull Request su GitHub
 
-// Torna a main e merge
+// Merge dopo approvazione
 $ git checkout main
 $ git pull origin main
 $ git merge feature/add-search
-
-// Push verso remoto
 $ git push origin main
-
-// Elimina branch locale
 $ git branch -d feature/add-search
-$ git push origin --delete feature/add-search
 
 // ========================================
-// 3. WORKFLOW COLLABORATIVO
+// COMANDI ESSENZIALI
 // ========================================
 
-// Clona un repository
-$ git clone https://github.com/user/project.git
-$ cd project
-
-// Crea branch locale
-$ git checkout -b fix/issue-123
-
-// Fai modifiche
-$ git status                    # Vedi cosa è cambiato
-$ git diff src/main.rs         # Vedi differenze file specifico
-$ git add src/main.rs
-$ git commit -m "Fix: resolve issue #123"
-
-// Push
-$ git push origin fix/issue-123
-
-// Crea Pull Request su GitHub (via web interface)
-
-// Dopo merge su GitHub
-$ git checkout main
-$ git pull origin main
+$ git status          # Mostra stato working tree
+$ git log --oneline   # History compatto
+$ git diff            # Differenze non staged
+$ git reset --soft HEAD~1  # Annulla commit, keep changes
+$ git revert HEAD     # Crea commit che annulla
+$ git stash           # Salva temporaneamente modifiche
+$ git cherry-pick abc123  # Applica commit specifico
 
 // ========================================
-// 4. REVERT E UNDO
+// TAGS PER RELEASES
 // ========================================
 
-// Annulla ultimo commit (ma keep changes)
-$ git reset --soft HEAD~1
-
-// Annulla ultimo commit (discard changes)
-$ git reset --hard HEAD~1
-
-// Vedi history
-$ git log --oneline -10
-
-// Revert un commit specifico
-$ git revert abc123
-
-// Cherry-pick commit da un branch
-$ git cherry-pick abc123
-
-// ========================================
-// 5. TAGGING E RELEASES
-// ========================================
-
-// Crea tag per versione
 $ git tag -a v1.0.0 -m "Release version 1.0.0"
 $ git push origin v1.0.0
 
-// Lista tag
-$ git tag -l
-
-// Crea tag leggero
-$ git tag v1.0.1
+$ git tag -l          # Lista tag
 
 // ========================================
-// 6. STASHING (TEMPORANEO)
+// .gitignore TEMPLATE
 // ========================================
 
-// Salva temporaneamente modifiche
-$ git stash
-
-// Torna al lavoro precedente
-$ git stash pop
-
-// Elenca stash
-$ git stash list
-
-// ========================================
-// 7. REBASING (ADVANCED)
-// ========================================
-
-// Riscrivi history (MAI su branch pubblici!)
-$ git rebase -i HEAD~3
-
-// Usa "pick", "reword", "squash" per modificare commit
-
-// ========================================
-// 8. GITIGNORE ESEMPI
-// ========================================
-
-# .gitignore per Rust project
-
-# Build artifacts
 target/
 Cargo.lock
-
-# Editor
-.vscode/
-.idea/
 *.swp
-*.swo
-
-# OS
 .DS_Store
-Thumbs.db
-
-# Secrets
+.vscode/
 .env
-.env.local
-secrets.txt
-
-# IDE
-*.iml
-.gradle/
+node_modules/
 
 // ========================================
-// EXAMPLE: COMMIT MESSAGES
+// SEMANTIC COMMIT MESSAGES
 // ========================================
 
-// ✅ BUONI:
-$ git commit -m "feat: add search functionality"
-$ git commit -m "fix: resolve panic in parser"
-$ git commit -m "docs: update README with examples"
-$ git commit -m "refactor: simplify network code"
-$ git commit -m "test: add unit tests for utils"
-
-// ❌ CATTIVI:
-$ git commit -m "fix"
-$ git commit -m "updated code"
-$ git commit -m "asdfgh"
-
-// ========================================
-// SEMANTIC COMMIT FORMAT
-// ========================================
-
-/*
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
-
-Types: feat, fix, docs, style, refactor, test, chore
-Scope: Optional (feature, parser, network)
-Subject: Imperativo, no caps, no punto
-Body: Perché, non che
-Footer: Riferimenti issue (Closes #123)
-
-Example:
-feat(search): implement full-text search
-
-Add support for searching notes by keywords.
-Uses SQLite FTS5 for performance.
-
-Closes #42
-*/
+feat(parser): add new parsing algorithm
+fix(ui): resolve button alignment issue
+docs(readme): update installation instructions
+refactor(network): simplify connection logic
+test(utils): add unit tests for helpers
 
 // ========================================
 // GITHUB ACTIONS CI/CD
 // ========================================
 
-/*
-File: .github/workflows/rust.yml
-
-name: Rust
+// File: .github/workflows/rust.yml
+name: Rust CI
 
 on:
   push:
@@ -308,112 +165,65 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  CARGO_TERM_COLOR: always
-
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-
     - name: Build
-      run: cargo build --verbose
-
+      run: cargo build --release
     - name: Run tests
-      run: cargo test --verbose
-
+      run: cargo test
     - name: Run clippy
       run: cargo clippy -- -D warnings
-*/
-</code></pre>
-</div>
-<div class="box box-exercises"><h3>✏️ Esercizi Pratici</h3>
-<ol>
+</code></pre></div>
+<div class="box box-exercises"><h3>✏️ Esercizi Pratici</h3><ol>
     <li><strong>Setup GitHub Base</strong>
-        <p>Crea account GitHub (se non esiste), crea repository pubblico e pushalo prima commit.</p>
+        <p>Crea account GitHub, nuovo repository pubblico, push primo commit.</p>
     </li>
 
-    <li><strong>Git Workflow Locale</strong>
-        <p>Crea 3 branch feature, aggiungi commit, merge su main, visualizza history con git log.</p>
+    <li><strong>Branching Workflow</strong>
+        <p>Crea 3 feature branch, aggiungi commit, merge su main visualizzando history.</p>
     </li>
 
-    <li><strong>Collaborazione Simulata</strong>
-        <p>Clona un repository open source, crea branch, fai modifica (anche piccola), crea PR.</p>
+    <li><strong>Pull Request</strong>
+        <p>Fork progetto open source, crea PR con piccola modifica/fix.</p>
     </li>
 
-    <li><strong>Tagging e Releases</strong>
-        <p>Crea tag v1.0.0 nel tuo repository, crea GitHub Release con changelog.</p>
+    <li><strong>Tagging & Releases</strong>
+        <p>Crea tag v1.0.0, pubblica release con changelog su GitHub.</p>
     </li>
 
     <li><strong>.gitignore Ottimale</strong>
-        <p>Crea .gitignore per progetto Rust con tutti i file da escludere, verifica con <code>git check-ignore</code>.</p>
+        <p>Configura .gitignore per Rust con tutti i file da escludere.</p>
     </li>
 
-    <li><strong>Challenge: GitHub Actions CI/CD</strong>
-        <p>Setup GitHub Actions per:</p>
-        <ul>
-            <li>Compilare il progetto</li>
-            <li>Eseguire test</li>
-            <li>Eseguire clippy linter</li>
-            <li>Creare badge status nel README</li>
-        </ul>
+    <li><strong>Challenge: GitHub Actions</strong>
+        <p>Setup CI/CD che compila, testa e lancia clippy automaticamente.</p>
     </li>
-</ol>
-</div>
-<div class="box box-troubleshooting"><h3>⚠️ Troubleshooting</h3>
-<h4>❌ Errore "permission denied (publickey)"</h4>
-<p><strong>Causa:</strong> SSH key non configurata correttamente.</p>
-<p><strong>Soluzione:</strong></p>
-<pre><code>ssh-keygen -t ed25519 -C "email@example.com"
-# Copia ~/.ssh/id_ed25519.pub
-# Aggiungi in GitHub Settings → SSH and GPG keys</code></pre>
+</ol></div>
+<div class="box box-troubleshooting"><h3>⚠️ Troubleshooting</h3><h4>❌ "permission denied (publickey)"</h4>
+<p><strong>Soluzione:</strong> Genera SSH key e aggiungi a GitHub Settings.</p>
 
-<h4>❌ "fatal: not a git repository"</h4>
-<p><strong>Causa:</strong> Non sei in directory con .git</p>
-<p><strong>Soluzione:</strong> <code>git init</code> per inizializzare</p>
-
-<h4>❌ "Your branch is ahead of 'origin/main'"</h4>
-<p><strong>Causa:</strong> Hai commit locali non pushati.</p>
-<p><strong>Soluzione:</strong> <code>git push origin main</code></p>
+<h4>❌ "Your branch is ahead"</h4>
+<p><strong>Soluzione:</strong> <code>git push origin main</code> per inviare commit.</p>
 
 <h4>❌ Merge conflict</h4>
-<p><strong>Soluzione:</strong></p>
-<pre><code># Risolvi conflitti manualmente nei file
-# Cercherai <<<<<<, ======, >>>>>>
-# Editing, salva, poi:
-$ git add .
-$ git commit -m "Resolve merge conflict"</code></pre>
+<p><strong>Soluzione:</strong> Edita file, risolvi conflitti, <code>git add . && git commit</code>.</p>
 
-<h4>💡 Tip: Revert Accidentale Push</h4>
-<pre><code>git revert HEAD   # Crea nuovo commit che annulla l'ultimo
-git push origin main</code></pre>
-
-<h4>💡 Tip: History Locale Leggibile</h4>
-<pre><code>git log --graph --oneline --all --decorate</code></pre>
-
-<h4>🔍 Strumenti Utili</h4>
-<ul>
-    <li><strong>GitHub Desktop</strong>: GUI per Git (meno potente ma user-friendly)</li>
-    <li><strong>GitKraken</strong>: GUI avanzata con visualizzazione branch</li>
-    <li><strong>Lazygit</strong>: TUI veloce e intuitivo</li>
-</ul>
+<h4>💡 Tip: Revert accidentale</h4>
+<p><code>git revert HEAD</code> crea nuovo commit che annulla l'ultimo.</p>
 </div>
-<nav class="lesson-nav"><a href="lesson-4-3.html">← Lezione Precedente</a><a href="lesson-5-2.html">Lezione Successiva →</a></nav></main></div><footer><p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
-<p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p></footer><script>document.addEventListener('DOMContentLoaded', function() {
-    const currentPage = window.location.pathname.split('/').pop();
-    const links = document.querySelectorAll('.sidebar a');
-    links.forEach(link => {if (link.getAttribute('href') === currentPage) {link.classList.add('active');}});
-    const codeBlocks = document.querySelectorAll('.box-code');
-    codeBlocks.forEach(block => {
-        const button = block.querySelector('.copy-button');
-        if (button) {
-            button.addEventListener('click', () => {
-                const code = block.querySelector('code').textContent;
-                navigator.clipboard.writeText(code);
-                button.textContent = 'Copiato!';
-                setTimeout(() => {button.textContent = 'Copia';}, 2000);
-            });
-        }
-    });
-});</script></body></html>
+<nav class="lesson-nav"><a href="lesson-4-3.html">← Precedente</a><a href="lesson-5-2.html">Successiva →</a></nav></main></div>
+<footer><p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
+<p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p></footer>
+<script>document.addEventListener('DOMContentLoaded', function() {
+const currentPage = window.location.pathname.split('/').pop(); const links = document.querySelectorAll('.sidebar a');
+links.forEach(link => {if (link.getAttribute('href') === currentPage) link.classList.add('active');});
+const codeBlocks = document.querySelectorAll('.box-code'); codeBlocks.forEach(block => {const button = block.querySelector('.copy-button');
+if (button) {button.addEventListener('click', () => {const code = block.querySelector('code').textContent; navigator.clipboard.writeText(code);
+button.textContent = 'Copiato!'; setTimeout(() => {button.textContent = 'Copia';}, 2000);});}});
+const menuToggle = document.querySelector('.menu-toggle'); const sidebar = document.querySelector('.sidebar');
+if (menuToggle && sidebar) {menuToggle.addEventListener('click', () => {sidebar.classList.toggle('open');});
+const sidebarLinks = sidebar.querySelectorAll('a'); sidebarLinks.forEach(link => {link.addEventListener('click', () => {if (window.innerWidth <= 900) sidebar.classList.remove('open');});});
+document.addEventListener('click', (e) => {if (window.innerWidth <= 900 && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) sidebar.classList.remove('open');});}});</script></body></html>
