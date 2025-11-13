@@ -458,25 +458,30 @@ footer {
                 
 <ol>
     <li><strong>Aggiorna il sistema</strong>
+        <button class="copy-button">Copia</button>
         <pre><code>sudo apt update
 sudo apt upgrade -y</code></pre>
     </li>
 
     <li><strong>Installa dipendenze</strong>
+        <button class="copy-button">Copia</button>
         <pre><code>sudo apt install build-essential curl git -y</code></pre>
     </li>
 
     <li><strong>Installa Rust tramite rustup</strong>
+        <button class="copy-button">Copia</button>
         <pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</code></pre>
         <p>Scegli l'opzione 1 (default installation) premendo Enter.</p>
     </li>
 
     <li><strong>Configura PATH</strong>
+        <button class="copy-button">Copia</button>
         <pre><code>source $HOME/.cargo/env</code></pre>
         <p>Questo comando aggiunge Rust al PATH della sessione corrente.</p>
     </li>
 
     <li><strong>Verifica installazione</strong>
+        <button class="copy-button">Copia</button>
         <pre><code>rustc --version
 cargo --version
 rustup --version</code></pre>
@@ -484,6 +489,7 @@ rustup --version</code></pre>
     </li>
 
     <li><strong>Crea il primo progetto</strong>
+         <button class="copy-button">Copia</button>
         <pre><code>cargo new hello_rust
 cd hello_rust
 cargo run</code></pre>
