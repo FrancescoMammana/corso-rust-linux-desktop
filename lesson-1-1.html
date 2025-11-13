@@ -1,760 +1,158 @@
 <!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Installazione Rust su Debian | Corso Rust Linux Desktop</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #1a1a1a;
-    color: #e0e0e0;
-    line-height: 1.6;
-}
-
-header {
-    background: #2a2a2a;
-    padding: 1rem 2rem;
-    border-bottom: 3px solid #DE8E43;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.header-content {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.rust-logo {
-    font-size: 2rem;
-    color: #DE8E43;
-}
-
-h1 {
-    font-size: 1.5rem;
-    color: #DE8E43;
-}
-
-.menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: #DE8E43;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 0.5rem;
-}
-
-.container {
-    display: flex;
-    margin-top: 70px;
-    min-height: calc(100vh - 70px);
-}
-
-.sidebar {
-    width: 280px;
-    background: #252525;
-    padding: 2rem 0;
-    position: fixed;
-    left: 0;
-    height: calc(100vh - 70px);
-    overflow-y: auto;
-    border-right: 1px solid #3a3a3a;
-    z-index: 999;
-}
-
-.sidebar h3 {
-    color: #DE8E43;
-    padding: 0.5rem 1.5rem;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 1rem;
-}
-
-.sidebar ul {
-    list-style: none;
-}
-
-.sidebar li a {
-    display: block;
-    padding: 0.7rem 1.5rem 0.7rem 2.5rem;
-    color: #b0b0b0;
-    text-decoration: none;
-    transition: all 0.3s;
-    font-size: 0.95rem;
-}
-
-.sidebar li a:hover {
-    background: #2f2f2f;
-    color: #DE8E43;
-    border-left: 3px solid #DE8E43;
-}
-
-.sidebar li a.active {
-    background: #2f2f2f;
-    color: #DE8E43;
-    border-left: 3px solid #DE8E43;
-    font-weight: 600;
-}
-
-.content {
-    flex: 1;
-    margin-left: 280px;
-    padding: 2rem 3rem;
-    max-width: 1200px;
-}
-
-.breadcrumb {
-    color: #888;
-    font-size: 0.9rem;
-    margin-bottom: 2rem;
-}
-
-.breadcrumb a {
-    color: #4A90E2;
-    text-decoration: none;
-}
-
-.breadcrumb a:hover {
-    text-decoration: underline;
-}
-
-.lesson-title {
-    font-size: 2.5rem;
-    color: #DE8E43;
-    margin-bottom: 1rem;
-}
-
-.box {
-    margin: 2rem 0;
-    padding: 1.5rem;
-    border-radius: 8px;
-    border-left: 4px solid;
-}
-
-.box-theory {
-    background: #2a2a3e;
-    border-left-color: #4A90E2;
-}
-
-.box-steps {
-    background: #2a2a2a;
-    border-left-color: #DE8E43;
-}
-
-.box-code {
-    background: #1e1e1e;
-    border-left-color: #DE8E43;
-    position: relative;
-}
-
-.box-exercises {
-    background: #2d4a2e;
-    border-left-color: #5cb85c;
-}
-
-.box-troubleshooting {
-    background: #4a2d2e;
-    border-left-color: #d9534f;
-}
-
-.box h3 {
-    color: #DE8E43;
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
-}
-
-.box-theory h3 { color: #4A90E2; }
-.box-exercises h3 { color: #5cb85c; }
-.box-troubleshooting h3 { color: #d9534f; }
-
-code {
-    font-family: 'Fira Code', 'Courier New', monospace;
-    background: #2a2a2a;
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-    font-size: 0.9rem;
-    color: #DE8E43;
-}
-
-pre {
-    background: #1e1e1e;
-    padding: 1.5rem;
-    border-radius: 5px;
-    overflow-x: auto;
-    margin: 1rem 0;
-}
-
-pre code {
-    background: none;
-    padding: 0;
-    color: #e0e0e0;
-    display: block;
-}
-
-.copy-button {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: #DE8E43;
-    color: #1a1a1a;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-.copy-button:hover {
-    background: #f09d5a;
-}
-
-ol, ul {
-    margin-left: 1.5rem;
-    margin-top: 0.5rem;
-}
-
-li {
-    margin: 0.5rem 0;
-}
-
-.lesson-nav {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid #3a3a3a;
-    gap: 1rem;
-}
-
-.lesson-nav a {
-    background: #DE8E43;
-    color: #1a1a1a;
-    padding: 0.8rem 1.5rem;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s;
-    text-align: center;
-}
-
-.lesson-nav a:hover {
-    background: #f09d5a;
-    transform: translateY(-2px);
-}
-
-.lesson-nav a.disabled {
-    background: #3a3a3a;
-    color: #666;
-    cursor: not-allowed;
-}
-
-footer {
-    background: #252525;
-    padding: 2rem;
-    text-align: center;
-    color: #888;
-    border-top: 1px solid #3a3a3a;
-    margin-top: 3rem;
-}
-
-/* ========================================
-   RESPONSIVE DESIGN - TABLET E MOBILE
-   ======================================== */
-
-@media (max-width: 900px) {
-    .menu-toggle {
-        display: block;
-    }
-
-    .sidebar {
-        position: fixed;
-        left: -280px;
-        top: 70px;
-        height: calc(100vh - 70px);
-        transition: left 0.3s ease;
-        box-shadow: 2px 0 10px rgba(0,0,0,0.5);
-    }
-
-    .sidebar.open {
-        left: 0;
-    }
-
-    .content {
-        margin-left: 0;
-        padding: 1.5rem;
-        width: 100%;
-    }
-
-    .lesson-title {
-        font-size: 2rem;
-    }
-
-    .box {
-        margin: 1.5rem 0;
-        padding: 1.2rem;
-    }
-
-    .lesson-nav {
-        flex-direction: column;
-    }
-
-    .lesson-nav a {
-        width: 100%;
-    }
-}
-
-@media (max-width: 600px) {
-    header {
-        padding: 0.8rem 1rem;
-    }
-
-    h1 {
-        font-size: 1.1rem;
-    }
-
-    .rust-logo {
-        font-size: 1.5rem;
-    }
-
-    .sidebar {
-        width: 85vw;
-        left: -85vw;
-    }
-
-    .content {
-        padding: 1rem;
-    }
-
-    .lesson-title {
-        font-size: 1.6rem;
-    }
-
-    .box {
-        margin: 1rem 0;
-        padding: 1rem;
-    }
-
-    .box h3 {
-        font-size: 1.1rem;
-    }
-
-    pre {
-        padding: 1rem;
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-width: 400px) {
-    h1 {
-        font-size: 0.95rem;
-    }
-
-    .sidebar {
-        width: 100vw;
-        left: -100vw;
-    }
-
-    .lesson-title {
-        font-size: 1.4rem;
-    }
-}
-</style>
-</head>
-<body>
-    <header>
-        <div class="header-content">
-            <div class="rust-logo">🦀</div>
-            <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
-        </div>
-        <button class="menu-toggle" aria-label="Menu">☰</button>
-    </header>
-
-    <div class="container">
-        <aside class="sidebar">
-        <h3>📚 Corso Rust Linux</h3>
-        <ul><li><a href="index.html">🏠 Home</a></li></ul>
-        <h3>1. Ambiente di Sviluppo</h3>
-        <ul>
-            <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
-            <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
-            <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
-        </ul>
-        <h3>2. Rust Base</h3>
-        <ul>
-            <li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li>
-            <li><a href="lesson-2-2.html">2.2 Strutture Controllo</a></li>
-            <li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li>
-            <li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li>
-        </ul>
-        <h3>3. Sviluppo GUI</h3>
-        <ul>
-            <li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li>
-            <li><a href="lesson-3-2.html">3.2 Glade Designer</a></li>
-            <li><a href="lesson-3-3.html">3.3 Sviluppo Manuale</a></li>
-            <li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li>
-            <li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li>
-        </ul>
-        <h3>4. Progetti Pratici</h3>
-        <ul>
-            <li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li>
-            <li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li>
-            <li><a href="lesson-4-3.html">4.3 Client HTTP</a></li>
-        </ul>
-        <h3>5. GitHub & Best Practices</h3>
-        <ul>
-            <li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li>
-            <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
-            <li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li>
-        </ul>
-        <h3>📖 Altro</h3>
-        <ul>
-            <li><a href="about.html">ℹ️ Info Corso</a></li>
-            <li><a href="projects.html">🎯 Progetti</a></li>
-            <li><a href="resources.html">🔗 Risorse</a></li>
-            <li><a href="faq.html">❓ FAQ</a></li>
-        </ul>
-    </aside>
-
-        <main class="content">
-            <nav class="breadcrumb">
-                <a href="index.html">Home</a> > Sezione 1: Ambiente di Sviluppo > Installazione Rust su Debian
-            </nav>
-
-            <h2 class="lesson-title">Installazione Rust su Debian</h2>
-
-            <div class="box box-theory">
-                <h3>📘 Introduzione Teorica</h3>
-                
-<p><strong>Rust</strong> è un linguaggio di programmazione moderno, sicuro e performante, ideale per sviluppare applicazioni desktop su Linux. L'installazione su Debian è semplice grazie a <strong>rustup</strong>, il gestore ufficiale delle toolchain Rust.</p>
+<html lang="it"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Installazione Rust su Debian | Corso Rust Linux Desktop</title><link rel="icon" type="image/png" href="favicon.png"><style>* {margin: 0; padding: 0; box-sizing: border-box;}
+body {font-family: 'Inter', sans-serif; background: #1a1a1a; color: #e0e0e0; line-height: 1.6;}
+header {background: #2a2a2a; padding: 1rem 2rem; border-bottom: 3px solid #DE8E43; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between;}
+.header-content {display: flex; align-items: center; gap: 1rem;} .rust-logo {font-size: 2rem; color: #DE8E43;} h1 {font-size: 1.5rem; color: #DE8E43;}
+.menu-toggle {display: none; background: none; border: none; color: #DE8E43; font-size: 2rem; cursor: pointer; padding: 0.5rem;}
+.container {display: flex; margin-top: 70px; min-height: calc(100vh - 70px);}
+.sidebar {width: 280px; background: #252525; padding: 2rem 0; position: fixed; left: 0; height: calc(100vh - 70px); overflow-y: auto; border-right: 1px solid #3a3a3a; z-index: 999;}
+.sidebar h3 {color: #DE8E43; padding: 0.5rem 1.5rem; font-size: 0.9rem; text-transform: uppercase;}
+.sidebar ul {list-style: none;} .sidebar li a {display: block; padding: 0.7rem 1.5rem 0.7rem 2.5rem; color: #b0b0b0; text-decoration: none; transition: all 0.3s;}
+.sidebar li a:hover, .sidebar li a.active {background: #2f2f2f; color: #DE8E43; border-left: 3px solid #DE8E43;}
+.content {flex: 1; margin-left: 280px; padding: 2rem 3rem; max-width: 1200px;}
+.breadcrumb {color: #888; font-size: 0.9rem; margin-bottom: 2rem;} .breadcrumb a {color: #4A90E2; text-decoration: none;}
+.lesson-title {font-size: 2.5rem; color: #DE8E43; margin-bottom: 1rem;}
+.box {margin: 2rem 0; padding: 1.5rem; border-radius: 8px; border-left: 4px solid;}
+.box-theory {background: #2a2a3e; border-left-color: #4A90E2;} .box-steps {background: #2a2a2a; border-left-color: #DE8E43;} 
+.box-code {background: #1e1e1e; border-left-color: #DE8E43; position: relative;} .box-exercises {background: #2d4a2e; border-left-color: #5cb85c;} 
+.box-troubleshooting {background: #4a2d2e; border-left-color: #d9534f;}
+.box h3 {color: #DE8E43; margin-bottom: 1rem; font-size: 1.3rem;} .box-theory h3 {color: #4A90E2;} .box-exercises h3 {color: #5cb85c;} .box-troubleshooting h3 {color: #d9534f;}
+code {font-family: 'Fira Code', monospace; background: #2a2a2a; padding: 0.2rem 0.4rem; border-radius: 3px; color: #DE8E43;}
+.code-block-wrapper {position: relative; margin: 1rem 0;}
+pre {background: #1e1e1e; padding: 1.5rem; padding-top: 2.5rem; border-radius: 5px; overflow-x: auto; margin: 0;} 
+pre code {background: none; padding: 0; color: #e0e0e0; display: block;}
+.copy-button {position: absolute; top: 0.5rem; right: 0.5rem; background: #DE8E43; color: #1a1a1a; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; z-index: 10; transition: all 0.2s;}
+.copy-button:hover {background: #f09d5a; transform: translateY(-1px);}
+.copy-button:active {transform: translateY(0);}
+ol, ul {margin-left: 1.5rem; margin-top: 0.5rem;} li {margin: 0.5rem 0;}
+.lesson-nav {display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #3a3a3a; gap: 1rem;}
+.lesson-nav a {background: #DE8E43; color: #1a1a1a; padding: 0.8rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: 600; text-align: center; transition: all 0.3s;}
+.lesson-nav a:hover {background: #f09d5a;} .lesson-nav a.disabled {background: #3a3a3a; color: #666; cursor: not-allowed;}
+footer {background: #252525; padding: 2rem; text-align: center; color: #888; border-top: 1px solid #3a3a3a; margin-top: 3rem;}
+@media (max-width: 900px) {.menu-toggle {display: block;} .sidebar {position: fixed; left: -280px; top: 70px; transition: left 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.5);} .sidebar.open {left: 0;} .content {margin-left: 0; padding: 1.5rem; width: 100%;} .lesson-title {font-size: 2rem;} .box {margin: 1.5rem 0; padding: 1.2rem;} .lesson-nav {flex-direction: column;} .lesson-nav a {width: 100%;}}
+@media (max-width: 600px) {header {padding: 0.8rem 1rem;} h1 {font-size: 1.1rem;} .rust-logo {font-size: 1.5rem;} .sidebar {width: 85vw; left: -85vw;} .content {padding: 1rem;} .lesson-title {font-size: 1.6rem;} .box {margin: 1rem 0; padding: 1rem;} .box h3 {font-size: 1.1rem;} pre {padding: 1rem; padding-top: 2.5rem; font-size: 0.85rem;}}
+@media (max-width: 400px) {h1 {font-size: 0.95rem;} .sidebar {width: 100vw; left: -100vw;} .lesson-title {font-size: 1.4rem;}}</style></head>
+<body><header><div class="header-content"><div class="rust-logo">🦀</div><h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1></div><button class="menu-toggle" aria-label="Menu">☰</button></header>
+<div class="container"><aside class="sidebar"><h3>📚 Corso</h3><ul><li><a href="index.html">🏠 Home</a></li></ul>
+<h3>1. Ambiente</h3><ul><li><a href="lesson-1-1.html">1.1 Rust</a></li><li><a href="lesson-1-2.html">1.2 VS Code</a></li><li><a href="lesson-1-3.html">1.3 GTK</a></li></ul>
+<h3>2. Rust Base</h3><ul><li><a href="lesson-2-1.html">2.1 Sintassi</a></li><li><a href="lesson-2-2.html">2.2 Controllo</a></li><li><a href="lesson-2-3.html">2.3 Progetto</a></li><li><a href="lesson-2-4.html">2.4 Crate</a></li></ul>
+<h3>3. GUI</h3><ul><li><a href="lesson-3-1.html">3.1 GTK-rs</a></li><li><a href="lesson-3-2.html">3.2 Glade</a></li><li><a href="lesson-3-3.html">3.3 Manuale</a></li><li><a href="lesson-3-4.html">3.4 Widget</a></li><li><a href="lesson-3-5.html">3.5 Menu</a></li></ul>
+<h3>4. Progetti</h3><ul><li><a href="lesson-4-1.html">4.1 Editor</a></li><li><a href="lesson-4-2.html">4.2 Note DB</a></li><li><a href="lesson-4-3.html">4.3 HTTP</a></li></ul>
+<h3>5. GitHub</h3><ul><li><a href="lesson-5-1.html">5.1 Repo</a></li><li><a href="lesson-5-2.html">5.2 Docs</a></li><li><a href="lesson-5-3.html">5.3 Test</a></li></ul></aside><main class="content">
+<nav class="breadcrumb"><a href="index.html">Home</a> > Sezione 1: Ambiente di Sviluppo > Installazione Rust su Debian</nav><h2 class="lesson-title">Installazione Rust su Debian</h2>
+<div class="box box-theory"><h3>📘 Introduzione Teorica</h3><p><strong>Rust</strong> è un linguaggio moderno, sicuro e performante per applicazioni desktop Linux.</p>
 <ul>
-    <li><strong>rustup</strong>: Installa e gestisce versioni multiple di Rust</li>
+    <li><strong>rustup</strong>: Gestore toolchain Rust</li>
     <li><strong>cargo</strong>: Build system e package manager</li>
     <li><strong>rustc</strong>: Compilatore Rust</li>
-    <li><strong>Standard library</strong>: Libreria standard inclusa</li>
-</ul>
-<p>Rust supporta Linux natively e si integra perfettamente con l'ecosistema GNU/Linux.</p>
-
-            </div>
-
-            <div class="box box-steps">
-                <h3>🔧 Procedura Passo-Passo</h3>
-                
-<ol>
-    <li><strong>Aggiorna il sistema</strong>
-        <button class="copy-button">Copia</button>
+    <li><strong>Standard library</strong>: Libreria inclusa</li>
+</ul></div>
+<div class="box box-steps"><h3>🔧 Procedura Passo-Passo</h3><ol>
+    <li><strong>Aggiorna sistema</strong>
         <pre><code>sudo apt update
 sudo apt upgrade -y</code></pre>
     </li>
 
     <li><strong>Installa dipendenze</strong>
-        <button class="copy-button">Copia</button>
         <pre><code>sudo apt install build-essential curl git -y</code></pre>
     </li>
 
-    <li><strong>Installa Rust tramite rustup</strong>
-        <button class="copy-button">Copia</button>
+    <li><strong>Installa Rust con rustup</strong>
         <pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</code></pre>
-        <p>Scegli l'opzione 1 (default installation) premendo Enter.</p>
     </li>
 
     <li><strong>Configura PATH</strong>
-        <button class="copy-button">Copia</button>
         <pre><code>source $HOME/.cargo/env</code></pre>
-        <p>Questo comando aggiunge Rust al PATH della sessione corrente.</p>
     </li>
 
     <li><strong>Verifica installazione</strong>
-        <button class="copy-button">Copia</button>
         <pre><code>rustc --version
-cargo --version
-rustup --version</code></pre>
-        <p>Dovresti vedere le versioni installate (es. rustc 1.70.0).</p>
+cargo --version</code></pre>
     </li>
 
-    <li><strong>Crea il primo progetto</strong>
-         <button class="copy-button">Copia</button>
+    <li><strong>Primo progetto</strong>
         <pre><code>cargo new hello_rust
 cd hello_rust
 cargo run</code></pre>
-        <p>Vedrai "Hello, world!" stampato a terminale.</p>
     </li>
-</ol>
-
-            </div>
-
-            <div class="box box-code">
-                <h3>💻 Codice Sorgente Commentato</h3>
-                <button class="copy-button">Copia</button>
-                
-<pre><code>// ========================================
-// PRIMO PROGRAMMA RUST: Hello World
-// ========================================
-
-// File: src/main.rs
+</ol></div>
+<div class="box box-code"><h3>💻 Codice Sorgente Commentato</h3><pre><code>// File: src/main.rs
 fn main() {
     println!("Hello, world!");
 }
-
-// ========================================
-// COMPILAZIONE ED ESECUZIONE
-// ========================================
-
-// Metodo 1: Cargo (consigliato)
-$ cargo new hello_rust
-$ cd hello_rust
-$ cargo run
-   Compiling hello_rust v0.1.0
-    Finished dev [unoptimized + debuginfo] target(s)
-     Running `target/debug/hello_rust`
-Hello, world!
-
-// Metodo 2: rustc diretto
-$ rustc main.rs
-$ ./main
-Hello, world!
-
-// ========================================
-// STRUTTURA PROGETTO CARGO
-// ========================================
-
-hello_rust/
-├── Cargo.toml      # Configurazione progetto
-└── src/
-    └── main.rs     # Codice sorgente
-
-// File: Cargo.toml
-[package]
-name = "hello_rust"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-# Qui andranno le dipendenze esterne
-
-// ========================================
-// COMANDI CARGO ESSENZIALI
-// ========================================
-
-$ cargo new nome_progetto     # Crea nuovo progetto
-$ cargo build                 # Compila (debug mode)
-$ cargo build --release       # Compila (release mode)
-$ cargo run                   # Compila + esegue
-$ cargo check                 # Verifica compilazione (veloce)
-$ cargo test                  # Esegue test
-$ cargo clean                 # Rimuove file compilati
-$ cargo update                # Aggiorna dipendenze
-
-// ========================================
-// AGGIORNAMENTO RUST
-// ========================================
-
-$ rustup update               # Aggiorna Rust all'ultima versione
-$ rustup default stable       # Usa versione stable
-$ rustup default nightly      # Usa versione nightly (sperimentale)
-
-// ========================================
-// RUST TOOLCHAIN COMPONENTS
-// ========================================
-
-$ rustup component add rustfmt      # Code formatter
-$ rustup component add clippy       # Linter avanzato
-$ rustup component add rust-src     # Codice sorgente std lib
-
-// ========================================
-// VERIFICA INSTALLAZIONE COMPLETA
-// ========================================
-
-$ rustc --version
-rustc 1.70.0 (90c541806 2023-05-31)
-
-$ cargo --version  
-cargo 1.70.0 (ec8a8a0ca 2023-04-25)
-
-$ rustup --version
-rustup 1.26.0 (5af9b9484 2023-04-05)
-
-// ========================================
-// PRIMO PROGRAMMA CON INPUT
-// ========================================
-
-use std::io;
-
-fn main() {
-    println!("Come ti chiami?");
-
-    let mut nome = String::new();
-
-    io::stdin()
-        .read_line(&mut nome)
-        .expect("Errore lettura input");
-
-    println!("Ciao, {}!", nome.trim());
-}
 </code></pre>
 
-            </div>
+<p><strong>Compilazione:</strong></p>
+<pre><code>cargo build
+cargo run</code></pre>
 
-            <div class="box box-exercises">
-                <h3>✏️ Esercizi Pratici</h3>
-                
-<ol>
-    <li><strong>Installa Rust</strong>
-        <p>Completa l'installazione di Rust su Debian seguendo tutti i passaggi. Verifica che <code>rustc</code>, <code>cargo</code> e <code>rustup</code> funzionino correttamente.</p>
-    </li>
-
-    <li><strong>Hello World</strong>
-        <p>Crea un nuovo progetto chiamato <code>mio_primo_progetto</code> e fai stampare "Benvenuto in Rust!" invece di "Hello, world!".</p>
-    </li>
-
-    <li><strong>Programma con Input</strong>
-        <p>Modifica il programma per chiedere il nome dell'utente e salutarlo personalizzando il messaggio.</p>
-    </li>
-
-    <li><strong>Esplora Cargo</strong>
-        <p>Prova tutti i comandi cargo: <code>build</code>, <code>run</code>, <code>check</code>, <code>clean</code>. Nota le differenze di velocità.</p>
-    </li>
-
-    <li><strong>Release Build</strong>
-        <p>Compila il progetto in modalità release con <code>cargo build --release</code> e confronta dimensione e performance con la versione debug.</p>
-    </li>
-
-    <li><strong>Challenge: Calcolatrice Semplice</strong>
-        <p>Crea un programma che chiede due numeri e un'operazione (+, -, *, /) e stampa il risultato.</p>
-    </li>
-</ol>
-
-            </div>
-
-            <div class="box box-troubleshooting">
-                <h3>⚠️ Troubleshooting</h3>
-                
-<h4>❌ Errore "curl: command not found"</h4>
-<p><strong>Causa:</strong> curl non è installato.</p>
+<p><strong>Comandi cargo essenziali:</strong></p>
+<pre><code>cargo new nome_progetto    # Nuovo progetto
+cargo build               # Compila (debug)
+cargo build --release     # Compila (release)
+cargo run                 # Compila + esegue
+cargo check               # Verifica veloce
+cargo test                # Esegue test
+cargo clean               # Rimuove build</code></pre></div>
+<div class="box box-exercises"><h3>✏️ Esercizi Pratici</h3><ol>
+    <li><strong>Installa Rust</strong>: Completa installazione e verifica versioni.</li>
+    <li><strong>Hello World</strong>: Crea progetto che stampa "Benvenuto in Rust!".</li>
+    <li><strong>Programma Input</strong>: Chiedi nome utente e saluta.</li>
+    <li><strong>Esplora Cargo</strong>: Prova build, run, check, clean.</li>
+    <li><strong>Release Build</strong>: Compila in release e confronta dimensioni.</li>
+    <li><strong>Challenge</strong>: Calcolatrice semplice (+, -, *, /).</li>
+</ol></div>
+<div class="box box-troubleshooting"><h3>⚠️ Troubleshooting</h3><h4>❌ "curl: command not found"</h4>
 <p><strong>Soluzione:</strong></p>
 <pre><code>sudo apt install curl -y</code></pre>
 
-<h4>❌ Errore "rustc: command not found" dopo installazione</h4>
-<p><strong>Causa:</strong> PATH non configurato.</p>
+<h4>❌ "rustc: command not found"</h4>
 <p><strong>Soluzione:</strong></p>
-<pre><code>source $HOME/.cargo/env
-# Oppure riavvia il terminale</code></pre>
+<pre><code>source $HOME/.cargo/env</code></pre>
 
-<h4>❌ Errore "linker 'cc' not found"</h4>
-<p><strong>Causa:</strong> build-essential non installato.</p>
+<h4>❌ "linker 'cc' not found"</h4>
 <p><strong>Soluzione:</strong></p>
-<pre><code>sudo apt install build-essential -y</code></pre>
+<pre><code>sudo apt install build-essential -y</code></pre></div>
+<nav class="lesson-nav"><a class="disabled">← Precedente</a><a href="lesson-1-2.html">Successiva →</a></nav></main></div>
+<footer><p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
+<p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p></footer>
+<script>document.addEventListener('DOMContentLoaded', function() {
+const currentPage = window.location.pathname.split('/').pop();
+const links = document.querySelectorAll('.sidebar a');
+links.forEach(link => {if (link.getAttribute('href') === currentPage) link.classList.add('active');});
 
-<h4>❌ Installazione molto lenta</h4>
-<p><strong>Causa:</strong> Connessione lenta o mirror apt lento.</p>
-<p><strong>Soluzione:</strong></p>
-<ul>
-    <li>Usa connessione stabile</li>
-    <li>Cambia mirror apt in /etc/apt/sources.list</li>
-    <li>L'installazione impiega 2-5 minuti normalmente</li>
-</ul>
+// Copy button per TUTTI i blocchi pre code
+const preBlocks = document.querySelectorAll('pre');
+preBlocks.forEach(pre => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block-wrapper';
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.appendChild(pre);
 
-<h4>💡 Tip: PATH Permanente</h4>
-<p>Il comando <code>source $HOME/.cargo/env</code> è automaticamente aggiunto a <code>~/.bashrc</code> o <code>~/.zshrc</code> da rustup, quindi funzionerà automaticamente nei prossimi terminali.</p>
+    const button = document.createElement('button');
+    button.className = 'copy-button';
+    button.textContent = 'Copia';
+    wrapper.appendChild(button);
 
-<h4>💡 Tip: Aggiornamenti</h4>
-<p>Rust rilascia nuove versioni ogni 6 settimane. Aggiorna regolarmente con:</p>
-<pre><code>rustup update</code></pre>
-
-<h4>🔍 Risorse Utili</h4>
-<ul>
-    <li><a href="https://www.rust-lang.org" style="color: #DE8E43;">Rust Official Site</a></li>
-    <li><a href="https://doc.rust-lang.org/book/" style="color: #DE8E43;">The Rust Book</a></li>
-    <li><a href="https://doc.rust-lang.org/rust-by-example/" style="color: #DE8E43;">Rust by Example</a></li>
-</ul>
-
-            </div>
-
-            <nav class="lesson-nav">
-                <a class="disabled">← Precedente</a>
-                <a href="lesson-1-2.html">Successiva →</a>
-            </nav>
-        </main>
-    </div>
-
-    <footer>
-        <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
-        <p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | 
-           <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p>
-    </footer>
-
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Sidebar active link
-    const currentPage = window.location.pathname.split('/').pop();
-    const links = document.querySelectorAll('.sidebar a');
-    links.forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
-            link.classList.add('active');
-        }
+    button.addEventListener('click', () => {
+        const code = pre.querySelector('code') ? pre.querySelector('code').textContent : pre.textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            button.textContent = '✓ Copiato!';
+            button.style.background = '#5cb85c';
+            setTimeout(() => {
+                button.textContent = 'Copia';
+                button.style.background = '#DE8E43';
+            }, 2000);
+        });
     });
-
-    // Copy button
-    const codeBlocks = document.querySelectorAll('.box-code');
-    codeBlocks.forEach(block => {
-        const button = block.querySelector('.copy-button');
-        if (button) {
-            button.addEventListener('click', () => {
-                const code = block.querySelector('code').textContent;
-                navigator.clipboard.writeText(code);
-                button.textContent = 'Copiato!';
-                setTimeout(() => {
-                    button.textContent = 'Copia';
-                }, 2000);
-            });
-        }
-    });
-
-    // Menu toggle per mobile
-    const menuToggle = document.querySelector('.menu-toggle');
-    const sidebar = document.querySelector('.sidebar');
-
-    if (menuToggle && sidebar) {
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-        });
-
-        // Chiudi sidebar quando si clicca su un link
-        const sidebarLinks = sidebar.querySelectorAll('a');
-        sidebarLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= 900) {
-                    sidebar.classList.remove('open');
-                }
-            });
-        });
-
-        // Chiudi sidebar quando si clicca fuori
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 900) {
-                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-                    sidebar.classList.remove('open');
-                }
-            }
-        });
-    }
 });
-</script>
-</body>
-</html>
+
+const menuToggle = document.querySelector('.menu-toggle');
+const sidebar = document.querySelector('.sidebar');
+if (menuToggle && sidebar) {
+    menuToggle.addEventListener('click', () => {sidebar.classList.toggle('open');});
+    const sidebarLinks = sidebar.querySelectorAll('a');
+    sidebarLinks.forEach(link => {link.addEventListener('click', () => {if (window.innerWidth <= 900) sidebar.classList.remove('open');});});
+    document.addEventListener('click', (e) => {if (window.innerWidth <= 900 && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) sidebar.classList.remove('open');});
+}});</script></body></html>
