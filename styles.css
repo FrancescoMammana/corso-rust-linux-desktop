@@ -247,16 +247,16 @@ pre code {
 }
 
 /* ========================================
-   COPY BUTTON - STILE MIGLIORATO
+   COPY BUTTON - STILE NUOVO (SOLO BORDO)
    ======================================== */
 
 .copy-button {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    background: #DE8E43;
-    color: #1a1a1a;
-    border: none;
+    background: transparent;
+    color: #DE8E43;
+    border: 2px solid #DE8E43;
     padding: 0.4rem 0.6rem;
     border-radius: 4px;
     cursor: pointer;
@@ -272,7 +272,8 @@ pre code {
 }
 
 .copy-button:hover {
-    background: #f09d5a;
+    background: #DE8E43;
+    color: #1a1a1a;
     transform: translateY(-2px);
 }
 
@@ -282,6 +283,8 @@ pre code {
 
 .copy-button.copied {
     background: #5cb85c;
+    color: #1a1a1a;
+    border-color: #5cb85c;
 }
 
 /* ========================================
