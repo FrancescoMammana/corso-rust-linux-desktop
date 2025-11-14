@@ -1,96 +1,96 @@
 <!DOCTYPE html>
-<html lang="it"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Introduzione a GTK-rs | Corso Rust Linux Desktop</title><link rel="icon" type="image/png" href="favicon.png"><style>* {margin: 0; padding: 0; box-sizing: border-box;}
-body {font-family: 'Inter', sans-serif; background: #1a1a1a; color: #e0e0e0; line-height: 1.6;}
-header {background: #2a2a2a; padding: 1rem 2rem; border-bottom: 3px solid #DE8E43; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between;}
-.header-content {display: flex; align-items: center; gap: 1rem;} .rust-logo {font-size: 2rem; color: #DE8E43;} h1 {font-size: 1.5rem; color: #DE8E43;}
-.menu-toggle {display: none; background: none; border: none; color: #DE8E43; font-size: 2rem; cursor: pointer; padding: 0.5rem;}
-.container {display: flex; margin-top: 70px; min-height: calc(100vh - 70px);}
-.sidebar {width: 280px; background: #252525; padding: 2rem 0; position: fixed; left: 0; height: calc(100vh - 70px); overflow-y: auto; border-right: 1px solid #3a3a3a; z-index: 999;}
-.sidebar h3 {color: #DE8E43; padding: 0.5rem 1.5rem; font-size: 0.9rem; text-transform: uppercase;}
-.sidebar ul {list-style: none;} .sidebar li a {display: block; padding: 0.7rem 1.5rem 0.7rem 2.5rem; color: #b0b0b0; text-decoration: none; transition: all 0.3s;}
-.sidebar li a:hover, .sidebar li a.active {background: #2f2f2f; color: #DE8E43; border-left: 3px solid #DE8E43;}
-.content {flex: 1; margin-left: 280px; padding: 2rem 3rem; max-width: 1200px;}
-.breadcrumb {color: #888; font-size: 0.9rem; margin-bottom: 2rem;} .breadcrumb a {color: #4A90E2; text-decoration: none;}
-.lesson-title {font-size: 2.5rem; color: #DE8E43; margin-bottom: 1rem;}
-.box {margin: 2rem 0; padding: 1.5rem; border-radius: 8px; border-left: 4px solid;}
-.box-theory {background: #2a2a3e; border-left-color: #4A90E2;} .box-steps {background: #2a2a2a; border-left-color: #DE8E43;} 
-.box-code {background: #1e1e1e; border-left-color: #DE8E43; position: relative;} .box-exercises {background: #2d4a2e; border-left-color: #5cb85c;} 
-.box-troubleshooting {background: #4a2d2e; border-left-color: #d9534f;}
-.box h3 {color: #DE8E43; margin-bottom: 1rem; font-size: 1.3rem;} .box-theory h3 {color: #4A90E2;} .box-exercises h3 {color: #5cb85c;} .box-troubleshooting h3 {color: #d9534f;}
-code {font-family: 'Fira Code', monospace; background: #2a2a2a; padding: 0.2rem 0.4rem; border-radius: 3px; color: #DE8E43;}
-pre {background: #1e1e1e; padding: 1.5rem; border-radius: 5px; overflow-x: auto; margin: 1rem 0;} pre code {background: none; padding: 0; color: #e0e0e0; display: block;}
-.copy-button {position: absolute; top: 1rem; right: 1rem; background: #DE8E43; color: #1a1a1a; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-weight: 600;}
-ol, ul {margin-left: 1.5rem; margin-top: 0.5rem;} li {margin: 0.5rem 0;}
-.lesson-nav {display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #3a3a3a; gap: 1rem;}
-.lesson-nav a {background: #DE8E43; color: #1a1a1a; padding: 0.8rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: 600; text-align: center; transition: all 0.3s;}
-.lesson-nav a:hover {background: #f09d5a;} .lesson-nav a.disabled {background: #3a3a3a; color: #666; cursor: not-allowed;}
-footer {background: #252525; padding: 2rem; text-align: center; color: #888; border-top: 1px solid #3a3a3a; margin-top: 3rem;}
-@media (max-width: 900px) {.menu-toggle {display: block;} .sidebar {position: fixed; left: -280px; top: 70px; transition: left 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.5);} .sidebar.open {left: 0;} .content {margin-left: 0; padding: 1.5rem; width: 100%;} .lesson-title {font-size: 2rem;} .box {margin: 1.5rem 0; padding: 1.2rem;} .lesson-nav {flex-direction: column;} .lesson-nav a {width: 100%;}}
-@media (max-width: 600px) {header {padding: 0.8rem 1rem;} h1 {font-size: 1.1rem;} .rust-logo {font-size: 1.5rem;} .sidebar {width: 85vw; left: -85vw;} .content {padding: 1rem;} .lesson-title {font-size: 1.6rem;} .box {margin: 1rem 0; padding: 1rem;} .box h3 {font-size: 1.1rem;} pre {padding: 1rem; font-size: 0.85rem;}}
-@media (max-width: 400px) {h1 {font-size: 0.95rem;} .sidebar {width: 100vw; left: -100vw;} .lesson-title {font-size: 1.4rem;}}</style></head>
-<body><header><div class="header-content"><div class="rust-logo">🦀</div><h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1></div><button class="menu-toggle" aria-label="Menu">☰</button></header>
-<div class="container"><aside class="sidebar"><h3>📚 Corso</h3><ul><li><a href="index.html">🏠 Home</a></li></ul>
-<h3>1. Ambiente</h3><ul><li><a href="lesson-1-1.html">1.1 Rust</a></li><li><a href="lesson-1-2.html">1.2 VS Code</a></li><li><a href="lesson-1-3.html">1.3 GTK</a></li></ul>
-<h3>2. Rust Base</h3><ul><li><a href="lesson-2-1.html">2.1 Sintassi</a></li><li><a href="lesson-2-2.html">2.2 Controllo</a></li><li><a href="lesson-2-3.html">2.3 Progetto</a></li><li><a href="lesson-2-4.html">2.4 Crate</a></li></ul>
-<h3>3. GUI</h3><ul><li><a href="lesson-3-1.html">3.1 GTK-rs</a></li><li><a href="lesson-3-2.html">3.2 Glade</a></li><li><a href="lesson-3-3.html">3.3 Manuale</a></li><li><a href="lesson-3-4.html">3.4 Widget</a></li><li><a href="lesson-3-5.html">3.5 Menu</a></li></ul>
-<h3>4. Progetti</h3><ul><li><a href="lesson-4-1.html">4.1 Editor</a></li><li><a href="lesson-4-2.html">4.2 Note DB</a></li><li><a href="lesson-4-3.html">4.3 HTTP</a></li></ul>
-<h3>5. GitHub</h3><ul><li><a href="lesson-5-1.html">5.1 Repo</a></li><li><a href="lesson-5-2.html">5.2 Docs</a></li><li><a href="lesson-5-3.html">5.3 Test</a></li></ul></aside><main class="content">
-<nav class="breadcrumb"><a href="index.html">Home</a> > Sezione 3: Sviluppo GUI > Introduzione a GTK-rs</nav><h2 class="lesson-title">Introduzione a GTK-rs</h2>
-<div class="box box-theory"><h3>📘 Introduzione Teorica</h3><p><strong>GTK-rs</strong> è il binding ufficiale Rust per GTK+:</p>
-<ul>
-    <li><strong>Widget-based</strong>: Componenti UI riutilizzabili e composabili</li>
-    <li><strong>Signal system</strong>: Sistema robusto di eventi e callbacks</li>
-    <li><strong>Container layout</strong>: Box, Grid, Paned, FlowBox, ListBox</li>
-    <li><strong>Native look</strong>: Si integra perfettamente con GNOME e desktop Linux</li>
-    <li><strong>Thread-safe</strong>: Gestione sicura della concorrenza</li>
-    <li><strong>Type-safe</strong>: Sfrutta il type system di Rust</li>
-    <li><strong>Memory-safe</strong>: Niente segmentation fault o memory leak</li>
-</ul>
-<p>GTK-rs offre API idiomatiche Rust mantenendo compatibilità con GTK C. È la scelta ideale per applicazioni desktop Linux moderne, professionali e affidabili.</p></div>
-<div class="box box-steps"><h3>🔧 Procedura Passo-Passo</h3><ol>
-    <li><strong>Setup progetto GTK completo</strong>
-        <pre><code>cargo new hello_gtk_app
-cd hello_gtk_app
-# Aggiungi al Cargo.toml:
-# [dependencies]
-# gtk = { version = "0.18", features = ["v3_24"] }
-# glib = "0.18"</code></pre>
-    </li>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduzione a GTK-rs | Corso Rust Linux Desktop</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="rust-logo">🦀</div>
+            <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
+        </div>
+        <button class="menu-toggle" aria-label="Menu">☰</button>
+    </header>
 
+    <div class="container">
+        <aside class="sidebar">
+            <h3>📚 Corso</h3>
+            <ul><li><a href="index.html">🏠 Home</a></li></ul>
+            <h3>1. Ambiente</h3>
+            <ul><li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
+            <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
+            <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li></ul>
+            <h3>2. Rust Base</h3>
+            <ul><li><a href="lesson-2-1.html">2.1 Sintassi</a></li>
+            <li><a href="lesson-2-2.html">2.2 Controllo</a></li>
+            <li><a href="lesson-2-3.html">2.3 Progetto</a></li>
+            <li><a href="lesson-2-4.html">2.4 Crate</a></li></ul>
+            <h3>3. GUI</h3>
+            <ul><li><a href="lesson-3-1.html">3.1 GTK-rs</a></li>
+            <li><a href="lesson-3-2.html">3.2 Glade</a></li>
+            <li><a href="lesson-3-3.html">3.3 Manuale</a></li>
+            <li><a href="lesson-3-4.html">3.4 Widget</a></li>
+            <li><a href="lesson-3-5.html">3.5 Menu</a></li></ul>
+            <h3>4. Progetti</h3>
+            <ul><li><a href="lesson-4-1.html">4.1 Editor</a></li>
+            <li><a href="lesson-4-2.html">4.2 Note DB</a></li>
+            <li><a href="lesson-4-3.html">4.3 HTTP</a></li></ul>
+            <h3>5. GitHub</h3>
+            <ul><li><a href="lesson-5-1.html">5.1 Repository</a></li>
+            <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
+            <li><a href="lesson-5-3.html">5.3 Testing</a></li></ul>
+            <h3>📖 Risorse</h3>
+            <ul><li><a href="about.html">ℹ️ Info Corso</a></li>
+            <li><a href="resources.html">🔗 Risorse</a></li>
+            <li><a href="faq.html">❓ FAQ</a></li></ul>
+        </aside>
+
+        <main class="content">
+            <nav class="breadcrumb"><a href="index.html">Home</a> > Sezione 3: Sviluppo GUI > Introduzione a GTK-rs</nav>
+            <h2 class="lesson-title">Introduzione a GTK-rs</h2>
+
+            <div class="box box-theory">
+                <h3>📘 Introduzione Teorica</h3>
+                <p><strong>GTK-rs</strong> è il binding ufficiale Rust per GTK+:</p>
+<ul>
+    <li><strong>Widget-based</strong>: Componenti UI riusabili</li>
+    <li><strong>Signal system</strong>: Sistema eventi robusto</li>
+    <li><strong>Container layout</strong>: Box, Grid, Paned</li>
+    <li><strong>Native look</strong>: Si integra con GNOME</li>
+    <li><strong>Thread-safe</strong>: Gestione sicura concorrenza</li>
+</ul>
+            </div>
+
+            <div class="box box-steps">
+                <h3>🔧 Procedura Passo-Passo</h3>
+                <ol>
+    <li><strong>Setup GTK</strong>
+        <pre><code>cargo new hello_gtk
+# Aggiungi Cargo.toml:
+# [dependencies]
+# gtk = { version = "0.18", features = ["v3_24"] }</code></pre>
+    </li>
     <li><strong>Application pattern</strong>
         <pre><code>use gtk::prelude::*;
 use gtk::Application;
 
 fn main() {
-    let app = Application::builder()
-        .application_id("com.example.HelloGTK")
-        .build();
-
+    let app = Application::new();
     app.connect_activate(build_ui);
     app.run();
 }</code></pre>
     </li>
+</ol>
+            </div>
 
-    <li><strong>Build UI in activate handler</strong>
-        <pre><code>fn build_ui(app: &Application) {
-    let window = gtk::ApplicationWindow::new(app);
-    window.set_title("Hello GTK!");
-    window.show_all();
-}</code></pre>
-    </li>
-
-    <li><strong>Compila ed esegui</strong>
-        <pre><code>cargo run
-# Apparirà finestra GTK con titolo "Hello GTK!"</code></pre>
-    </li>
-</ol></div>
-<div class="box box-code"><h3>💻 Codice Sorgente Commentato</h3><button class="copy-button">Copia</button><pre><code>// ========================================
-// HELLO WORLD GTK-RS COMPLETO
-// ========================================
-
-use gtk::prelude::*;
-use gtk::{Application, ApplicationWindow, Box, Button, Label, Orientation};
+            <div class="box box-code">
+                <h3>💻 Codice Sorgente Commentato</h3>
+                <pre><code>use gtk::prelude::*;
+use gtk::{Application, ApplicationWindow, Button};
 
 fn main() {
     let app = Application::builder()
@@ -102,172 +102,57 @@ fn main() {
 }
 
 fn build_ui(app: &Application) {
-    // Finestra principale con ApplicationWindow
     let window = ApplicationWindow::builder()
         .application(app)
-        .title("Hello GTK-rs")
+        .title("Hello GTK")
         .default_width(400)
         .default_height(300)
-        .border_width(10)
         .build();
 
-    // Container verticale
-    let vbox = Box::new(Orientation::Vertical, 10);
-
-    // Label (etichetta di testo)
-    let label = Label::new(Some("Benvenuto in GTK-rs!"));
-    label.set_line_wrap(true);
-    vbox.pack_start(&label, false, false, 0);
-
-    // Button con callback
     let button = Button::with_label("Cliccami!");
     button.connect_clicked(|_| {
-        println!("✓ Bottone cliccato!");
+        println!("✓ Clicked!");
     });
-    vbox.pack_start(&button, false, false, 0);
 
-    // Button per aumentare dimensione finestra
-    let enlarge_btn = Button::with_label("Ingrandisci");
-    enlarge_btn.connect_clicked(glib::clone!(@weak window => move |_| {
-        let (width, height) = window.size();
-        window.resize(width + 100, height + 50);
-    }));
-    vbox.pack_start(&enlarge_btn, false, false, 0);
-
-    // Button per chiudere
-    let quit_btn = Button::with_label("Esci");
-    quit_btn.connect_clicked(glib::clone!(@weak window => move |_| {
-        window.close();
-    }));
-    vbox.pack_start(&quit_btn, false, false, 0);
-
-    window.add(&vbox);
+    window.add(&button);
     window.show_all();
 }
+</code></pre>
+            </div>
 
-// ========================================
-// COUNTER APP CON STATE
-// ========================================
+            <div class="box box-exercises">
+                <h3>✏️ Esercizi Pratici</h3>
+                <ol>
+    <li><strong>Hello World</strong>: Finestra con bottone.</li>
+    <li><strong>Counter App</strong>: +1, -1, Reset buttons.</li>
+    <li><strong>Resize Window</strong>: Bottone ingrandisce finestra.</li>
+    <li><strong>Color Changer</strong>: 3 bottoni cambiano colore.</li>
+    <li><strong>Multi-Window</strong>: Apri finestre multiple.</li>
+    <li><strong>Challenge</strong>: Calcolatrice base (+,-,*,/).</li>
+</ol>
+            </div>
 
-use std::cell::RefCell;
-use std::rc::Rc;
+            <div class="box box-troubleshooting">
+                <h3>⚠️ Troubleshooting</h3>
+                <h4>❌ "failed to run custom build"</h4>
+<p><strong>Soluzione:</strong> <code>sudo apt install libgtk-3-dev</code></p>
 
-fn counter_app() {
-    let app = Application::builder()
-        .application_id("com.example.Counter")
-        .build();
+<h4>❌ Finestra non appare</h4>
+<p><strong>Soluzione:</strong> Verifica <code>show_all()</code>.</p>
+            </div>
 
-    app.connect_activate(|app| {
-        let window = ApplicationWindow::new(app);
-        window.set_title("Counter App");
-        window.set_border_width(10);
+            <nav class="lesson-nav">
+                <a href="lesson-2-4.html">← Precedente</a>
+                <a href="lesson-3-2.html">Successiva →</a>
+            </nav>
+        </main>
+    </div>
 
-        let vbox = Box::new(Orientation::Vertical, 10);
+    <footer>
+        <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
+        <p><a href="https://www.rust-lang.org" target="_blank">Rust Programming Language</a> | <a href="https://gtk-rs.org" target="_blank">GTK-rs</a></p>
+    </footer>
 
-        let counter = Rc::new(RefCell::new(0));
-
-        // Display label
-        let label = Label::new(Some("0"));
-        label.set_markup("<span size='xx-large' color='#DE8E43'>0</span>");
-        vbox.pack_start(&label, false, false, 0);
-
-        // Increment button
-        let inc_btn = Button::with_label("➕ +1");
-        let counter_clone = counter.clone();
-        let label_clone = label.clone();
-        inc_btn.connect_clicked(move |_| {
-            let mut c = counter_clone.borrow_mut();
-            *c += 1;
-            label_clone.set_markup(&format!(
-                "<span size='xx-large' color='#DE8E43'>{}</span>",
-                c
-            ));
-        });
-        vbox.pack_start(&inc_btn, false, false, 0);
-
-        // Decrement button
-        let dec_btn = Button::with_label("➖ -1");
-        let counter_clone = counter.clone();
-        let label_clone = label.clone();
-        dec_btn.connect_clicked(move |_| {
-            let mut c = counter_clone.borrow_mut();
-            *c -= 1;
-            label_clone.set_markup(&format!(
-                "<span size='xx-large' color='#4A90E2'>{}</span>",
-                c
-            ));
-        });
-        vbox.pack_start(&dec_btn, false, false, 0);
-
-        // Reset button
-        let reset_btn = Button::with_label("🔄 Reset");
-        reset_btn.connect_clicked(move |_| {
-            let mut c = counter.borrow_mut();
-            *c = 0;
-            label.set_markup("<span size='xx-large'>0</span>");
-        });
-        vbox.pack_start(&reset_btn, false, false, 0);
-
-        window.add(&vbox);
-        window.show_all();
-    });
-
-    app.run();
-}
-</code></pre></div>
-<div class="box box-exercises"><h3>✏️ Esercizi Pratici</h3><ol>
-    <li><strong>Hello World GTK Base</strong>
-        <p>Crea finestra con Label "Ciao GTK!" e Button "OK" che stampa messaggio. Compila e esegui.</p>
-    </li>
-
-    <li><strong>Counter App Completo</strong>
-        <p>Implementa counter con bottoni +1, -1, Reset. Mostra valore ingrandito in Label colorato.</p>
-    </li>
-
-    <li><strong>Finestra Ridimensionabile</strong>
-        <p>Crea app con bottone "Ingrandisci" che aumenta dimensioni finestra di 100x50px.</p>
-    </li>
-
-    <li><strong>Color Changer</strong>
-        <p>3 bottoni (Rosso, Verde, Blu) che cambiano colore background label.</p>
-    </li>
-
-    <li><strong>Calcolatrice Base</strong>
-        <p>Due Entry, 4 bottoni (+,-,*,/), Label per risultato. Implementa operazioni base.</p>
-    </li>
-
-    <li><strong>Challenge: Multi-Window App</strong>
-        <p>Finestra principale con bottone "Apri seconda finestra" che crea nuova window indipendente.</p>
-    </li>
-</ol></div>
-<div class="box box-troubleshooting"><h3>⚠️ Troubleshooting</h3><h4>❌ Errore "failed to run custom build command for gtk"</h4>
-<p><strong>Causa:</strong> GTK dev libraries non installate.</p>
-<p><strong>Soluzione:</strong> <code>sudo apt install libgtk-3-dev pkg-config</code></p>
-
-<h4>❌ Finestra GTK non appare</h4>
-<p><strong>Causa:</strong> Manca <code>window.show_all()</code> o ambiente desktop non disponibile.</p>
-<p><strong>Soluzione:</strong> Assicurati di chiamare <code>show_all()</code> e di essere in desktop environment.</p>
-
-<h4>❌ Button click non fa nulla</h4>
-<p><strong>Causa:</strong> Signal handler non connesso correttamente.</p>
-<p><strong>Soluzione:</strong> Usa <code>connect_clicked(|_| { ... })</code> correttamente.</p>
-
-<h4>💡 Tip: Debug GTK</h4>
-<p>Usa variabili d'ambiente: <code>GTK_DEBUG=all cargo run</code> per verbose output.</p>
-
-<h4>💡 Tip: Compilazione Lenta</h4>
-<p>Prima compilazione GTK-rs può richiedere 5-10 minuti. Le successive sono molto veloci (incrementali).</p>
-</div>
-<nav class="lesson-nav"><a href="lesson-2-4.html">← Precedente</a><a href="lesson-3-2.html">Successiva →</a></nav></main></div>
-<footer><p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
-<p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p></footer>
-<script>document.addEventListener('DOMContentLoaded', function() {
-const currentPage = window.location.pathname.split('/').pop(); const links = document.querySelectorAll('.sidebar a');
-links.forEach(link => {if (link.getAttribute('href') === currentPage) link.classList.add('active');});
-const codeBlocks = document.querySelectorAll('.box-code'); codeBlocks.forEach(block => {const button = block.querySelector('.copy-button');
-if (button) {button.addEventListener('click', () => {const code = block.querySelector('code').textContent; navigator.clipboard.writeText(code);
-button.textContent = 'Copiato!'; setTimeout(() => {button.textContent = 'Copia';}, 2000);});}});
-const menuToggle = document.querySelector('.menu-toggle'); const sidebar = document.querySelector('.sidebar');
-if (menuToggle && sidebar) {menuToggle.addEventListener('click', () => {sidebar.classList.toggle('open');});
-const sidebarLinks = sidebar.querySelectorAll('a'); sidebarLinks.forEach(link => {link.addEventListener('click', () => {if (window.innerWidth <= 900) sidebar.classList.remove('open');});});
-document.addEventListener('click', (e) => {if (window.innerWidth <= 900 && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) sidebar.classList.remove('open');});}});</script></body></html>
+    <script src="script.js"></script>
+</body>
+</html>

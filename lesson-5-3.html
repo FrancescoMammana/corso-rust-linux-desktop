@@ -1,53 +1,76 @@
 <!DOCTYPE html>
-<html lang="it"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Testing e Debugging | Corso Rust Linux Desktop</title><link rel="icon" type="image/png" href="favicon.png"><style>* {margin: 0; padding: 0; box-sizing: border-box;}
-body {font-family: 'Inter', sans-serif; background: #1a1a1a; color: #e0e0e0; line-height: 1.6;}
-header {background: #2a2a2a; padding: 1rem 2rem; border-bottom: 3px solid #DE8E43; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between;}
-.header-content {display: flex; align-items: center; gap: 1rem;} .rust-logo {font-size: 2rem; color: #DE8E43;} h1 {font-size: 1.5rem; color: #DE8E43;}
-.menu-toggle {display: none; background: none; border: none; color: #DE8E43; font-size: 2rem; cursor: pointer; padding: 0.5rem;}
-.container {display: flex; margin-top: 70px; min-height: calc(100vh - 70px);}
-.sidebar {width: 280px; background: #252525; padding: 2rem 0; position: fixed; left: 0; height: calc(100vh - 70px); overflow-y: auto; border-right: 1px solid #3a3a3a; z-index: 999;}
-.sidebar h3 {color: #DE8E43; padding: 0.5rem 1.5rem; font-size: 0.9rem; text-transform: uppercase;}
-.sidebar ul {list-style: none;} .sidebar li a {display: block; padding: 0.7rem 1.5rem 0.7rem 2.5rem; color: #b0b0b0; text-decoration: none; transition: all 0.3s;}
-.sidebar li a:hover, .sidebar li a.active {background: #2f2f2f; color: #DE8E43; border-left: 3px solid #DE8E43;}
-.content {flex: 1; margin-left: 280px; padding: 2rem 3rem; max-width: 1200px;}
-.breadcrumb {color: #888; font-size: 0.9rem; margin-bottom: 2rem;} .breadcrumb a {color: #4A90E2; text-decoration: none;}
-.lesson-title {font-size: 2.5rem; color: #DE8E43; margin-bottom: 1rem;}
-.box {margin: 2rem 0; padding: 1.5rem; border-radius: 8px; border-left: 4px solid;}
-.box-theory {background: #2a2a3e; border-left-color: #4A90E2;} .box-steps {background: #2a2a2a; border-left-color: #DE8E43;} 
-.box-code {background: #1e1e1e; border-left-color: #DE8E43; position: relative;} .box-exercises {background: #2d4a2e; border-left-color: #5cb85c;} 
-.box-troubleshooting {background: #4a2d2e; border-left-color: #d9534f;}
-.box h3 {color: #DE8E43; margin-bottom: 1rem; font-size: 1.3rem;} .box-theory h3 {color: #4A90E2;} .box-exercises h3 {color: #5cb85c;} .box-troubleshooting h3 {color: #d9534f;}
-code {font-family: 'Fira Code', monospace; background: #2a2a2a; padding: 0.2rem 0.4rem; border-radius: 3px; color: #DE8E43;}
-pre {background: #1e1e1e; padding: 1.5rem; border-radius: 5px; overflow-x: auto; margin: 1rem 0;} pre code {background: none; padding: 0; color: #e0e0e0; display: block;}
-.copy-button {position: absolute; top: 1rem; right: 1rem; background: #DE8E43; color: #1a1a1a; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-weight: 600;}
-ol, ul {margin-left: 1.5rem; margin-top: 0.5rem;} li {margin: 0.5rem 0;}
-.lesson-nav {display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #3a3a3a; gap: 1rem;}
-.lesson-nav a {background: #DE8E43; color: #1a1a1a; padding: 0.8rem 1.5rem; border-radius: 5px; text-decoration: none; font-weight: 600; text-align: center; transition: all 0.3s;}
-.lesson-nav a:hover {background: #f09d5a;} .lesson-nav a.disabled {background: #3a3a3a; color: #666; cursor: not-allowed;}
-footer {background: #252525; padding: 2rem; text-align: center; color: #888; border-top: 1px solid #3a3a3a; margin-top: 3rem;}
-@media (max-width: 900px) {.menu-toggle {display: block;} .sidebar {position: fixed; left: -280px; top: 70px; transition: left 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.5);} .sidebar.open {left: 0;} .content {margin-left: 0; padding: 1.5rem; width: 100%;} .lesson-title {font-size: 2rem;} .box {margin: 1.5rem 0; padding: 1.2rem;} .lesson-nav {flex-direction: column;} .lesson-nav a {width: 100%;}}
-@media (max-width: 600px) {header {padding: 0.8rem 1rem;} h1 {font-size: 1.1rem;} .rust-logo {font-size: 1.5rem;} .sidebar {width: 85vw; left: -85vw;} .content {padding: 1rem;} .lesson-title {font-size: 1.6rem;} .box {margin: 1rem 0; padding: 1rem;} .box h3 {font-size: 1.1rem;} pre {padding: 1rem; font-size: 0.85rem;}}
-@media (max-width: 400px) {h1 {font-size: 0.95rem;} .sidebar {width: 100vw; left: -100vw;} .lesson-title {font-size: 1.4rem;}}</style></head>
-<body><header><div class="header-content"><div class="rust-logo">🦀</div><h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1></div><button class="menu-toggle" aria-label="Menu">☰</button></header>
-<div class="container"><aside class="sidebar"><h3>📚 Corso</h3><ul><li><a href="index.html">🏠 Home</a></li></ul>
-<h3>1. Ambiente</h3><ul><li><a href="lesson-1-1.html">1.1 Rust</a></li><li><a href="lesson-1-2.html">1.2 VS Code</a></li><li><a href="lesson-1-3.html">1.3 GTK</a></li></ul>
-<h3>2. Rust Base</h3><ul><li><a href="lesson-2-1.html">2.1 Sintassi</a></li><li><a href="lesson-2-2.html">2.2 Controllo</a></li><li><a href="lesson-2-3.html">2.3 Progetto</a></li><li><a href="lesson-2-4.html">2.4 Crate</a></li></ul>
-<h3>3. GUI</h3><ul><li><a href="lesson-3-1.html">3.1 GTK-rs</a></li><li><a href="lesson-3-2.html">3.2 Glade</a></li><li><a href="lesson-3-3.html">3.3 Manuale</a></li><li><a href="lesson-3-4.html">3.4 Widget</a></li><li><a href="lesson-3-5.html">3.5 Menu</a></li></ul>
-<h3>4. Progetti</h3><ul><li><a href="lesson-4-1.html">4.1 Editor</a></li><li><a href="lesson-4-2.html">4.2 Note DB</a></li><li><a href="lesson-4-3.html">4.3 HTTP</a></li></ul>
-<h3>5. GitHub</h3><ul><li><a href="lesson-5-1.html">5.1 Repo</a></li><li><a href="lesson-5-2.html">5.2 Docs</a></li><li><a href="lesson-5-3.html">5.3 Test</a></li></ul></aside><main class="content">
-<nav class="breadcrumb"><a href="index.html">Home</a> > Sezione 5: GitHub & Best Practices > Testing e Debugging</nav><h2 class="lesson-title">Testing e Debugging</h2>
-<div class="box box-theory"><h3>📘 Introduzione Teorica</h3><p><strong>Testing e debugging</strong> sono essenziali:</p>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing e Debugging | Corso Rust Linux Desktop</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="rust-logo">🦀</div>
+            <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
+        </div>
+        <button class="menu-toggle" aria-label="Menu">☰</button>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3>📚 Corso</h3>
+            <ul><li><a href="index.html">🏠 Home</a></li></ul>
+            <h3>1. Ambiente</h3>
+            <ul><li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
+            <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
+            <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li></ul>
+            <h3>2. Rust Base</h3>
+            <ul><li><a href="lesson-2-1.html">2.1 Sintassi</a></li>
+            <li><a href="lesson-2-2.html">2.2 Controllo</a></li>
+            <li><a href="lesson-2-3.html">2.3 Progetto</a></li>
+            <li><a href="lesson-2-4.html">2.4 Crate</a></li></ul>
+            <h3>3. GUI</h3>
+            <ul><li><a href="lesson-3-1.html">3.1 GTK-rs</a></li>
+            <li><a href="lesson-3-2.html">3.2 Glade</a></li>
+            <li><a href="lesson-3-3.html">3.3 Manuale</a></li>
+            <li><a href="lesson-3-4.html">3.4 Widget</a></li>
+            <li><a href="lesson-3-5.html">3.5 Menu</a></li></ul>
+            <h3>4. Progetti</h3>
+            <ul><li><a href="lesson-4-1.html">4.1 Editor</a></li>
+            <li><a href="lesson-4-2.html">4.2 Note DB</a></li>
+            <li><a href="lesson-4-3.html">4.3 HTTP</a></li></ul>
+            <h3>5. GitHub</h3>
+            <ul><li><a href="lesson-5-1.html">5.1 Repository</a></li>
+            <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
+            <li><a href="lesson-5-3.html">5.3 Testing</a></li></ul>
+            <h3>📖 Risorse</h3>
+            <ul><li><a href="about.html">ℹ️ Info Corso</a></li>
+            <li><a href="resources.html">🔗 Risorse</a></li>
+            <li><a href="faq.html">❓ FAQ</a></li></ul>
+        </aside>
+
+        <main class="content">
+            <nav class="breadcrumb"><a href="index.html">Home</a> > Sezione 5: GitHub & Best Practices > Testing e Debugging</nav>
+            <h2 class="lesson-title">Testing e Debugging</h2>
+
+            <div class="box box-theory">
+                <h3>📘 Introduzione Teorica</h3>
+                <p><strong>Testing e debugging</strong> sono fondamentali per affidabilità:</p>
 <ul>
-    <li><strong>Unit tests</strong>: Test singole funzioni</li>
-    <li><strong>Integration tests</strong>: Test workflow completi</li>
-    <li><strong>Benchmarks</strong>: Misura performance</li>
-    <li><strong>Debugging</strong>: gdb, lldb, println!</li>
-    <li><strong>Code coverage</strong>: % linee testate</li>
-    <li><strong>Property testing</strong>: Test con proprietà randomiche</li>
+    <li><strong>Unit tests</strong>: Test singole funzioni con #[test]</li>
+    <li><strong>Integration tests</strong>: Test workflow completi in tests/ dir</li>
+    <li><strong>Doc tests</strong>: Esempi in rustdoc eseguiti come test</li>
+    <li><strong>Benchmarks</strong>: Misura performance con criterion</li>
+    <li><strong>Code coverage</strong>: % linee testate con tarpaulin</li>
+    <li><strong>Property testing</strong>: Test con input randomico proptest</li>
+    <li><strong>Debugging</strong>: gdb, lldb, println!, dbg!, eprintln!</li>
 </ul>
-<p>Cod ben testato è codice affidabile.</p></div>
-<div class="box box-steps"><h3>🔧 Procedura Passo-Passo</h3><ol>
+<p>Codice ben testato è codice affidabile e professionale.</p>
+            </div>
+
+            <div class="box box-steps">
+                <h3>🔧 Procedura Passo-Passo</h3>
+                <ol>
     <li><strong>Unit test base</strong>
         <pre><code>#[cfg(test)]
 mod tests {
@@ -63,7 +86,8 @@ mod tests {
     <li><strong>Esegui test</strong>
         <pre><code>cargo test
 cargo test --release
-cargo test -- --nocapture</code></pre>
+cargo test -- --nocapture
+cargo test test_name -- --exact</code></pre>
     </li>
 
     <li><strong>Integration test</strong>
@@ -74,18 +98,30 @@ fn test_complete_workflow() {
 }</code></pre>
     </li>
 
-    <li><strong>Debug con println</strong>
-        <pre><code>dbg!(variabile);
-eprintln!("Debug: {:?}", valore);</code></pre>
+    <li><strong>Debug con macro</strong>
+        <pre><code>dbg!(variabile);           // Print + ritorna valore
+eprintln!("Debug: {:?}", v); // Print su stderr
+println!("Info: {}", x);     // Print su stdout</code></pre>
     </li>
-</ol></div>
-<div class="box box-code"><h3>💻 Codice Sorgente Commentato</h3><button class="copy-button">Copia</button><pre><code>// ========================================
+
+    <li><strong>Code coverage</strong>
+        <pre><code>cargo install cargo-tarpaulin
+cargo tarpaulin --out Html</code></pre>
+    </li>
+</ol>
+            </div>
+
+            <div class="box box-code">
+                <h3>💻 Codice Sorgente Commentato</h3>
+                <pre><code>// ========================================
 // TESTING COMPLETO
 // ========================================
 
-fn somma(a: i32, b: i32) -> i32 { a + b }
+pub fn somma(a: i32, b: i32) -> i32 {
+    a + b
+}
 
-fn divide(a: i32, b: i32) -> Result<i32, String> {
+pub fn divide(a: i32, b: i32) -> Result<i32, String> {
     if b == 0 {
         Err("Division by zero".to_string())
     } else {
@@ -93,11 +129,15 @@ fn divide(a: i32, b: i32) -> Result<i32, String> {
     }
 }
 
+// ========================================
+// UNIT TESTS
+// ========================================
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    // ---- UNIT TESTS ----
+    // Basic assert
     #[test]
     fn test_somma_positive() {
         assert_eq!(somma(2, 3), 5);
@@ -109,12 +149,14 @@ mod tests {
         assert_eq!(somma(5, 0), 5);
     }
 
+    // Negative numbers
     #[test]
-    #[should_panic(expected = "overflow")]
-    fn test_overflow() {
-        let _ = i32::MAX + 1;
+    fn test_somma_negative() {
+        assert_eq!(somma(-2, -3), -5);
+        assert_eq!(somma(5, -3), 2);
     }
 
+    // Result type
     #[test]
     fn test_divide_success() {
         assert!(divide(10, 2).is_ok());
@@ -126,14 +168,36 @@ mod tests {
         assert!(divide(10, 0).is_err());
     }
 
-    // ---- CUSTOM MESSAGE ----
+    // Panic test
     #[test]
-    fn test_custom_message() {
-        let value = 5;
-        assert_eq!(value, 5, "Expected 5, got {}", value);
+    #[should_panic]
+    fn test_panic() {
+        panic!("This should panic");
     }
 
-    // ---- PROPERTY TESTING ----
+    // Custom error message
+    #[test]
+    fn test_with_message() {
+        let result = somma(2, 3);
+        assert_eq!(result, 5, "Expected 5, got {}", result);
+    }
+
+    // Ignore test
+    #[test]
+    #[ignore]
+    fn expensive_test() {
+        // Run only with: cargo test -- --ignored
+    }
+}
+
+// ========================================
+// PROPERTY TESTING
+// ========================================
+
+#[cfg(test)]
+mod property_tests {
+    use super::*;
+
     #[test]
     fn prop_somma_commutativa() {
         for a in -100..100 {
@@ -149,88 +213,119 @@ mod tests {
             assert_eq!(somma(a, 0), a);
         }
     }
-}
-
-// ========================================
-// BENCHMARK
-// ========================================
-
-#[cfg(test)]
-mod benches {
-    use super::*;
 
     #[test]
-    fn bench_somma() {
-        let start = std::time::Instant::now();
-        for _ in 0..1_000_000 {
-            let _ = somma(5, 3);
+    fn prop_somma_associativa() {
+        for a in -20..20 {
+            for b in -20..20 {
+                for c in -20..20 {
+                    assert_eq!(
+                        somma(somma(a, b), c),
+                        somma(a, somma(b, c))
+                    );
+                }
+            }
         }
-        let elapsed = start.elapsed();
-        println!("1M operations: {:?}", elapsed);
     }
 }
 
 // ========================================
-// DEBUGGING
+// DEBUGGING TECHNIQUES
 // ========================================
 
-fn debug_example() {
+pub fn debug_example() {
     let x = 42;
-    dbg!(x);  // Stampa e ritorna value
+    dbg!(x);  // Stampa: [src/main.rs:100] x = 42
 
     let v = vec![1, 2, 3];
-    eprintln!("Vector: {:?}", v);  // Stampa su stderr
+    eprintln!("Vector DEBUG: {:?}", v);
 
-    println!("Debug: {}", 123);  // Stampa su stdout
+    println!("Normal output: {}", 123);
 }
-</code></pre></div>
-<div class="box box-exercises"><h3>✏️ Esercizi Pratici</h3><ol>
+
+// ========================================
+// INTEGRATION TEST (tests/integration.rs)
+// ========================================
+
+/*
+#[test]
+fn test_complete_workflow() {
+    let result = somma(2, 3);
+    assert_eq!(result, 5);
+
+    let div_result = divide(10, 2);
+    assert_eq!(div_result, Ok(5));
+}
+*/
+</code></pre>
+            </div>
+
+            <div class="box box-exercises">
+                <h3>✏️ Esercizi Pratici</h3>
+                <ol>
     <li><strong>Unit Test Base</strong>
         <p>Scrivi test per: somma, sottrazione, moltiplicazione di due numeri.</p>
     </li>
 
     <li><strong>Test Error Handling</strong>
-        <p>Test per divide by zero, overflow, invalid input.</p>
+        <p>Test per divide by zero, overflow, invalid input con Result type.</p>
     </li>
 
     <li><strong>Integration Test</strong>
-        <p>Crea tests/integration.rs con test di workflow completo.</p>
+        <p>Crea tests/integration.rs con test di workflow completo multi-funzioni.</p>
     </li>
 
     <li><strong>Property Testing</strong>
-        <p>Verifica proprietà commutativa, associativa, identity.</p>
+        <p>Verifica proprietà: commutativa, associativa, identity per operazioni.</p>
     </li>
 
     <li><strong>Code Coverage</strong>
-        <p>Installa tarpaulin e misura coverage: <code>cargo tarpaulin</code>.</p>
+        <p>Installa tarpaulin e misura coverage: <code>cargo tarpaulin --out Html</code></p>
     </li>
 
     <li><strong>Challenge: Fuzzing</strong>
-        <p>Usa proptest per generare input random e trovare edge cases.</p>
+        <p>Usa proptest per generare input random, trova edge cases, aumenta robustezza.</p>
     </li>
-</ol></div>
-<div class="box box-troubleshooting"><h3>⚠️ Troubleshooting</h3><h4>❌ Test panics ma non vuoi</h4>
-<p><strong>Soluzione:</strong> Usa <code>Result&lt;T, E&gt;</code> al posto di panic.</p>
+</ol>
+            </div>
 
-<h4>❌ println! non appare</h4>
-<p><strong>Soluzione:</strong> <code>cargo test -- --nocapture</code>.</p>
+            <div class="box box-troubleshooting">
+                <h3>⚠️ Troubleshooting</h3>
+                <h4>❌ Test panics ma non vuoi</h4>
+<p><strong>Causa:</strong> Aspettavi Result ma usi unwrap().</p>
+<p><strong>Soluzione:</strong> Usa Result&lt;T, E&gt; e match o ?.operator.</p>
+
+<h4>❌ println! non appare in test</h4>
+<p><strong>Causa:</strong> Output catturato da test runner.</p>
+<p><strong>Soluzione:</strong> <code>cargo test -- --nocapture</code></p>
 
 <h4>❌ Test molto lento</h4>
-<p><strong>Soluzione:</strong> Separa unit (veloci) e integration (lenti) test.</p>
+<p><strong>Causa:</strong> Combinazione unit + integration + benchmark.</p>
+<p><strong>Soluzione:</strong> Separa: unit veloci (test/), integration (tests/), bench (benches/).</p>
 
-<h4>💡 Tip: Test organization</h4>
-<p>Unit tests: vicino al codice. Integration tests: in tests/ directory.</p>
-</div>
-<nav class="lesson-nav"><a href="lesson-5-2.html">← Precedente</a><a class="disabled">Successiva →</a></nav></main></div>
-<footer><p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
-<p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p></footer>
-<script>document.addEventListener('DOMContentLoaded', function() {
-const currentPage = window.location.pathname.split('/').pop(); const links = document.querySelectorAll('.sidebar a');
-links.forEach(link => {if (link.getAttribute('href') === currentPage) link.classList.add('active');});
-const codeBlocks = document.querySelectorAll('.box-code'); codeBlocks.forEach(block => {const button = block.querySelector('.copy-button');
-if (button) {button.addEventListener('click', () => {const code = block.querySelector('code').textContent; navigator.clipboard.writeText(code);
-button.textContent = 'Copiato!'; setTimeout(() => {button.textContent = 'Copia';}, 2000);});}});
-const menuToggle = document.querySelector('.menu-toggle'); const sidebar = document.querySelector('.sidebar');
-if (menuToggle && sidebar) {menuToggle.addEventListener('click', () => {sidebar.classList.toggle('open');});
-const sidebarLinks = sidebar.querySelectorAll('a'); sidebarLinks.forEach(link => {link.addEventListener('click', () => {if (window.innerWidth <= 900) sidebar.classList.remove('open');});});
-document.addEventListener('click', (e) => {if (window.innerWidth <= 900 && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) sidebar.classList.remove('open');});}});</script></body></html>
+<h4>❌ Test non esegue</h4>
+<p><strong>Causa:</strong> Attributo #[test] mancante.</p>
+<p><strong>Soluzione:</strong> Aggiungi #[test] prima di fn o #[ignore].</p>
+
+<h4>💡 Tip: Test Organization</h4>
+<p>Unit tests: vicino al codice. Integration: in tests/. Bench: in benches/.</p>
+
+<h4>💡 Tip: Test Helpers</h4>
+<p>Crea funzioni helper per test setup comune.</p>
+            </div>
+
+            <nav class="lesson-nav">
+                <a href="lesson-5-2.html">← Precedente</a>
+                <a class="disabled">Successiva →</a>
+            </nav>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
+        <p><a href="https://www.rust-lang.org" target="_blank">Rust Programming Language</a> | <a href="https://gtk-rs.org" target="_blank">GTK-rs</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

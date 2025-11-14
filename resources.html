@@ -4,428 +4,130 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Risorse | Corso Rust Linux Desktop</title>
-    <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #1a1a1a;
-    color: #e0e0e0;
-    line-height: 1.6;
-}
-
-header {
-    background: #2a2a2a;
-    padding: 1rem 2rem;
-    border-bottom: 3px solid #DE8E43;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-}
-
-.header-content {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.rust-logo {
-    font-size: 2rem;
-    color: #DE8E43;
-}
-
-h1 {
-    font-size: 1.5rem;
-    color: #DE8E43;
-}
-
-.container {
-    display: flex;
-    margin-top: 70px;
-    min-height: calc(100vh - 70px);
-}
-
-.sidebar {
-    width: 280px;
-    background: #252525;
-    padding: 2rem 0;
-    position: fixed;
-    left: 0;
-    height: calc(100vh - 70px);
-    overflow-y: auto;
-    border-right: 1px solid #3a3a3a;
-}
-
-.sidebar h3 {
-    color: #DE8E43;
-    padding: 0.5rem 1.5rem;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 1rem;
-}
-
-.sidebar ul {
-    list-style: none;
-}
-
-.sidebar li a {
-    display: block;
-    padding: 0.7rem 1.5rem 0.7rem 2.5rem;
-    color: #b0b0b0;
-    text-decoration: none;
-    transition: all 0.3s;
-    font-size: 0.95rem;
-}
-
-.sidebar li a:hover {
-    background: #2f2f2f;
-    color: #DE8E43;
-    border-left: 3px solid #DE8E43;
-}
-
-.sidebar li a.active {
-    background: #2f2f2f;
-    color: #DE8E43;
-    border-left: 3px solid #DE8E43;
-    font-weight: 600;
-}
-
-.content {
-    flex: 1;
-    margin-left: 280px;
-    padding: 2rem 3rem;
-    max-width: 1200px;
-}
-
-.breadcrumb {
-    color: #888;
-    font-size: 0.9rem;
-    margin-bottom: 2rem;
-}
-
-.breadcrumb a {
-    color: #4A90E2;
-    text-decoration: none;
-}
-
-.breadcrumb a:hover {
-    text-decoration: underline;
-}
-
-.lesson-title {
-    font-size: 2.5rem;
-    color: #DE8E43;
-    margin-bottom: 1rem;
-}
-
-.box {
-    margin: 2rem 0;
-    padding: 1.5rem;
-    border-radius: 8px;
-    border-left: 4px solid;
-}
-
-.box-theory {
-    background: #2a2a3e;
-    border-left-color: #4A90E2;
-}
-
-.box-steps {
-    background: #2a2a2a;
-    border-left-color: #DE8E43;
-}
-
-.box-code {
-    background: #1e1e1e;
-    border-left-color: #DE8E43;
-    position: relative;
-}
-
-.box-exercises {
-    background: #2d4a2e;
-    border-left-color: #5cb85c;
-}
-
-.box-troubleshooting {
-    background: #4a2d2e;
-    border-left-color: #d9534f;
-}
-
-.box h3 {
-    color: #DE8E43;
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
-}
-
-.box-theory h3 { color: #4A90E2; }
-.box-exercises h3 { color: #5cb85c; }
-.box-troubleshooting h3 { color: #d9534f; }
-
-code {
-    font-family: 'Fira Code', 'Courier New', monospace;
-    background: #2a2a2a;
-    padding: 0.2rem 0.4rem;
-    border-radius: 3px;
-    font-size: 0.9rem;
-    color: #DE8E43;
-}
-
-pre {
-    background: #1e1e1e;
-    padding: 1.5rem;
-    border-radius: 5px;
-    overflow-x: auto;
-    margin: 1rem 0;
-}
-
-pre code {
-    background: none;
-    padding: 0;
-    color: #e0e0e0;
-    display: block;
-}
-
-.copy-button {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: #DE8E43;
-    color: #1a1a1a;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-.copy-button:hover {
-    background: #f09d5a;
-}
-
-ol, ul {
-    margin-left: 1.5rem;
-    margin-top: 0.5rem;
-}
-
-li {
-    margin: 0.5rem 0;
-}
-
-.lesson-nav {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid #3a3a3a;
-}
-
-.lesson-nav a {
-    background: #DE8E43;
-    color: #1a1a1a;
-    padding: 0.8rem 1.5rem;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s;
-}
-
-.lesson-nav a:hover {
-    background: #f09d5a;
-    transform: translateY(-2px);
-}
-
-.lesson-nav a.disabled {
-    background: #3a3a3a;
-    color: #666;
-    cursor: not-allowed;
-}
-
-footer {
-    background: #252525;
-    padding: 2rem;
-    text-align: center;
-    color: #888;
-    border-top: 1px solid #3a3a3a;
-    margin-top: 3rem;
-}
-
-@media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s;
-    }
-
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
-    .content {
-        margin-left: 0;
-        padding: 1rem;
-    }
-}
-</style>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    
     <header>
         <div class="header-content">
             <div class="rust-logo">🦀</div>
             <h1>Corso Completo: Sviluppo Applicazioni Desktop Linux in Rust</h1>
         </div>
+        <button class="menu-toggle" aria-label="Menu">☰</button>
     </header>
-    
+
     <div class="container">
-        
-    <aside class="sidebar">
-        <h3>📚 Corso Rust Linux</h3>
-        <ul>
-            <li><a href="index.html">🏠 Home</a></li>
-        </ul>
+        <aside class="sidebar">
+            <h3>📚 Corso</h3>
+            <ul>
+                <li><a href="index.html">🏠 Home</a></li>
+            </ul>
 
-        <h3>1. Ambiente di Sviluppo</h3>
-        <ul>
-            <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
-            <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
-            <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
-        </ul>
+            <h3>1. Ambiente</h3>
+            <ul>
+                <li><a href="lesson-1-1.html">1.1 Installazione Rust</a></li>
+                <li><a href="lesson-1-2.html">1.2 Config VS Code</a></li>
+                <li><a href="lesson-1-3.html">1.3 Strumenti Extra</a></li>
+            </ul>
 
-        <h3>2. Rust Base</h3>
-        <ul>
-            <li><a href="lesson-2-1.html">2.1 Sintassi Fondamentale</a></li>
-            <li><a href="lesson-2-2.html">2.2 Strutture Controllo</a></li>
-            <li><a href="lesson-2-3.html">2.3 Struttura Progetto</a></li>
-            <li><a href="lesson-2-4.html">2.4 Crate & Dipendenze</a></li>
-        </ul>
+            <h3>2. Rust Base</h3>
+            <ul>
+                <li><a href="lesson-2-1.html">2.1 Sintassi</a></li>
+                <li><a href="lesson-2-2.html">2.2 Controllo</a></li>
+                <li><a href="lesson-2-3.html">2.3 Progetto</a></li>
+                <li><a href="lesson-2-4.html">2.4 Crate</a></li>
+            </ul>
 
-        <h3>3. Sviluppo GUI</h3>
-        <ul>
-            <li><a href="lesson-3-1.html">3.1 Intro GTK-rs</a></li>
-            <li><a href="lesson-3-2.html">3.2 Glade Designer</a></li>
-            <li><a href="lesson-3-3.html">3.3 Sviluppo Manuale</a></li>
-            <li><a href="lesson-3-4.html">3.4 Widget & Eventi</a></li>
-            <li><a href="lesson-3-5.html">3.5 Menu & Dialog</a></li>
-        </ul>
+            <h3>3. GUI</h3>
+            <ul>
+                <li><a href="lesson-3-1.html">3.1 GTK-rs</a></li>
+                <li><a href="lesson-3-2.html">3.2 Glade</a></li>
+                <li><a href="lesson-3-3.html">3.3 Manuale</a></li>
+                <li><a href="lesson-3-4.html">3.4 Widget</a></li>
+                <li><a href="lesson-3-5.html">3.5 Menu</a></li>
+            </ul>
 
-        <h3>4. Progetti Pratici</h3>
-        <ul>
-            <li><a href="lesson-4-1.html">4.1 Editor di Testo</a></li>
-            <li><a href="lesson-4-2.html">4.2 Gestore Note DB</a></li>
-            <li><a href="lesson-4-3.html">4.3 Client HTTP</a></li>
-        </ul>
+            <h3>4. Progetti</h3>
+            <ul>
+                <li><a href="lesson-4-1.html">4.1 Editor</a></li>
+                <li><a href="lesson-4-2.html">4.2 Note DB</a></li>
+                <li><a href="lesson-4-3.html">4.3 HTTP</a></li>
+            </ul>
 
-        <h3>5. GitHub & Best Practices</h3>
-        <ul>
-            <li><a href="lesson-5-1.html">5.1 Repository GitHub</a></li>
-            <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
-            <li><a href="lesson-5-3.html">5.3 Testing & Debug</a></li>
-        </ul>
+            <h3>5. GitHub</h3>
+            <ul>
+                <li><a href="lesson-5-1.html">5.1 Repository</a></li>
+                <li><a href="lesson-5-2.html">5.2 Documentazione</a></li>
+                <li><a href="lesson-5-3.html">5.3 Testing</a></li>
+            </ul>
 
-        <h3>📖 Altro</h3>
-        <ul>
-            <li><a href="about.html">ℹ️ Info Corso</a></li>
-            <li><a href="projects.html">🎯 Progetti</a></li>
-            <li><a href="resources.html">🔗 Risorse</a></li>
-            <li><a href="faq.html">❓ FAQ</a></li>
-        </ul>
-    </aside>
-    
+            <h3>📖 Risorse</h3>
+            <ul>
+                <li><a href="about.html">ℹ️ Info Corso</a></li>
+                <li><a href="resources.html">🔗 Risorse</a></li>
+                <li><a href="faq.html">❓ FAQ</a></li>
+            </ul>
+        </aside>
+
         <main class="content">
-            <h2 class="lesson-title">🔗 Risorse e Link Utili</h2>
+            <h2 class="lesson-title">🔗 Risorse Esterne</h2>
 
             <div class="box box-theory">
                 <h3>📚 Documentazione Ufficiale</h3>
                 <ul>
-                    <li><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> - Sito ufficiale</li>
-                    <li><a href="https://doc.rust-lang.org/book/" target="_blank" style="color: #DE8E43;">The Rust Book</a> - Libro ufficiale</li>
-                    <li><a href="https://doc.rust-lang.org/rust-by-example/" target="_blank" style="color: #DE8E43;">Rust by Example</a> - Tutorial interattivo</li>
-                    <li><a href="https://docs.rs/" target="_blank" style="color: #DE8E43;">Docs.rs</a> - Documentazione crate</li>
+                    <li><a href="https://www.rust-lang.org/" target="_blank">The Rust Programming Language</a> - Sito ufficiale</li>
+                    <li><a href="https://doc.rust-lang.org/book/" target="_blank">The Rust Book</a> - Guida completa (gratuita)</li>
+                    <li><a href="https://doc.rust-lang.org/std/" target="_blank">Rust Standard Library</a> - API docs</li>
+                    <li><a href="https://docs.rs/" target="_blank">Docs.rs</a> - Documentazione crate</li>
                 </ul>
             </div>
 
             <div class="box box-steps">
-                <h3>🎨 GTK e GUI</h3>
+                <h3>🎨 GTK & GUI</h3>
                 <ul>
-                    <li><a href="https://gtk-rs.org" target="_blank" style="color: #4A90E2;">GTK-rs</a> - Bindings Rust per GTK</li>
-                    <li><a href="https://gtk-rs.org/gtk4-rs/stable/latest/book/" target="_blank" style="color: #4A90E2;">GTK-rs Book</a> - Guida completa</li>
-                    <li><a href="https://glade.gnome.org" target="_blank" style="color: #4A90E2;">Glade</a> - UI Designer</li>
-                    <li><a href="https://developer.gnome.org/gtk3/" target="_blank" style="color: #4A90E2;">GTK Documentation</a> - Docs GTK3</li>
+                    <li><a href="https://gtk-rs.org/" target="_blank">GTK-rs Official</a> - Binding Rust per GTK</li>
+                    <li><a href="https://gtk-rs.org/gtk4-rs/stable/latest/book/" target="_blank">GTK-rs Book</a> - Guida GTK-rs</li>
+                    <li><a href="https://developer.gnome.org/gtk3/" target="_blank">GTK 3 Reference</a> - Doc GTK C</li>
+                    <li><a href="https://glade.gnome.org/" target="_blank">Glade</a> - Designer visuale</li>
+                </ul>
+            </div>
+
+            <div class="box box-code">
+                <h3>🛠️ Strumenti Utili</h3>
+                <ul>
+                    <li><a href="https://crates.io/" target="_blank">crates.io</a> - Repository crate Rust</li>
+                    <li><a href="https://github.com/" target="_blank">GitHub</a> - Versionamento e hosting</li>
+                    <li><a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a> - Editor</li>
+                    <li><a href="https://www.rust-lang.org/en-US/install.html" target="_blank">rustup</a> - Gestore toolchain</li>
                 </ul>
             </div>
 
             <div class="box box-exercises">
-                <h3>🛠️ Tools & Utilities</h3>
+                <h3>🎓 Comunità</h3>
                 <ul>
-                    <li><a href="https://crates.io" target="_blank" style="color: #5cb85c;">Crates.io</a> - Repository crate Rust</li>
-                    <li><a href="https://lib.rs" target="_blank" style="color: #5cb85c;">Lib.rs</a> - Ricerca librerie</li>
-                    <li><a href="https://play.rust-lang.org" target="_blank" style="color: #5cb85c;">Rust Playground</a> - Test codice online</li>
-                    <li><a href="https://code.visualstudio.com/docs/languages/rust" target="_blank" style="color: #5cb85c;">VS Code Rust</a> - Setup VS Code</li>
+                    <li><a href="https://users.rust-lang.org/" target="_blank">Rust Users Forum</a> - Forum ufficiale</li>
+                    <li><a href="https://discord.gg/rust-lang" target="_blank">Rust Discord</a> - Chat community</li>
+                    <li><a href="https://www.reddit.com/r/rust/" target="_blank">r/rust</a> - Subreddit Rust</li>
+                    <li><a href="https://stackoverflow.com/questions/tagged/rust" target="_blank">Stack Overflow Rust</a> - Domande/risposte</li>
                 </ul>
             </div>
 
-            <div class="box box-theory">
-                <h3>👥 Community</h3>
+            <div class="box box-troubleshooting">
+                <h3>📖 Risorse Aggiuntive</h3>
                 <ul>
-                    <li><a href="https://users.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Users Forum</a> - Forum ufficiale</li>
-                    <li><a href="https://reddit.com/r/rust" target="_blank" style="color: #DE8E43;">r/rust</a> - Subreddit Rust</li>
-                    <li><a href="https://discord.gg/rust-lang" target="_blank" style="color: #DE8E43;">Rust Discord</a> - Chat community</li>
-                    <li><a href="https://this-week-in-rust.org" target="_blank" style="color: #DE8E43;">This Week in Rust</a> - Newsletter</li>
-                </ul>
-            </div>
-
-            <div class="box box-steps">
-                <h3>📖 Libri e Tutorial</h3>
-                <ul>
-                    <li>Programming Rust (O'Reilly)</li>
-                    <li>Rust in Action (Manning)</li>
-                    <li>Zero To Production In Rust</li>
-                    <li>Rust for Rustaceans</li>
+                    <li><a href="https://rustbyexample.com/" target="_blank">Rust by Example</a> - Esempi pratici</li>
+                    <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Rust_Security_Cheat_Sheet.html" target="_blank">Rust Security Cheat Sheet</a></li>
+                    <li><a href="https://www.lpalmieri.com/posts/2020-12-02-zero-to-production/" target="_blank">Zero to Production</a> - Tutorial avanzato</li>
+                    <li><a href="https://blog.rust-lang.org/" target="_blank">Official Rust Blog</a> - News e articoli</li>
                 </ul>
             </div>
         </main>
     </div>
-    
+
     <footer>
         <p>&copy; 2025 Corso Rust Linux Desktop | Creato con ❤️ per la community Rust</p>
-        <p><a href="https://www.rust-lang.org" target="_blank" style="color: #DE8E43;">Rust Programming Language</a> | 
-           <a href="https://gtk-rs.org" target="_blank" style="color: #DE8E43;">GTK-rs</a></p>
     </footer>
-    
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Highlight active page in sidebar
-    const currentPage = window.location.pathname.split('/').pop();
-    const links = document.querySelectorAll('.sidebar a');
-    links.forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
-            link.classList.add('active');
-        }
-    });
 
-    // Copy code functionality
-    const codeBlocks = document.querySelectorAll('.box-code');
-    codeBlocks.forEach(block => {
-        const button = block.querySelector('.copy-button');
-        if (button) {
-            button.addEventListener('click', () => {
-                const code = block.querySelector('code').textContent;
-                navigator.clipboard.writeText(code);
-                button.textContent = 'Copiato!';
-                setTimeout(() => {
-                    button.textContent = 'Copia';
-                }, 2000);
-            });
-        }
-    });
-});
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
