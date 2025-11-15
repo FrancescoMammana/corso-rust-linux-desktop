@@ -90,33 +90,174 @@ println!("{}", s1);</code></pre>
 
             <div class="box box-code">
                 <h3>💻 Codice Sorgente Commentato</h3>
-                <pre><code>// OWNERSHIP
+                <h4>1. Ownership - Il Concetto Fondamentale</h4>
+<p><strong>Ownership</strong> è il sistema di gestione memoria unico di Rust che garantisce sicurezza senza garbage collector. Ogni valore ha un solo proprietario alla volta.</p>
+
+<pre><code>// ESEMPIO OWNERSHIP BASE
 fn main() {
+    // s1 è il PROPRIETARIO della stringa "Rust"
+    // La memoria viene allocata nell'heap
     let s1 = String::from("Rust");
-    let s2 = s1;  // Move
-    println!("{}", s2);
+
+    // MOVE: la proprietà passa da s1 a s2
+    // s1 NON è più valido dopo questa riga
+    let s2 = s1;
+
+    // ❌ println!("{}", s1); // ERRORE! s1 è stato "mosso"
+
+    // ✅ s2 è ora l'unico proprietario valido
+    println!("s2 contiene: {}", s2);
+
+    // Quando s2 esce dallo scope, la memoria viene automaticamente liberata
 }
 
-// BORROWING
+// SPIEGAZIONE DETTAGLIATA:
+// 1. String::from() alloca memoria nell'heap per contenere "Rust"
+// 2. s1 diventa proprietario: ha la responsabilità di liberare la memoria
+// 3. let s2 = s1 TRASFERISCE (move) la proprietà da s1 a s2
+// 4. Rust invalida s1 per prevenire double-free (liberare memoria due volte)
+// 5. Solo s2 può ora accedere ai dati
+// 6. Quando s2 esce dallo scope, Rust chiama automaticamente drop() per liberare memoria
+</code></pre>
+
+<h4>2. Borrowing - Prestare Riferimenti</h4>
+<p><strong>Borrowing</strong> permette di usare un valore senza prenderne possesso, attraverso riferimenti (&). È come "prestare" un libro senza trasferirne la proprietà.</p>
+
+<pre><code>// ESEMPIO BORROWING IMMUTABILE
+fn main() {
+    let s1 = String::from("Ownership");
+
+    // &s1 crea un RIFERIMENTO IMMUTABILE (borrow)
+    // s1 rimane proprietario, calcola_lunghezza "prende in prestito"
+    let len = calcola_lunghezza(&s1);
+
+    // ✅ s1 è ancora valido! Possiamo usarlo
+    println!("La stringa '{}' ha lunghezza {}", s1, len);
+}
+
+// Funzione che PRENDE IN PRESTITO (borrow) una stringa
+// &String significa "riferimento a String"
 fn calcola_lunghezza(s: &String) -> usize {
-    s.len()
+    // Possiamo LEGGERE s, ma NON modificarlo
+    s.len()  // Restituisce la lunghezza
+    // Quando la funzione termina, il riferimento viene distrutto
+    // MA la stringa originale rimane valida nel chiamante
 }
 
+// REGOLE BORROWING IMMUTABILE:
+// ✅ Puoi avere INFINITI riferimenti immutabili (&T) contemporaneamente
+// ✅ Puoi leggere i dati ma NON modificarli
+// ✅ Il proprietario originale mantiene la proprietà
+// ✅ I dati non possono essere modificati finché esistono borrow immutabili
+</code></pre>
+
+<h4>3. Mutable Borrowing - Modificare Attraverso Riferimenti</h4>
+<p><strong>Mutable borrowing</strong> (&mut) permette di modificare un valore preso in prestito, ma con regole rigide per evitare data races.</p>
+
+<pre><code>// ESEMPIO MUTABLE BORROWING
 fn main() {
-    let s3 = String::from("Ownership");
-    let len = calcola_lunghezza(&s3);
-    println!("'{}' ha lunghezza {}", s3, len);
-}
-
-// MUTABLE BORROWING
-fn modifica(s: &mut String) {
-    s.push_str(" mondo!");
-}
-
-fn main() {
+    // IMPORTANTE: la variabile deve essere mut per permettere modifiche
     let mut testo = String::from("Ciao");
+
+    // &mut testo crea un RIFERIMENTO MUTABILE
+    // La funzione può modificare testo attraverso questo riferimento
     modifica(&mut testo);
-    println!("{}", testo);
+
+    // ✅ testo è stato modificato dalla funzione
+    println!("Testo modificato: {}", testo);  // Output: "Ciao mondo!"
+}
+
+// Funzione che accetta un RIFERIMENTO MUTABILE
+fn modifica(s: &mut String) {
+    // push_str modifica la stringa originale
+    s.push_str(" mondo!");
+
+    // Altri esempi di modifica:
+    // s.clear();           // Svuota la stringa
+    // s.push('!');         // Aggiunge carattere
+    // s.insert_str(0, "→"); // Inserisce all'inizio
+}
+
+// REGOLE MUTABLE BORROWING (FONDAMENTALI):
+// 1. Puoi avere UN SOLO &mut riferimento alla volta
+// 2. NON puoi avere &mut e & riferimenti contemporaneamente
+// 3. Previene data races a compile-time
+// 4. La variabile originale deve essere dichiarata mut
+</code></pre>
+
+<h4>4. Pattern Matching - Destrutturare e Gestire Casi</h4>
+<p><strong>Pattern matching</strong> con <code>match</code> permette di gestire tutti i possibili casi in modo sicuro ed esaustivo.</p>
+
+<pre><code>// DEFINIZIONE ENUM - Tipo che può essere uno tra diversi valori
+enum Risultato {
+    // Variant con dati associati
+    Ok(String),      // Caso successo: contiene messaggio
+    Errore(i32),     // Caso errore: contiene codice
+}
+
+// ESEMPIO PATTERN MATCHING
+fn main() {
+    // Creiamo un Risultato di successo
+    let r = Risultato::Ok("Operazione completata".to_string());
+
+    // MATCH: controlliamo TUTTI i possibili casi
+    match r {
+        // Se è Ok, estraiamo il messaggio nella variabile msg
+        Risultato::Ok(msg) => {
+            println!("✓ Successo: {}", msg);
+        }
+
+        // Se è Errore, estraiamo il codice nella variabile code
+        Risultato::Errore(code) => {
+            println!("✗ Errore con codice: {}", code);
+        }
+    }
+}
+
+// PATTERN MATCHING AVANZATO
+fn esempio_avanzato() {
+    let numero = 42;
+
+    match numero {
+        0 => println!("Zero!"),
+        1..=10 => println!("Da uno a dieci"),
+        n if n % 2 == 0 => println!("{} è pari", n),
+        n if n % 2 == 1 => println!("{} è dispari", n),
+        _ => println!("Altro numero"),
+    }
+}
+</code></pre>
+
+<h4>5. Riepilogo Esempio Completo</h4>
+<pre><code>// ESEMPIO CHE COMBINA TUTTI I CONCETTI
+
+// Struct con lifetime
+struct Libro<'a> {
+    titolo: &'a str,
+    autore: &'a str,
+    pagine: u32,
+}
+
+impl<'a> Libro<'a> {
+    fn nuovo(titolo: &'a str, autore: &'a str, pagine: u32) -> Self {
+        Libro { titolo, autore, pagine }
+    }
+
+    fn info(&self) -> String {
+        format!("{} di {} ({} pagine)", 
+                self.titolo, self.autore, self.pagine)
+    }
+}
+
+fn main() {
+    // OWNERSHIP
+    let titolo = String::from("Il Linguaggio Rust");
+    let autore = String::from("Steve Klabnik");
+
+    // BORROWING
+    let libro = Libro::nuovo(&titolo, &autore, 552);
+
+    println!("Libro: {}", libro.info());
 }
 </code></pre>
             </div>
